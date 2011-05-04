@@ -129,11 +129,8 @@
 		
 		
 		function divide(pointsArray) {
-			//pointsArray.print("output");
 			if (pointsArray.length < 4) {
-				//alert("< 4 :" + pointsArray.length);
 				if (pointsArray.length < 3) {
-							//alert("< 3 : " + pointsArray.length);
 						//displayLine(pointsArray[0],pointsArray[1], "#999");
 						displayPoint(pointsArray[0], "rgb(255,0,0)");
 						displayPoint(pointsArray[1], "rgb(0,255,0)");
@@ -158,26 +155,13 @@
 				var median = pointsArray.length / 2;
 				var leftPointsArray = pointsArray.slice(0, median);
 				var rightPointsArray = pointsArray.slice(median, pointsArray.length);
-	/*
-							var div = $("output");
-				div.innerHTML += "left : ";
-				printPoints(leftPointsArray);
-				div.innerHTML += "right : ";
-				printPoints(rightPointsArray);
-	*/
+
 				var leftEnv = divide(leftPointsArray);
 				var rightEnv = divide(rightPointsArray);
 				rightEnv.reverse();
 				var iGauche = maxX(leftEnv); 
 				var iDroite = minX(rightEnv); 
-	/*
-				var iGauche = leftEnv.length-1; 
-				var iDroite = 0;
-	*/
-			/*
-		alert("ig : " + iGauche);
-				alert("iDr : " + iDroite);
-	*/
+
 				var finished = false;
 				var envelop = [];
 	
@@ -204,26 +188,23 @@
 				var iDH = iDroite;
 				
 				envelop.push(leftEnv[iGH]);
-				var finished2 = false;
+				var finished = false;
 				iGauche = maxX(leftEnv); 
 				iDroite = minX(rightEnv); 
-	/*
-				var iGauche = leftEnv.length-1; 
-				var iDroite = 0;
-	*/
-				while (!finished2) {
+
+				while (!finished) {
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite - 1 + rightEnv.length) % rightEnv.length]}));
 					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche - 1 + leftEnv.length) % leftEnv.length]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
-					finished2 = true;
+					finished = true;
 					if (crossProduct(v1, v2) < 0) {
-						finished2 = false;
+						finished = false;
 						iDroite = (iDroite - 1 + rightEnv.length) % rightEnv.length;
 					}
 					if (crossProduct(v3, v4) < 0) {
-						finished2 = false;
+						finished = false;
 						iGauche = (iGauche - 1 + leftEnv.length)  % leftEnv.length;
 					}
 				}
