@@ -131,7 +131,7 @@
 		function divide(pointsArray) {
 			if (pointsArray.length < 4) {
 				if (pointsArray.length < 3) {
-						//displayLine(pointsArray[0],pointsArray[1], "#999");
+/* 						displayLine(pointsArray[0],pointsArray[1], "#999"); */
 						displayPoint(pointsArray[0], "rgb(255,0,0)");
 						displayPoint(pointsArray[1], "rgb(0,255,0)");
 				}
@@ -140,12 +140,13 @@
 					if(pointCrossProduct(pointsArray[0], pointsArray[1], pointsArray[2]) <= 0) {
 						pointsArray.swap(1,2);
 					}
-	/*
-					for (i = 0; i < pointsArray.length - 1; i+= 1) {
+/*
+						for (i = 0; i < pointsArray.length - 1; i+= 1) {
 						displayLine(pointsArray[i],pointsArray[i+1], "#999");
 					}
-	*/
-					//displayLine(pointsArray[0],pointsArray[pointsArray.length-1], "#999");		
+*/
+	
+/* 					displayLine(pointsArray[0],pointsArray[pointsArray.length-1], "#999");		 */
 					displayPoint(pointsArray[0], "rgb(255,0,0)");
 					displayPoint(pointsArray[1], "rgb(0,255,0)");
 					displayPoint(pointsArray[2], "rgb(0,0,255)");
@@ -172,17 +173,17 @@
 					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche + 1) % leftEnv.length]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
-					if (crossProduct(v1, v2) > 0) {
+					if (crossProduct(v1, v2) >= 0) {
 						finished = false;
 						iDroite = (iDroite + 1) % rightEnv.length;
 					}
 					
-					if (crossProduct(v3, v4) > 0) {
+					if (crossProduct(v3, v4) >= 0) {
 						finished = false;
 						iGauche = (iGauche + 1)  % leftEnv.length;
 					}
 				}
-	/* 			displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999"); */
+/* 				displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999"); */
 				
 				var iGH = iGauche;
 				var iDH = iDroite;
@@ -199,16 +200,16 @@
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
-					if (crossProduct(v1, v2) < 0) {
+					if (crossProduct(v1, v2) <= 0) {
 						finished = false;
 						iDroite = (iDroite - 1 + rightEnv.length) % rightEnv.length;
 					}
-					if (crossProduct(v3, v4) < 0) {
+					if (crossProduct(v3, v4) <= 0) {
 						finished = false;
 						iGauche = (iGauche - 1 + leftEnv.length)  % leftEnv.length;
 					}
 				}
-				//displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999");
+/* 				//displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999"); */
 				
 				var i = iDH;
 				while (i != iDroite) {
@@ -222,52 +223,40 @@
 					j = (j - 1 + leftEnv.length) % leftEnv.length; 
 				}
 				envelop.reverse();
-							return envelop;
+				return envelop;
 			}
 		}
 		
+		clearCanvas();
 		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		var k;
-		for (k = 0; k < env.length - 1; k+= 1) {
-			displayLine(env[k], env[k+1], "#AA0000");
-		}
-		displayLine(env[0], env[env.length - 1], "#AA0000");
-	
-	
-	/*
-		var p1 = new Point(400,0);
-		var p2 = new Point(500,300);
-		var p3 = new Point(273,500);
-		var p4 = new Point(700,140);
-		displayLine(p1,p2);
-		displayLine(p1,p3);
-		var v1 = new Vector(p1, p2);
-		var v2 = new Vector(p1, p3);
-		displayPoint(p1, randomColor());
-		displayPoint(p2, randomColor());
-		displayPoint(p3, randomColor());
-		displayPoint(p4, randomColor());
-		alert(crossProduct(v1,v2));
-	*/
-	
-		function maxX(lapatate) {
+		displayEnvelop(env, "#BB0000");
+		displayAllPoints(points);
+		
+		function maxX(array) {
 			var iMax = 0, i;
-			for (i = 1; i < lapatate.length; i+= 1) {
-				if (lapatate[i].x > lapatate[iMax].x) {
+			for (i = 1; i < array.length; i+= 1) {
+				if (array[i].x > array[iMax].x) {
 					iMax = i;
 				}
 			}
 			return iMax;
 		}
 		
-		function minX(maPlaque) {
+		function minX(array) {
 			var iMin = 0, i;
-			for (i = 1; i < maPlaque.length; i+= 1) {
-				if (maPlaque[i].x < maPlaque[iMin].x) {
+			for (i = 1; i < array.length; i+= 1) {
+				if (array[i].x < array[iMin].x) {
 					iMin = i;
 				}
 			}
 			return iMin;
+		}
+		
+		function displayAllPoints(array) {
+			var i;
+			for(i = 0; i < array.length; i += 1) {
+				displayPoint(array[i], "#999");
+			}
 		}
 		
 		function displayPoint(name, color) {
@@ -283,15 +272,32 @@
 		function displayLine(a, b, color) {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
-		//	context.clearRect(0, 0, exemple.width, exemple.height);
 			context.moveTo(a.x,600 - a.y);
 			context.lineTo(b.x,600 - b.y);
 			context.strokeStyle = color;
 			context.stroke();
 		}
 		
+		function clearCanvas() {
+			var exemple = $('exemple');
+			var context = exemple.getContext('2d');
+			context.clearRect(0, 0, exemple.width, exemple.height);
+		}
+		
+		function displayEnvelop(pointsArray, color) {
+			var k;
+			for (k = 0; k < pointsArray.length - 1; k+= 1) {
+				displayLine(pointsArray[k], pointsArray[k+1], color);
+			}
+			displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
+		}
+		
 		function randomColor() {
-			return "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ",1)";
+			return "rgba(" + randomValueUntil(255) + "," + randomValueUntil(255) + "," + randomValueUntil(255) + ",1)";
+		}
+		
+		function randomValueUntil(value) {
+			return Math.floor(Math.random() * value);
 		}
 	};
 })();
