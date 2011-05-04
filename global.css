@@ -1,9 +1,15 @@
 body {
 	max-width: 1000px;
 	margin: auto;
+	text-align: center;
 }
 
 canvas {
-	border: 1px solid black;
+	border: 1px dotted black;
 	margin: auto;
+	display: block;
+}
+
+fieldset {
+	border: none;
 }

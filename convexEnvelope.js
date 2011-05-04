@@ -1,5 +1,5 @@
 /**
- * An implementation of the Minimum Bounding Box Algorithm 
+ * An implementation of the Convex hull algorithms (divide and conquer) 
  *
  * Authors:	Nima Izadi - Nicolas Dupont
  */
@@ -127,29 +127,21 @@
 			}
 		};
 		
+				
+		//clearCanvas();
+		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		displayPolygon(env, "#000000");
+		
+		//printPoints(env);
+		displayAllPoints(points);
 		
 		function divide(pointsArray) {
 			if (pointsArray.length < 4) {
-				if (pointsArray.length < 3) {
-/* 						displayLine(pointsArray[0],pointsArray[1], "#999"); */
-						displayPoint(pointsArray[0], "rgb(255,0,0)");
-						displayPoint(pointsArray[1], "rgb(0,255,0)");
-				}
-				else {
-					var i;
+				if(pointsArray.length > 2) {
+					//When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 					if(pointCrossProduct(pointsArray[0], pointsArray[1], pointsArray[2]) <= 0) {
 						pointsArray.swap(1,2);
 					}
-/*
-						for (i = 0; i < pointsArray.length - 1; i+= 1) {
-						displayLine(pointsArray[i],pointsArray[i+1], "#999");
-					}
-*/
-	
-/* 					displayLine(pointsArray[0],pointsArray[pointsArray.length-1], "#999");		 */
-					displayPoint(pointsArray[0], "rgb(255,0,0)");
-					displayPoint(pointsArray[1], "rgb(0,255,0)");
-					displayPoint(pointsArray[2], "rgb(0,0,255)");
 				}
 				return pointsArray;
 			} else {
@@ -159,20 +151,19 @@
 
 				var leftEnv = divide(leftPointsArray);
 				var rightEnv = divide(rightPointsArray);
-				rightEnv.reverse();
-				var iGauche = maxX(leftEnv); 
-				var iDroite = minX(rightEnv); 
+				rightEnv.reverse();//reverse the sub-envelope right
+				
+				var iGauche = maxX(leftEnv); //index of the point having the largest abscissa
+				var iDroite = minX(rightEnv); //index of the point having the smallest abscissa 
 
 				var finished = false;
-				var envelop = [];
-	
+			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
 					finished = true;
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite + 1) % rightEnv.length]}));
 					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche + 1) % leftEnv.length]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
-					
 					if (crossProduct(v1, v2) >= 0) {
 						finished = false;
 						iDroite = (iDroite + 1) % rightEnv.length;
@@ -183,11 +174,11 @@
 						iGauche = (iGauche + 1)  % leftEnv.length;
 					}
 				}
-/* 				displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999"); */
 				
 				var iGH = iGauche;
 				var iDH = iDroite;
-				
+
+				var envelop = [];
 				envelop.push(leftEnv[iGH]);
 				var finished = false;
 				iGauche = maxX(leftEnv); 
@@ -209,7 +200,6 @@
 						iGauche = (iGauche - 1 + leftEnv.length)  % leftEnv.length;
 					}
 				}
-/* 				//displayLine(leftEnv[iGauche], rightEnv[iDroite], "#999"); */
 				
 				var i = iDH;
 				while (i != iDroite) {
@@ -227,11 +217,29 @@
 			}
 		}
 		
-		clearCanvas();
-		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		displayEnvelop(env, "#BB0000");
-		displayAllPoints(points);
+		function joinTop(finished, leftEnv, rightEnv, iGauche, iDroite) {
+			while (!finished) {
+					finished = true;
+					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite + 1) % rightEnv.length]}));
+					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche + 1) % leftEnv.length]}));
+					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+				
+					if (crossProduct(v1, v2) >= 0) {
+						finished = false;
+						iDroite = (iDroite + 1) % rightEnv.length;
+					}
+					
+					if (crossProduct(v3, v4) >= 0) {
+						finished = false;
+						iGauche = (iGauche + 1)  % leftEnv.length;
+					}
+				}
+		}
 		
+		/*
+	 	 * returns the index of the point having the largest abscissa
+	 	 */
 		function maxX(array) {
 			var iMax = 0, i;
 			for (i = 1; i < array.length; i+= 1) {
@@ -242,6 +250,9 @@
 			return iMax;
 		}
 		
+		/*
+	 	 * returns the index of the point having the smallest abscissa
+	 	 */
 		function minX(array) {
 			var iMin = 0, i;
 			for (i = 1; i < array.length; i+= 1) {
@@ -252,50 +263,75 @@
 			return iMin;
 		}
 		
+		/*
+	 	 * display all points of the array passed in parameter
+	 	 */
 		function displayAllPoints(array) {
 			var i;
 			for(i = 0; i < array.length; i += 1) {
-				displayPoint(array[i], "#999");
+				displayPoint(array[i], randomColor());
 			}
 		}
 		
-		function displayPoint(name, color) {
+		/*
+	 	 * display a colored point
+	 	 */
+		function displayPoint(point, color) {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
 			context.fillStyle = color;
 			context.beginPath();
-			context.arc(name.x,600 - name.y, 2, 0, Math.PI * 2,true);
+			context.arc(point.x,600 - point.y, 3, 0, Math.PI * 2,true);
 			context.closePath();
 			context.fill();
 		}
 		
+		/*
+	 	 * display a colored line between the point a and the point b
+	 	 */
 		function displayLine(a, b, color) {
+/* 			alert(a.print() + ", " + b.print()); */
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
+		 	context.lineWidth=2;
+		  context.lineCap='round'; 
 			context.moveTo(a.x,600 - a.y);
 			context.lineTo(b.x,600 - b.y);
 			context.strokeStyle = color;
 			context.stroke();
 		}
 		
+		/*
+	 	 * clear the canvas /!\ Does not work
+	 	 * TODO 
+	 	 */
 		function clearCanvas() {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
-			context.clearRect(0, 0, exemple.width, exemple.height);
+			
 		}
 		
-		function displayEnvelop(pointsArray, color) {
+		/*
+	 	 * display the closed path of a polygon with the array of polygon's vertices
+	 	 */
+		function displayPolygon(pointsArray, color) {
 			var k;
 			for (k = 0; k < pointsArray.length - 1; k+= 1) {
-				displayLine(pointsArray[k], pointsArray[k+1], color);
+				displayLine(pointsArray[k], pointsArray[k + 1], color);
 			}
 			displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
 		}
 		
+		/*
+	 	 * return a random color
+	 	 */
 		function randomColor() {
 			return "rgba(" + randomValueUntil(255) + "," + randomValueUntil(255) + "," + randomValueUntil(255) + ",1)";
 		}
 		
+		/*
+	 	 * return a random value between 0 and the value passed in parameter
+	 	 */
 		function randomValueUntil(value) {
 			return Math.floor(Math.random() * value);
 		}
