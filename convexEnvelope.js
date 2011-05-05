@@ -8,92 +8,30 @@
  * Protecting global namespace
  */
 (function() {	
-  /************************************************************************************ Some global method
-  */
-  
-	/*
-	 * Returns a random value between [_min, _max].
-	 */
-	Math.randomValue = function (_max, _min) {
-		var min = _min || 0, max = (_max + 1) || 101;
-		return Math.floor((Math.random() * (max - min)) + min);
-	};
-	
-	/*
-	 * Adding the swap method to the Array object prototype
-	 */
-	Array.prototype.swap = function (a, b) {
-	  var tmp = this[b];
-	  this[b] = this[a];
-	  this[a] = tmp;
-	};
-		
-	/*
- 	 * Returns the next index regarding the index parameter and the array length
- 	 */
-	Array.prototype.nextIndex = function (index) {
-		return (index + 1) % this.length;
-	};
-	
-	/*
- 	 * Returns the previous index regarding the index parameter and the array length
- 	 */	
-	Array.prototype.previousIndex = function (index) {
-		return (index - 1 + this.length)  % this.length;
-	};
-	
-	/*
- 	 * Returns the index of the point having the greatest abscissa
- 	 */
-	Array.prototype.maxX = function () {
-		var iMax = 0, i;
-		for (i = 1; i < this.length; i+= 1) {
-			if (this[i].x > this[iMax].x) {
-				iMax = i;
-			}
-		}
-		return iMax;
-	};
-	
-	/*
- 	 * Returns the index of the point having the smallest abscissa
- 	 */
-	Array.prototype.minX = function () {
-		var iMin = 0, i;
-		for (i = 1; i < this.length; i+= 1) {
-			if (this[i].x < this[iMin].x) {
-				iMin = i;
-			}
-		}
-		return iMin;
-	};
-
-	
-	/*
-	 * Returns the dom element object
-	 */
-	var $ = function (divName) {
-		return document.getElementById(divName);
-	};
-	
+	/* 'Objects' */
+	var point, vector;
+	/* Functions */
+	var pointCrossProduct, crossProduct, printPoints, populate;
+	/* Variables */
+	var canvas;
 	/*
 	 * Computes the cross product between three point
 	 */
-	var pointCrossProduct = function (p1, p2, p3) {
+	pointCrossProduct = function (p1, p2, p3) {
 		return (p2.x - p1.x)*(p3.y - p1.y) - (p3.x - p1.x)*(p2.y - p1.y);
 	};
 	
 	/*
 	 * Computes the cross product between two vector
 	 */
-	var crossProduct = function (v1, v2) {
+	crossProduct = function (v1, v2) {
 		return v1.x * v2.y - v1.y * v2.x;
 	};
 	
 	/**
 	 *
 	 */
-	var printPoints = function (pointsArray) {
+	printPoints = function (pointsArray) {
 		var div = $("output"), i;
 		for (i = 0; i < pointsArray.length; i+= 1) {
 			div.innerHTML +=  pointsArray[i];
@@ -112,7 +50,7 @@
 	 *		y  		- number 
 	 *	}
 	 */
-	var point = function (spec) {
+	point = function (spec) {
 		var that = {};
 		var x = spec.x || 0, y = spec.y || 0;
 		that.x = x;
@@ -131,7 +69,7 @@
 	 *		y  		- number 
 	 *	}
 	 */
-	var vector = function(spec) {
+	vector = function(spec) {
 		var that = {};
 		that.x = spec.p2.x - spec.p1.x;
 		that.y = spec.p2.y - spec.p1.y;
@@ -141,7 +79,7 @@
 		return that;
 	};
 	
-	var populate = function (n, array) {
+	populate = function (n, array) {
 		var i = 0;
 		while(i < n) {
 			var randX = Math.floor(Math.random() * 600);
@@ -154,11 +92,24 @@
 		}
 	}
 
-	var canvas;
+	var populateFromJson = function () {
+		var myJsonText, myObject, i;
+		myJsonText = document.getElementById("xml_input").value;
+		if (myJsonText !== "") {
+			myObject = eval('(' + myJsonText + ')');
+			for (i = 0; i < myObject.points.length; i++) {
+				points.push(Object.create(point({
+					x: myObject.points[i].x,
+					y: myObject.points[i].y
+				})));
+			}
+		}	
+	};
+
 	/**
 	 * Affecting onclick function to the execute button
 	 */
-	window.onload = function () {
+	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
 			return execute();
 		};
@@ -167,7 +118,14 @@
 			canvas.displayAllPoints(points);
 		};
 		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
-	};
+	
+		$("parse_button").onclick =  function () {
+			populateFromJson();
+			canvas.displayAllPoints(points);
+		};
+	});
+	
+
 	
 	var points = [];
 	var execute = function () {
