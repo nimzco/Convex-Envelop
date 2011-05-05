@@ -8,6 +8,17 @@
  * Protecting global namespace
  */
 (function() {	
+  /************************************************************************************ Some global method
+  */
+  
+	/*
+	 * Returns a random value between [_min, _max].
+	 */
+	Math.randomValue = function (_max, _min) {
+		var min = _min || 0, max = (_max + 1) || 101;
+		return Math.floor((Math.random() * (max - min)) + min);
+	};
+	
 	/*
 	 * Adding the swap method to the Array object prototype
 	 */
@@ -15,30 +26,73 @@
 	  var tmp = this[b];
 	  this[b] = this[a];
 	  this[a] = tmp;
-	};	
+	};
+		
+	/*
+ 	 * Returns the next index regarding the index parameter and the array length
+ 	 */
+	Array.prototype.nextIndex = function (index) {
+		return (index + 1) % this.length;
+	};
 	
 	/*
-	 * Return the dom element object
+ 	 * Returns the previous index regarding the index parameter and the array length
+ 	 */	
+	Array.prototype.previousIndex = function (index) {
+		return (index - 1 + this.length)  % this.length;
+	};
+	
+	/*
+ 	 * Returns the index of the point having the greatest abscissa
+ 	 */
+	Array.prototype.maxX = function () {
+		var iMax = 0, i;
+		for (i = 1; i < this.length; i+= 1) {
+			if (this[i].x > this[iMax].x) {
+				iMax = i;
+			}
+		}
+		return iMax;
+	};
+	
+	/*
+ 	 * Returns the index of the point having the smallest abscissa
+ 	 */
+	Array.prototype.minX = function () {
+		var iMin = 0, i;
+		for (i = 1; i < this.length; i+= 1) {
+			if (this[i].x < this[iMin].x) {
+				iMin = i;
+			}
+		}
+		return iMin;
+	};
+
+	
+	/*
+	 * Returns the dom element object
 	 */
 	var $ = function (divName) {
 		return document.getElementById(divName);
 	};
 	
 	/*
-	 * Compute the cross product between three point
+	 * Computes the cross product between three point
 	 */
 	var pointCrossProduct = function (p1, p2, p3) {
 		return (p2.x - p1.x)*(p3.y - p1.y) - (p3.x - p1.x)*(p2.y - p1.y);
 	};
 	
 	/*
-	 * Compute the cross product between two vector
+	 * Computes the cross product between two vector
 	 */
 	var crossProduct = function (v1, v2) {
 		return v1.x * v2.y - v1.y * v2.x;
 	};
 	
-	
+	/**
+	 *
+	 */
 	var printPoints = function (pointsArray) {
 		var div = $("output"), i;
 		for (i = 0; i < pointsArray.length; i+= 1) {
@@ -46,7 +100,10 @@
 		}
 		div.innerHTML += "<br />";
 	};
-	
+
+  /************************************************************************************ Defining some objects
+  */
+  
 	/*
 	 * Point object
 	 * Parameter:
@@ -65,6 +122,7 @@
 		};
 		return that;
 	};
+	
 	/*
 	 * Vector object
 	 * Parameter:
@@ -136,15 +194,8 @@
 		p.push(p3);
 		p.push(p4);
 		p.push(p1);
-		
-		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		canvas.displayPolygon(env, canvas.randomColor());
-		
-		printPoints(env);
-		//canvas.displayAllPoints(p);
-		canvas.displayAllPoints(env);
-		
-		function divide(pointsArray) {
+				
+		var divide = function (pointsArray) {
 			if (pointsArray.length < 4) {
 				if(pointsArray.length > 2) {
 					//When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
@@ -162,8 +213,8 @@
 				var rightEnv = divide(rightPointsArray);
 				rightEnv.reverse();//reverse the sub-envelope right
 				
-				var iGauche = maxX(leftEnv); //index of the point having the largest abscissa
-				var iDroite = minX(rightEnv); //index of the point having the smallest abscissa 
+				var iGauche = leftEnv.maxX(); //index of the point having the largest abscissa
+				var iDroite = rightEnv.minX(); //index of the point having the smallest abscissa 
 				var iDroiteFirst = iDroite;
 				var iGaucheFirst = iGauche;
 				
@@ -171,32 +222,32 @@
 			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
 					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
-					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
+					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
+					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
 					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
 					
 					// Cross product between v1 and v2
 					var c1 = crossProduct(v1, v2);
-					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[nextIndex(rightEnv, iDroite)].x)) {
+					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.nextIndex(iDroite)].x)) {
 						finished = false;
-						iDroite = nextIndex(rightEnv, iDroite);
+						iDroite = rightEnv.nextIndex(iDroite);
 					}
 					if (c1 > 0) {
 						finished = false;
-						iDroite = nextIndex(rightEnv, iDroite);
+						iDroite = rightEnv.nextIndex(iDroite);
 					}
 					
 					// Cross product between v3 and v4
 					var c2 = crossProduct(v3, v4);
-					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[nextIndex(leftEnv, iGauche)].x)) {
+					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.nextIndex(iGauche)].x)) {
 						finished = false;
-						iGauche = nextIndex(leftEnv, iGauche);
+						iGauche = leftEnv.nextIndex(iGauche);
 					}
 					if (c2 > 0) {
 						finished = false;
-						iGauche = nextIndex(leftEnv, iGauche);
+						iGauche = leftEnv.nextIndex(iGauche);
 					}
 				}
 				
@@ -207,111 +258,84 @@
 				envelop.push(leftEnv[iGH]);
 				var finished = false;
 				
-				iGauche = maxX(leftEnv); 
-				iDroite = minX(rightEnv); 
+				iGauche = leftEnv.maxX(); 
+				iDroite = rightEnv.minX(); 
 				iDroiteFirst = iDroite;
 				iGaucheFirst = iGauche;
 
 				while (!finished) {
 					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[previousIndex(rightEnv, iDroite)]}));
-					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[previousIndex(leftEnv, iGauche)]}));
+					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.previousIndex(iDroite)]}));
+					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.previousIndex(iGauche)]}));
 					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
 					
 					// Cross product between v1 and v2
 					c1 = crossProduct(v1, v2);
-					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[previousIndex(rightEnv, iDroite)].x)) {
+					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.previousIndex(iDroite)].x)) {
 						finished = false;
-						iDroite = previousIndex(rightEnv, iDroite);
+						iDroite = rightEnv.previousIndex(iDroite);
 					}
 					if (c1 < 0) {
 						finished = false;
-						iDroite = previousIndex(rightEnv, iDroite);
+						iDroite = rightEnv.previousIndex(iDroite);
 					}
 					
 					// Cross product between v3 and v4
 					c2 = crossProduct(v3, v4);
-					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[previousIndex(leftEnv, iGauche)].x)) {
+					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.previousIndex(iGauche)].x)) {
 						finished = false;
-						iGauche = previousIndex(leftEnv, iGauche);
+						iGauche = leftEnv.previousIndex(iGauche);
 					}
 					if (c2 < 0) {
 						finished = false;
-						iGauche = previousIndex(leftEnv, iGauche);
+						iGauche = leftEnv.previousIndex(iGauche);
 					}
 				}
 				
 				var i = iDH;
 				while (i != iDroite) {
 					envelop.push(rightEnv[i]);
-					i = nextIndex(rightEnv, i); 
+					i = rightEnv.nextIndex(i); 
 				}
 				envelop.push(rightEnv[iDroite]);	
 						
 				i = iGauche;
 				while (i != iGH) {
 					envelop.push(leftEnv[i]);
-					i = previousIndex(leftEnv, i); 
+					i = leftEnv.previousIndex(i); 
 				}
 				envelop.reverse();
 				return envelop;
 			}
 		}
-		
-		function joinTop(finished, leftEnv, rightEnv, iGauche, iDroite) {
+		var joinTop = function (finished, leftEnv, rightEnv, iGauche, iDroite) {
 			while (!finished) {
-					finished = true;
-					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
-					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
-					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+				finished = true;
+				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
+				var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
+				var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+			
+				if (crossProduct(v1, v2) >= 0) {
+					finished = false;
+					iDroite = (iDroite + 1) % rightEnv.length;
+				}
 				
-					if (crossProduct(v1, v2) >= 0) {
-						finished = false;
-						iDroite = (iDroite + 1) % rightEnv.length;
-					}
-					
-					if (crossProduct(v3, v4) >= 0) {
-						finished = false;
-						iGauche = (iGauche + 1)  % leftEnv.length;
-					}
-				}
-		}
-		
-		function nextIndex(array, index) {
-			return (index + 1) % array.length;
-		}
-		
-		function previousIndex(array, index) {
-			return (index - 1 + array.length)  % array.length;
-		}
-		
-		/*
-	 	 * returns the index of the point having the largest abscissa
-	 	 */
-		function maxX(array) {
-			var iMax = 0, i;
-			for (i = 1; i < array.length; i+= 1) {
-				if (array[i].x > array[iMax].x) {
-					iMax = i;
+				if (crossProduct(v3, v2) >= 0) {
+					finished = false;
+					iGauche = (iGauche + 1)  % leftEnv.length;
 				}
 			}
-			return iMax;
-		}
+		};
+
+		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		canvas.displayPolygon(env, canvas.randomColor());
 		
-		/*
-	 	 * returns the index of the point having the smallest abscissa
-	 	 */
-		function minX(array) {
-			var iMin = 0, i;
-			for (i = 1; i < array.length; i+= 1) {
-				if (array[i].x < array[iMin].x) {
-					iMin = i;
-				}
-			}
-			return iMin;
-		}
+		printPoints(env);
+		//canvas.displayAllPoints(p);
+		canvas.displayAllPoints(env);
+
 	};
 })();

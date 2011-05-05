@@ -1,11 +1,3 @@
-/*
- * Returns a random value between [_min, _max].
- */
-Math.randomValue = function (_max, _min) {
-	var min = _min || 0, max = (_max + 1) || 101;
-	return Math.floor((Math.random() * (max - min)) + min);
-}
-
 window.convlexEnvelop = {};
 window.convlexEnvelop.viewer = function (canvasDiv){
 	var that = {};
