@@ -7,8 +7,7 @@
 /**
  * Protecting global namespace
  */
-(function() {
-	
+(function() {	
 	/*
 	 * Adding the swap method to the Array object prototype
 	 */
@@ -96,82 +95,8 @@
 			})));
 		}
 	}
-	
-	var canvasView = function () {
-		var that = {};
 
-		/*
-	 	 * Display a colored point
-	 	 */
-		that.displayPoint = function (point, color) {
-			var exemple = $('exemple');
-			var context = exemple.getContext('2d');
-			context.fillStyle = color || "rgba(0,0,0,1)";
-			context.beginPath();
-			context.arc(point.x,600 - point.y, 3, 0, Math.PI * 2,true);
-			context.closePath();
-			context.fill();
-		}
-
-		/*
-		 * Display all points within the array passed in parameter
-		 */
-		that.displayAllPoints = function (array) {
-			var i;
-			for(i = 0; i < array.length; i += 1) {
-				displayPoint(array[i], canvas.randomColor());
-			}
-		};
-
-		/*
-	 	 * display a colored line between the point a and the point b
-	 	 */
-		that.displayLine = function (a, b, color) {
-			var exemple = $('exemple');
-			var context = exemple.getContext('2d');
-		 	context.lineWidth=2;
-		  context.lineCap='round'; 
-			context.moveTo(a.x,600 - a.y);
-			context.lineTo(b.x,600 - b.y);
-			context.strokeStyle = color || "rgba(0,0,0,1)";;
-			context.stroke();
-		}
-		/*
-		 * /!\ Does not work /!\
-	 	 * Clears the canvas 
-	 	 * TODO 
-	 	 */
-		that.clearCanvas = function () {
-			var exemple = $('exemple');
-			var context = exemple.getContext('2d');
-		}
-
-		/*
-	 	 * Displays the closed path of a polygon with the array of polygon's vertices
-	 	 */
-		that.displayPolygon = function (pointsArray, _color) {
-			var k, color = _color || "rgba(0,0,0,1)";
-			for (k = 0; k < pointsArray.length - 1; k+= 1) {
-				displayLine(pointsArray[k], pointsArray[k + 1], color);
-			}
-			displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
-		}
-		/*
-	 	 * Returns a random color
-	 	 */
-		that.randomColor = function () {
-			return "rgba(" + randomValueUntil(200) + "," + randomValueUntil(200) + "," + randomValueUntil(200) + ",1)";
-		}
-		return that;
-	}
-	var canvas = Object.create(canvasView);
-	
-	/*
- 	 * Returns a random value between 0 and the value passed in parameter
- 	 */
-	function randomValueUntil(value) {
-		return Math.floor(Math.random() * value);
-	}
+	var canvas;
 	/**
 	 * Affecting onclick function to the execute button
 	 */
@@ -183,6 +108,7 @@
 			populate($('input').value, points);
 			canvas.displayAllPoints(points);
 		};
+		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
 	};
 	
 	var points = [];
