@@ -11,9 +11,9 @@
 	/* 'Objects' */
 	var point, vector;
 	/* Functions */
-	var pointCrossProduct, crossProduct, printPoints, populate;
+	var pointCrossProduct, crossProduct, printPoints, populate, exportPoints, joinTop, divide, populateFromJson, exportToJson;
 	/* Variables */
-	var canvas;
+	var canvas, points = [], env = [];
 	/*
 	 * Computes the cross product between three point
 	 */
@@ -92,8 +92,8 @@
 		}
 	}
 
-	var populateFromJson = function () {
-		var myJsonText, myObject, i;
+	populateFromJson = function () {
+		var myJsonText, myObject, i, envelop;
 		myJsonText = document.getElementById("xml_input").value;
 		if (myJsonText !== "") {
 			myObject = eval('(' + myJsonText + ')');
@@ -103,8 +103,40 @@
 					y: myObject.points[i].y
 				})));
 			}
+			if (typeof myObject.envelop !== "undefined") {
+				envelop = [];
+				for (i = 0; i < myObject.envelop.length; i++) {
+					envelop.push(Object.create(point({
+						x: myObject.envelop[i].x,
+						y: myObject.envelop[i].y
+					})));
+				}
+				canvas.displayPolygon(envelop);			
+			}
 		}	
 	};
+	exportToJson = function (pointsArray, envelop) {
+		var json, i;
+		if (points.length > 0) {
+			json = "{ 'points': [";
+			for(i = 0; i < pointsArray.length; i++) {
+				json += "{ 'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
+				json += (i < (pointsArray.length - 1) ? "," : "");
+			}
+			json += "]";
+			if (envelop.length > 0) {
+				json += ", 'envelop':";
+				json += " [";
+				for(i = 0; i < envelop.length; i++) {
+					json += "{ 'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
+					json += (i < (envelop.length - 1) ? "," : "");
+				}
+				json += "]";
+			}
+			json += "}";
+		}
+		return json || "";
+	}
 
 	/**
 	 * Affecting onclick function to the execute button
@@ -116,28 +148,22 @@
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
 			canvas.displayAllPoints(points);
-		};
-		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
-	
+		};	
 		$("parse_button").onclick =  function () {
 			populateFromJson();
 			canvas.displayAllPoints(points);
 		};
+		$("export_button").onclick = function () {
+			$('export_div').innerHTML = exportToJson(points, env);
+		}
+		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
+	
 	});
 	
+	
+	
 
-	
-	var points = [];
-	var execute = function () {
-	
-		points.print = function (outputDiv) {
-			var div = $(outputDiv), i;
-			div.innerHTML = "";
-			for (i = 0; i < points.length; i+= 1) {
-				div.innerHTML +=  points[i];
-			}
-		};
-				
+	var execute = function () {				
 		//canvas.clearCanvas();
 		
 		var p1 = point({x: 0, y: 0});
@@ -153,7 +179,7 @@
 		p.push(p4);
 		p.push(p1);
 				
-		var divide = function (pointsArray) {
+		divide = function (pointsArray) {
 			if (pointsArray.length < 4) {
 				if(pointsArray.length > 2) {
 					//When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
@@ -268,13 +294,14 @@
 				return envelop;
 			}
 		}
-		var joinTop = function (finished, leftEnv, rightEnv, iGauche, iDroite) {
+		joinTop = function (finished, leftEnv, rightEnv, iGauche, iDroite) {
+			var v1, v2, v3, v4;
 			while (!finished) {
 				finished = true;
-				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
-				var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
-				var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+				v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+				v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
+				v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
+				v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 			
 				if (crossProduct(v1, v2) >= 0) {
 					finished = false;
@@ -288,7 +315,7 @@
 			}
 		};
 
-		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		env = divide(points.sort(function(a,b) { return a.x - b.x;}));
 		canvas.displayPolygon(env, canvas.randomColor());
 		
 		printPoints(env);
