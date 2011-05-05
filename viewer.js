@@ -65,9 +65,7 @@ window.convlexEnvelop.viewer = function (canvasDiv){
 	};
 
 	/*
-	 * /!\ Does not work /!\
  	 * Clears the canvas 
- 	 * TODO 
  	 */
 	that.clear = function () {
 		//var context = canvas.getContext('2d');
