@@ -96,20 +96,14 @@
 			})));
 		}
 	}
-	/*
-	 * Display all points of the array passed in parameter
-	 */
-	var displayAllPoints = function (array) {
-		var i;
-		for(i = 0; i < array.length; i += 1) {
-			displayPoint(array[i], randomColor());
-			}
-		}
-					
+	
+	var canvasView = function () {
+		var that = {};
+
 		/*
 	 	 * Display a colored point
 	 	 */
-		function displayPoint(point, color) {
+		that.displayPoint = function (point, color) {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
 			context.fillStyle = color || "rgba(0,0,0,1)";
@@ -118,11 +112,21 @@
 			context.closePath();
 			context.fill();
 		}
-		
+
+		/*
+		 * Display all points within the array passed in parameter
+		 */
+		that.displayAllPoints = function (array) {
+			var i;
+			for(i = 0; i < array.length; i += 1) {
+				displayPoint(array[i], canvas.randomColor());
+			}
+		};
+
 		/*
 	 	 * display a colored line between the point a and the point b
 	 	 */
-		function displayLine(a, b, color) {
+		that.displayLine = function (a, b, color) {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
 		 	context.lineWidth=2;
@@ -132,42 +136,42 @@
 			context.strokeStyle = color || "rgba(0,0,0,1)";;
 			context.stroke();
 		}
-		
 		/*
 		 * /!\ Does not work /!\
 	 	 * Clears the canvas 
 	 	 * TODO 
 	 	 */
-		function clearCanvas() {
+		that.clearCanvas = function () {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
-			
 		}
-		
+
 		/*
 	 	 * Displays the closed path of a polygon with the array of polygon's vertices
 	 	 */
-		function displayPolygon(pointsArray, _color) {
+		that.displayPolygon = function (pointsArray, _color) {
 			var k, color = _color || "rgba(0,0,0,1)";
 			for (k = 0; k < pointsArray.length - 1; k+= 1) {
 				displayLine(pointsArray[k], pointsArray[k + 1], color);
 			}
 			displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
 		}
-		
 		/*
 	 	 * Returns a random color
 	 	 */
-		function randomColor() {
+		that.randomColor = function () {
 			return "rgba(" + randomValueUntil(200) + "," + randomValueUntil(200) + "," + randomValueUntil(200) + ",1)";
 		}
-		
-		/*
-	 	 * Returns a random value between 0 and the value passed in parameter
-	 	 */
-		function randomValueUntil(value) {
-			return Math.floor(Math.random() * value);
-		}
+		return that;
+	}
+	var canvas = Object.create(canvasView);
+	
+	/*
+ 	 * Returns a random value between 0 and the value passed in parameter
+ 	 */
+	function randomValueUntil(value) {
+		return Math.floor(Math.random() * value);
+	}
 	/**
 	 * Affecting onclick function to the execute button
 	 */
@@ -177,7 +181,7 @@
 		};
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
-			displayAllPoints(points);
+			canvas.displayAllPoints(points);
 		};
 	};
 	
@@ -192,7 +196,7 @@
 			}
 		};
 				
-		//clearCanvas();
+		//canvas.clearCanvas();
 		
 		var p1 = point({x: 0, y: 0});
 		var p2 = point({x: 0, y: 200});
@@ -208,11 +212,11 @@
 		p.push(p1);
 		
 		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		displayPolygon(env, randomColor());
+		canvas.displayPolygon(env, canvas.randomColor());
 		
 		printPoints(env);
-		//displayAllPoints(p);
-		displayAllPoints(env);
+		//canvas.displayAllPoints(p);
+		canvas.displayAllPoints(env);
 		
 		function divide(pointsArray) {
 			if (pointsArray.length < 4) {
