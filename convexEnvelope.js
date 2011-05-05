@@ -97,23 +97,22 @@
 		}
 	}
 	/*
-	 	 * display all points of the array passed in parameter
-	 	 */
-	function displayAllPoints(array) {
+	 * Display all points of the array passed in parameter
+	 */
+	var displayAllPoints = function (array) {
 		var i;
 		for(i = 0; i < array.length; i += 1) {
 			displayPoint(array[i], randomColor());
 			}
 		}
-		
-				
+					
 		/*
-	 	 * display a colored point
+	 	 * Display a colored point
 	 	 */
 		function displayPoint(point, color) {
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
-			context.fillStyle = color;
+			context.fillStyle = color || "rgba(0,0,0,1)";
 			context.beginPath();
 			context.arc(point.x,600 - point.y, 3, 0, Math.PI * 2,true);
 			context.closePath();
@@ -131,12 +130,13 @@
 		  context.lineCap='round'; 
 			context.moveTo(a.x,600 - a.y);
 			context.lineTo(b.x,600 - b.y);
-			context.strokeStyle = color;
+			context.strokeStyle = color || "rgba(0,0,0,1)";;
 			context.stroke();
 		}
 		
 		/*
-	 	 * clear the canvas /!\ Does not work
+		 * /!\ Does not work /!\
+	 	 * Clears the canvas 
 	 	 * TODO 
 	 	 */
 		function clearCanvas() {
@@ -146,10 +146,10 @@
 		}
 		
 		/*
-	 	 * display the closed path of a polygon with the array of polygon's vertices
+	 	 * Displays the closed path of a polygon with the array of polygon's vertices
 	 	 */
-		function displayPolygon(pointsArray, color) {
-			var k;
+		function displayPolygon(pointsArray, _color) {
+			var k, color = _color || "rgba(0,0,0,1)";
 			for (k = 0; k < pointsArray.length - 1; k+= 1) {
 				displayLine(pointsArray[k], pointsArray[k + 1], color);
 			}
@@ -157,14 +157,14 @@
 		}
 		
 		/*
-	 	 * return a random color
+	 	 * Returns a random color
 	 	 */
 		function randomColor() {
 			return "rgba(" + randomValueUntil(200) + "," + randomValueUntil(200) + "," + randomValueUntil(200) + ",1)";
 		}
 		
 		/*
-	 	 * return a random value between 0 and the value passed in parameter
+	 	 * Returns a random value between 0 and the value passed in parameter
 	 	 */
 		function randomValueUntil(value) {
 			return Math.floor(Math.random() * value);
