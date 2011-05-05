@@ -134,7 +134,6 @@
 	 	 * display a colored line between the point a and the point b
 	 	 */
 		function displayLine(a, b, color) {
-/* 			alert(a.print() + ", " + b.print()); */
 			var exemple = $('exemple');
 			var context = exemple.getContext('2d');
 		 	context.lineWidth=2;
@@ -204,12 +203,11 @@
 		
 				
 		//clearCanvas();
-/*
 		
-		var p1 = point({x: 100, y: 200});
-		var p2 = point({x: 200, y: 200});
-		var p3 = point({x: 300, y: 200});  
-		var p4 = point({x: 400, y: 200});		
+		var p1 = point({x: 0, y: 0});
+		var p2 = point({x: 0, y: 200});
+		var p3 = point({x: 100, y: 200});  
+		var p4 = point({x: 200, y: 400});		
 		
 		//cas limite : points alignés
 		
@@ -219,11 +217,12 @@
 		p.push(p4);
 		p.push(p1);
 		
-*/
 		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
 		displayPolygon(env, randomColor());
 		
+		printPoints(env);
 		//displayAllPoints(p);
+		displayAllPoints(env);
 		
 		function divide(pointsArray) {
 			if (pointsArray.length < 4) {
@@ -251,28 +250,31 @@
 				var finished = false;
 			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
-					finished = true;
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
 					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
+					finished = true;
+					
+					// Cross product between v1 and v2
 					var c1 = crossProduct(v1, v2);
 					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[nextIndex(rightEnv, iDroite)].x)) {
 						finished = false;
 						iDroite = nextIndex(rightEnv, iDroite);
 					}
-					if (c1 >= 0) {
+					if (c1 > 0) {
 						finished = false;
 						iDroite = nextIndex(rightEnv, iDroite);
 					}
 					
+					// Cross product between v3 and v4
 					var c2 = crossProduct(v3, v4);
 					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[nextIndex(leftEnv, iGauche)].x)) {
 						finished = false;
 						iGauche = nextIndex(leftEnv, iGauche);
 					}
-					if (c2 >= 0) {
+					if (c2 > 0) {
 						finished = false;
 						iGauche = nextIndex(leftEnv, iGauche);
 					}
@@ -297,6 +299,8 @@
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
+					
+					// Cross product between v1 and v2
 					c1 = crossProduct(v1, v2);
 					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[previousIndex(rightEnv, iDroite)].x)) {
 						finished = false;
@@ -306,6 +310,8 @@
 						finished = false;
 						iDroite = previousIndex(rightEnv, iDroite);
 					}
+					
+					// Cross product between v3 and v4
 					c2 = crossProduct(v3, v4);
 					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[previousIndex(leftEnv, iGauche)].x)) {
 						finished = false;
