@@ -5,21 +5,9 @@
  */
 
 /**
- * Protecting namespace
+ * Protecting global namespace
  */
 (function() {
-
-	/*
-	 * Adding the beget method to Object which instanciate an object
-	 * Code took from "Javascript - The Good Parts" by Douglas Crockford.
-	 */
-	if (typeof Object.beget !== 'function') { 
-		Object.beget = function (o) {
-			var F = function () {};
-			F.prototype = o; 
-			return new F();
-		}
-	};
 	
 	/*
 	 * Adding the swap method to the Array object prototype
@@ -28,8 +16,7 @@
 	  var tmp = this[b];
 	  this[b] = this[a];
 	  this[a] = tmp;
-	};
-	
+	};	
 	
 	/*
 	 * Return the dom element object
@@ -56,7 +43,7 @@
 	var printPoints = function (pointsArray) {
 		var div = $("output"), i;
 		for (i = 0; i < pointsArray.length; i+= 1) {
-			div.innerHTML +=  pointsArray[i].print();
+			div.innerHTML +=  pointsArray[i];
 		}
 		div.innerHTML += "<br />";
 	};
@@ -64,17 +51,17 @@
 	/*
 	 * Point object
 	 * Parameter:
-	 *	Hash - spec{ 
-	 *					x,
-	 *					y
-	 *				}
+	 *	spec{		-  Hash
+	 *		x, 		- number
+	 *		y  		- number 
+	 *	}
 	 */
 	var point = function (spec) {
 		var that = {};
-		var x = spec.x, y = spec.y;
+		var x = spec.x || 0, y = spec.y || 0;
 		that.x = x;
 		that.y = y;
-		that.print = function() {
+		that.toString = function() {
 			return "(" + x + "," + y + ") ";
 		};
 		return that;
@@ -82,15 +69,18 @@
 	/*
 	 * Vector object
 	 * Parameter:
-	 *	Hash - spec{ 
-	 *					p1,
-	 *					p2
-	 *				}
+	 *	spec{		-  Hash
+	 *		x, 		- number
+	 *		y  		- number 
+	 *	}
 	 */
 	var vector = function(spec) {
 		var that = {};
 		that.x = spec.p2.x - spec.p1.x;
 		that.y = spec.p2.y - spec.p1.y;
+		that.toString = function() {
+			return "[" + p1 + "," + p2 + "]";
+		};
 		return that;
 	};
 	
@@ -100,7 +90,7 @@
 			var randX = Math.floor(Math.random() * 600);
 			var randY = Math.floor(Math.random() * 600);
 			i += 1;
-			array.push(Object.beget(point({
+			array.push(Object.create(point({
 				x: randX,
 				y: randY
 			})));
@@ -190,17 +180,17 @@
 			displayAllPoints(points);
 		};
 	};
+	
 	var points = [];
 	var execute = function () {
-		
+	
 		points.print = function (outputDiv) {
 			var div = $(outputDiv), i;
 			div.innerHTML = "";
 			for (i = 0; i < points.length; i+= 1) {
-				div.innerHTML +=  points[i].print();
+				div.innerHTML +=  points[i];
 			}
 		};
-		
 				
 		//clearCanvas();
 		
@@ -250,10 +240,10 @@
 				var finished = false;
 			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
-					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
-					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
+					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
+					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
 					
@@ -293,10 +283,10 @@
 				iGaucheFirst = iGauche;
 
 				while (!finished) {
-					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[previousIndex(rightEnv, iDroite)]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[previousIndex(leftEnv, iGauche)]}));
-					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[previousIndex(rightEnv, iDroite)]}));
+					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[previousIndex(leftEnv, iGauche)]}));
+					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
 					
@@ -343,10 +333,10 @@
 		function joinTop(finished, leftEnv, rightEnv, iGauche, iDroite) {
 			while (!finished) {
 					finished = true;
-					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
-					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
+					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
+					var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
+					var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 				
 					if (crossProduct(v1, v2) >= 0) {
 						finished = false;
