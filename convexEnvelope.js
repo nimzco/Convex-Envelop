@@ -170,7 +170,7 @@
 	 	 * return a random color
 	 	 */
 		function randomColor() {
-			return "rgba(" + randomValueUntil(255) + "," + randomValueUntil(255) + "," + randomValueUntil(255) + ",1)";
+			return "rgba(" + randomValueUntil(200) + "," + randomValueUntil(200) + "," + randomValueUntil(200) + ",1)";
 		}
 		
 		/*
@@ -204,10 +204,26 @@
 		
 				
 		//clearCanvas();
-		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		displayPolygon(env, "#000000");
+/*
 		
-		//printPoints(env);
+		var p1 = point({x: 100, y: 200});
+		var p2 = point({x: 200, y: 200});
+		var p3 = point({x: 300, y: 200});  
+		var p4 = point({x: 400, y: 200});		
+		
+		//cas limite : points alignés
+		
+		var p = [];
+		p.push(p2);
+		p.push(p3);
+		p.push(p4);
+		p.push(p1);
+		
+*/
+		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		displayPolygon(env, randomColor());
+		
+		//displayAllPoints(p);
 		
 		function divide(pointsArray) {
 			if (pointsArray.length < 4) {
@@ -229,23 +245,36 @@
 				
 				var iGauche = maxX(leftEnv); //index of the point having the largest abscissa
 				var iDroite = minX(rightEnv); //index of the point having the smallest abscissa 
-
+				var iDroiteFirst = iDroite;
+				var iGaucheFirst = iGauche;
+				
 				var finished = false;
 			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
 					finished = true;
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite + 1) % rightEnv.length]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche + 1) % leftEnv.length]}));
+					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
+					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
-					if (crossProduct(v1, v2) >= 0) {
+					
+					var c1 = crossProduct(v1, v2);
+					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[nextIndex(rightEnv, iDroite)].x)) {
 						finished = false;
-						iDroite = (iDroite + 1) % rightEnv.length;
+						iDroite = nextIndex(rightEnv, iDroite);
+					}
+					if (c1 >= 0) {
+						finished = false;
+						iDroite = nextIndex(rightEnv, iDroite);
 					}
 					
-					if (crossProduct(v3, v4) >= 0) {
+					var c2 = crossProduct(v3, v4);
+					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[nextIndex(leftEnv, iGauche)].x)) {
 						finished = false;
-						iGauche = (iGauche + 1)  % leftEnv.length;
+						iGauche = nextIndex(leftEnv, iGauche);
+					}
+					if (c2 >= 0) {
+						finished = false;
+						iGauche = nextIndex(leftEnv, iGauche);
 					}
 				}
 				
@@ -255,36 +284,50 @@
 				var envelop = [];
 				envelop.push(leftEnv[iGH]);
 				var finished = false;
+				
 				iGauche = maxX(leftEnv); 
 				iDroite = minX(rightEnv); 
+				iDroiteFirst = iDroite;
+				iGaucheFirst = iGauche;
 
 				while (!finished) {
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite - 1 + rightEnv.length) % rightEnv.length]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche - 1 + leftEnv.length) % leftEnv.length]}));
+					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[previousIndex(rightEnv, iDroite)]}));
+					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[previousIndex(leftEnv, iGauche)]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 					
 					finished = true;
-					if (crossProduct(v1, v2) <= 0) {
+					c1 = crossProduct(v1, v2);
+					if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[previousIndex(rightEnv, iDroite)].x)) {
 						finished = false;
-						iDroite = (iDroite - 1 + rightEnv.length) % rightEnv.length;
+						iDroite = previousIndex(rightEnv, iDroite);
 					}
-					if (crossProduct(v3, v4) <= 0) {
+					if (c1 < 0) {
 						finished = false;
-						iGauche = (iGauche - 1 + leftEnv.length)  % leftEnv.length;
+						iDroite = previousIndex(rightEnv, iDroite);
+					}
+					c2 = crossProduct(v3, v4);
+					if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[previousIndex(leftEnv, iGauche)].x)) {
+						finished = false;
+						iGauche = previousIndex(leftEnv, iGauche);
+					}
+					if (c2 < 0) {
+						finished = false;
+						iGauche = previousIndex(leftEnv, iGauche);
 					}
 				}
 				
 				var i = iDH;
 				while (i != iDroite) {
 					envelop.push(rightEnv[i]);
-					i = (i + 1 + rightEnv.length) % rightEnv.length; 
+					i = nextIndex(rightEnv, i); 
 				}
-				envelop.push(rightEnv[iDroite]);			
-				var j = iGauche;
-				while (j != iGH) {
-					envelop.push(leftEnv[j]);
-					j = (j - 1 + leftEnv.length) % leftEnv.length; 
+				envelop.push(rightEnv[iDroite]);	
+						
+				i = iGauche;
+				while (i != iGH) {
+					envelop.push(leftEnv[i]);
+					i = previousIndex(leftEnv, i); 
 				}
 				envelop.reverse();
 				return envelop;
@@ -295,8 +338,8 @@
 			while (!finished) {
 					finished = true;
 					var v1 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[(iDroite + 1) % rightEnv.length]}));
-					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[(iGauche + 1) % leftEnv.length]}));
+					var v2 = Object.beget(vector({p1: leftEnv[iGauche], p2: rightEnv[nextIndex(rightEnv, iDroite)]}));
+					var v3 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[nextIndex(leftEnv, iGauche)]}));
 					var v4 = Object.beget(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
 				
 					if (crossProduct(v1, v2) >= 0) {
@@ -309,6 +352,14 @@
 						iGauche = (iGauche + 1)  % leftEnv.length;
 					}
 				}
+		}
+		
+		function nextIndex(array, index) {
+			return (index + 1) % array.length;
+		}
+		
+		function previousIndex(array, index) {
+			return (index - 1 + array.length)  % array.length;
 		}
 		
 		/*
