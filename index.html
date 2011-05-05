@@ -15,6 +15,7 @@
 			<button id="execute_button">Execute</button>
 			<button id="populate_button">Populate</button>
 			<button id="export_button">Export to JSON</button>
+			<button id="clear_button">Clear Canvas</button>
 		</fieldset>
 		<div id="output">
 		</div>
@@ -23,7 +24,8 @@
 			Votre navigateur ne supporte pas les canvas.
 		</canvas>
 		<button id="parse_button">Populate from Json</button> <br />
-		<textarea id="xml_input" cols="100" rows="20" ></textarea>
+		<div id="error"></div>
+		<textarea id="input_json" cols="100" rows="20" ></textarea>
 		<div id="export_div"></div>
 	</body>
 </html>

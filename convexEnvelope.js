@@ -13,7 +13,8 @@
 	/* Functions */
 	var pointCrossProduct, crossProduct, printPoints, populate, exportPoints, joinTop, divide, populateFromJson, exportToJson;
 	/* Variables */
-	var canvas, points = [], env = [];
+	var canvas, points = [], envelop = [];
+
 	/*
 	 * Computes the cross product between three point
 	 */
@@ -92,29 +93,38 @@
 		}
 	}
 
+	/**
+	 * Parses the input to get Json and 
+   */
 	populateFromJson = function () {
-		var myJsonText, myObject, i, envelop;
-		myJsonText = document.getElementById("xml_input").value;
+		var myJsonText, myObject, i;
+		myJsonText = $("input_json").value;
 		if (myJsonText !== "") {
-			myObject = eval('(' + myJsonText + ')');
-			for (i = 0; i < myObject.points.length; i++) {
-				points.push(Object.create(point({
-					x: myObject.points[i].x,
-					y: myObject.points[i].y
-				})));
-			}
-			if (typeof myObject.envelop !== "undefined") {
-				envelop = [];
-				for (i = 0; i < myObject.envelop.length; i++) {
-					envelop.push(Object.create(point({
-						x: myObject.envelop[i].x,
-						y: myObject.envelop[i].y
+			try {
+				myObject = eval('(' + myJsonText + ')');
+				for (i = 0; i < myObject.points.length; i++) {
+					points.push(Object.create(point({
+						x: myObject.points[i].x,
+						y: myObject.points[i].y
 					})));
 				}
-				canvas.displayPolygon(envelop);			
+				if (typeof myObject.envelop !== "undefined") {
+					for (i = 0; i < myObject.envelop.length; i++) {
+						envelop.push(Object.create(point({
+							x: myObject.envelop[i].x,
+							y: myObject.envelop[i].y
+						})));
+					}
+				}
+			} catch (e) {
+				$("error").innerHTML = "Your JSON Input is malformatted. Error: "  + e;
 			}
 		}	
 	};
+	
+	/**
+	 * Returns points and envelop into Json format for the parser
+   */
 	exportToJson = function (pointsArray, envelop) {
 		var json, i;
 		if (points.length > 0) {
@@ -152,12 +162,16 @@
 		$("parse_button").onclick =  function () {
 			populateFromJson();
 			canvas.displayAllPoints(points);
+			canvas.displayPolygon(envelop);
 		};
 		$("export_button").onclick = function () {
-			$('export_div').innerHTML = exportToJson(points, env);
-		}
+			$('export_div').innerHTML = exportToJson(points, envelop);
+		};
 		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
-	
+		$("clear_button").onclick = function () {
+			canvas.clear();
+			points = [];
+		};	
 	});
 	
 	
@@ -315,12 +329,12 @@
 			}
 		};
 
-		env = divide(points.sort(function(a,b) { return a.x - b.x;}));
-		canvas.displayPolygon(env, canvas.randomColor());
+		envelop = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		canvas.displayPolygon(envelop, canvas.randomColor());
 		
-		printPoints(env);
+		printPoints(envelop);
 		//canvas.displayAllPoints(p);
-		canvas.displayAllPoints(env);
+		canvas.displayAllPoints(envelop);
 
 	};
 })();
