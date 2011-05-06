@@ -10,24 +10,42 @@
 	  <link href="global.css" media="screen" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
+		<h1>Visualisateur</h1>
 		<fieldset>
-			<legend>Enter a value</legend>
-			<input type="text" id="input" value="6"/>
+			<p><label for="input">Number of points :</label>
+			<input type="text" id="input" value="6"/></p>
 			<br />
 			<button id="execute_button">Execute</button>
-			<button id="populate_button">Populate</button>
+			<button id="populate_button">Add points</button>
 			<button id="export_button">Export to JSON</button>
 			<button id="clear_button">Clear</button>
 		</fieldset>
-		<div id="output">
-		</div>
-		<h3>Size of the Canvas: 600x600</h3>
+
+		<p>Size of the Canvas: 600x600</p>
 		<canvas id="exemple" width="600" height="600">
 			Votre navigateur ne supporte pas les canvas.
 		</canvas>
-		<button id="parse_button">Populate from Json</button> <br />
-		<div id="error"></div>
+		<div id="output">
+		</div>
 		<textarea id="input_json" cols="100" rows="20" ></textarea>
-		<div id="export_div"></div>
+		<button id="parse_button">Draw from Json</button> <br />
+		<div id="error"></div>
+		<h2>Format du Json</h2>
+
+		<pre>
+{
+  'points': [
+    {'x': 29, 'y':119},
+    {'x': 105, 'y':65},
+    {'x': 257, 'y':322},
+    {'x': 259, 'y':445},
+    {'x': 525, 'y':257}],
+  'envelop': [
+    {'x': 105, 'y':65},
+    {'x': 525, 'y':257},
+    {'x': 259, 'y':445},
+    {'x': 29, 'y':119}]
+}
+		</pre>
 	</body>
 </html>

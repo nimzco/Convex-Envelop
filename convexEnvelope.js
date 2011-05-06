@@ -68,24 +68,23 @@
    */
 	exportToJson = function (pointsArray, envelop) {
 		var json, i;
-		json = "{ ";
+		json = "{";
 		if (points.length > 0) {
-			json += "'points': [";
+			json += "\n\t'points': [\n";
 			for(i = 0; i < pointsArray.length; i++) {
-				json += "{ 'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
-				json += (i < (pointsArray.length - 1) ? "," : "");
+				json += "\t\t{'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
+				json += (i < (pointsArray.length - 1) ? ",\n" : "");
 			}
-			json += "]";
+			json += "]\n";
 		}
 		json += (pointsArray.length > 0 && envelop.length > 0) ? "," : "";
 		if (envelop.length > 0) {
-			json += "'envelop':";
-			json += " [";
+			json += "\n\t'envelop': [\n";
 			for(i = 0; i < envelop.length; i++) {
-				json += "{ 'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
-				json += (i < (envelop.length - 1) ? "," : "");
+				json += "\t\t{'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
+				json += (i < (envelop.length - 1) ? ",\n" : "");
 			}
-			json += "]";
+			json += "]\n";
 		}
 		json += "}";
 		return json || "";
@@ -112,7 +111,7 @@
 			canvas.displayPolygon(envelop);
 		};
 		$("export_button").onclick = function () {
-			$('export_div').innerHTML = exportToJson(points, envelop);
+			$('input_json').value = exportToJson(points, envelop);
 		};
 		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
 		$("clear_button").onclick = function () {
