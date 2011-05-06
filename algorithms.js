@@ -6,7 +6,11 @@
  */
  
 
-function executeDivideAndConquer (points) {
+if (typeof window.convlexEnvelop === "undefined") {
+	window.convlexEnvelop = {};
+}
+window.convlexEnvelop.algorithms = function () {
+	var that = {};
 	var m = window.convlexEnvelop.models();
 	/* Getting shortcut name for method within window.convlexEnvelop.models */
 	var point = m.point;
@@ -16,7 +20,7 @@ function executeDivideAndConquer (points) {
 	var printPoints = m.printPoints;
 	var divideAndConquer;
 	
-	divideAndConquer = function (pointsArray) {
+	_divideAndConquer = function (pointsArray) {
 		if (pointsArray.length < 4) {
 			if(pointsArray.length > 2) {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
@@ -31,8 +35,8 @@ function executeDivideAndConquer (points) {
 			leftPointsArray = pointsArray.slice(0, median);
 			rightPointsArray = pointsArray.slice(median, pointsArray.length);
 
-			leftEnv = divideAndConquer(leftPointsArray);
-			rightEnv = divideAndConquer(rightPointsArray);
+			leftEnv = _divideAndConquer(leftPointsArray);
+			rightEnv = _divideAndConquer(rightPointsArray);
 			rightEnv.reverse();//reverse the sub-envelope right
 			
 			leftIndex = leftEnv.maxX(); //index of the point having the largest abscissa
@@ -116,7 +120,7 @@ function executeDivideAndConquer (points) {
 			return envelop;
 		}
 	}
+	that.divideAndConquer = _divideAndConquer;
+	return that;
 
-	envelop = divideAndConquer(points);
-	return envelop;
 };

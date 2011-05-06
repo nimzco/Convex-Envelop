@@ -10,6 +10,7 @@
  */
 (function() {	
 	var m = window.convlexEnvelop.models();
+	var algo = window.convlexEnvelop.algorithms();
 	/* 'Objects' */
 	var point = m.point, vector = m.vector;
 	/* Functions */
@@ -113,7 +114,8 @@
 				}
 				return tmp;
 			});
-			envelop = executeDivideAndConquer(points);
+			
+			envelop = algo.divideAndConquer(points);
 			canvas.displayPolygon(envelop, canvas.randomColor());	
 		};
 		$('populate_button').onclick = function (e) {
