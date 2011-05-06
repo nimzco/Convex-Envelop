@@ -13,3 +13,7 @@ canvas {
 fieldset {
 	border: none;
 }
+
+pre {
+	text-align: left;
+}
