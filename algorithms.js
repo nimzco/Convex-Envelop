@@ -164,6 +164,12 @@ function execute (points) {
 		}
 	};
 
-	envelop = divide(points.sort(function(a,b) { return a.x - b.x;}));
+	envelop = divide(points.sort(function(a,b) {
+		var tmp = a.x - b.x;
+		if (tmp === 0) {
+			tmp = a.y - b.y;
+		}
+		return tmp;
+	}));
 	return envelop;
 };
