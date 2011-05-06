@@ -1,3 +1,10 @@
+/**
+ * Authors:	Nima Izadi - Nicolas Dupont 
+ * Mail: nim.izadi@gmail.com - npg.dupont@gmail.com
+ *
+ * Some objects
+ */
+ 
 var models = function () {
 	var that = {}
 

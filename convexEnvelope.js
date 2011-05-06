@@ -1,9 +1,10 @@
 /**
- * An implementation of the Convex hull algorithms (divide and conquer) 
+ * Authors:	Nima Izadi - Nicolas Dupont 
+ * Mail: nim.izadi@gmail.com - npg.dupont@gmail.com
  *
- * Authors:	Nima Izadi - Nicolas Dupont
+ * Main controller
  */
-
+ 
 /**
  * Protecting global namespace
  */
