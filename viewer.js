@@ -68,7 +68,6 @@ window.convlexEnvelop.viewer = function (canvasDiv){
  	 * Clears the canvas 
  	 */
 	that.clear = function () {
-		//var context = canvas.getContext('2d');
 		canvas.width = canvas.width;
 	}
 

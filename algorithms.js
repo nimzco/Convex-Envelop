@@ -1,5 +1,5 @@
 function execute (points) {
-	var m = new models();
+	var m = models();
 	var point = m.point;
 	var vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;
