@@ -13,3 +13,7 @@ canvas {
 fieldset {
 	border: none;
 }
+
+#input_json {
+	max-width: 600px;
+}
