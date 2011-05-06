@@ -70,7 +70,7 @@ function execute (points) {
 				
 				// Cross product between v3 and v4
 				var c2 = crossProduct(v3, v1);
-				if((c2 == 0 && leftEnv.betterNextRight(iGauche, comparator)) || (comparator(c2, 0))) {
+				if((c2 == 0 && leftEnv.betterNextLeft(iGauche, comparator)) || (comparator(c2, 0))) {
 					finished = false;
 					iGauche = leftEnv.nextIndex(iGauche);
 				}
@@ -98,14 +98,15 @@ function execute (points) {
 				
 				// Cross product between v1 and v2
 				c1 = crossProduct(v1, v2);
-				if((c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.previousIndex(iDroite)].x)) || (comparator(c1, 0))) {
+				
+				if((c1 == 0 && rightEnv.betterPreviousRight(iDroite, comparator)) || (comparator(c1, 0))) {
 					finished = false;
 					iDroite = rightEnv.previousIndex(iDroite);
 				}
 				
 				// Cross product between v3 and v4
 				c2 = crossProduct(v3, v1);
-				if((c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.previousIndex(iGauche)].x)) || (comparator(c2, 0))) {
+				if((c2 == 0 && leftEnv.betterPreviousLeft(iGauche, comparator)) || (comparator(c2, 0))) {
 					finished = false;
 					iGauche = leftEnv.previousIndex(iGauche);
 				}

@@ -114,13 +114,10 @@
 				return tmp;
 			});
 			envelop = execute(points);
-			canvas.displayPolygon(envelop, canvas.randomColor());
-			printPoints(points);
-			canvas.displayAllPoints(envelop);
+			canvas.displayPolygon(envelop, canvas.randomColor());	
 		};
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
-
 			canvas.displayAllPoints(points);
 		};	
 		$("parse_button").onclick =  function () {
