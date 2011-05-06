@@ -65,12 +65,11 @@ window.convlexEnvelop.viewer = function (canvasDiv){
 	};
 
 	/*
-	 * /!\ Does not work /!\
  	 * Clears the canvas 
- 	 * TODO 
  	 */
-	that.clearCanvas = function () {
-		var context = canvas.getContext('2d');
+	that.clear = function () {
+		//var context = canvas.getContext('2d');
+		canvas.width = canvas.width;
 	}
 
 	/*
@@ -78,10 +77,12 @@ window.convlexEnvelop.viewer = function (canvasDiv){
  	 */
 	that.displayPolygon = function (pointsArray, _color) {
 		var k, color = _color || "rgba(0,0,0,1)";
-		for (k = 0; k < pointsArray.length - 1; k+= 1) {
-			_displayLine(pointsArray[k], pointsArray[k + 1], color);
+		if (pointsArray.length > 0) {
+			for (k = 0; k < pointsArray.length - 1; k+= 1) {
+				_displayLine(pointsArray[k], pointsArray[k + 1], color);
+			}
+			_displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
 		}
-		_displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
 	}
 
 	return that;
