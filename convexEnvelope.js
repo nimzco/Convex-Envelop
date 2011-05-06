@@ -9,7 +9,7 @@
  * Protecting global namespace
  */
 (function() {	
-	var m = models();
+	var m = window.convlexEnvelop.models();
 	/* 'Objects' */
 	var point = m.point, vector = m.vector;
 	/* Functions */

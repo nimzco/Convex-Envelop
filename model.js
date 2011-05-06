@@ -4,8 +4,11 @@
  *
  * Some objects
  */
- 
-var models = function () {
+
+if (typeof window.convlexEnvelop === "undefined") {
+	window.convlexEnvelop = {};
+}
+window.convlexEnvelop.models = function () {
 	var that = {}
 
 	/*

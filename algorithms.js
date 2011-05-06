@@ -7,7 +7,7 @@
  
 
 function execute (points) {
-	var m = models();
+	var m = window.convlexEnvelop.models();
 	var point = m.point;
 	var vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;

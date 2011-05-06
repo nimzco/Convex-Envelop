@@ -5,7 +5,9 @@
  * View
  */
 
-window.convlexEnvelop = {};
+if (typeof window.convlexEnvelop === "undefined") {
+	window.convlexEnvelop = {};
+}
 window.convlexEnvelop.viewer = function (canvasDiv){
 	var that = {};
 	/**
