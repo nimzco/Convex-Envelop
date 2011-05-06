@@ -1,4 +1,14 @@
-var models = function () {
+/**
+ * Authors:	Nima Izadi - Nicolas Dupont 
+ * Mail: nim.izadi@gmail.com - npg.dupont@gmail.com
+ *
+ * Some objects
+ */
+
+if (typeof window.convlexEnvelop === "undefined") {
+	window.convlexEnvelop = {};
+}
+window.convlexEnvelop.models = function () {
 	var that = {}
 
 	/*

@@ -1,5 +1,13 @@
+/**
+ * Authors:	Nima Izadi - Nicolas Dupont 
+ * Mail: nim.izadi@gmail.com - npg.dupont@gmail.com
+ *
+ * An implementation of the Convex hull algorithms (divide and conquer) 
+ */
+ 
+
 function execute (points) {
-	var m = models();
+	var m = window.convlexEnvelop.models();
 	var point = m.point;
 	var vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;

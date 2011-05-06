@@ -1,5 +1,9 @@
-/************************************************************************************ Some global method
-*/
+/**
+ * Authors:	Nima Izadi - Nicolas Dupont 
+ * Mail: nim.izadi@gmail.com - npg.dupont@gmail.com
+ *
+ * Some global methods
+ */
 
 /*
  * Add event being careful to not override existing onload methods 
