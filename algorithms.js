@@ -78,7 +78,7 @@ function execute (points) {
 			
 			var iGH = iGauche;
 			var iDH = iDroite;
-
+			$("output").innerHTML += "Right: " + rightEnv[iDH] + " Left: " + leftEnv[iDH] + "<br />";
 			var envelop = [];
 			envelop.push(leftEnv[iGH]);
 			var finished = false;
@@ -129,6 +129,9 @@ function execute (points) {
 		}
 	}
 
+	envelop = divide(points);
+	
+/*
 	envelop = divide(points.sort(function(a,b) {
 		var tmp = a.x - b.x;
 		if (tmp === 0) {
@@ -136,5 +139,6 @@ function execute (points) {
 		}
 		return tmp;
 	}));
+*/
 	return envelop;
 };

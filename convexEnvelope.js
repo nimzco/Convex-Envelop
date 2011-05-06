@@ -110,10 +110,18 @@
 			canvas.displayPolygon(envelop, canvas.randomColor());
 			printPoints(points);
 			canvas.displayAllPoints(envelop);
-
+			points = points.sort(function(a,b) {
+					var tmp = a.x - b.x;
+					if (tmp === 0) {
+						tmp = a.y - b.y;
+					}
+					return tmp;
+			});
+			alert(points);
 		};
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
+
 			canvas.displayAllPoints(points);
 		};	
 		$("parse_button").onclick =  function () {
@@ -122,6 +130,12 @@
 			canvas.displayPolygon(envelop);
 		};
 		$("export_button").onclick = function () {
+	/*
+		points= points.slice(points.length/4, points.length/2);
+			points= points.slice(points.length/2, points.length);
+			points= points.slice(points.length/2, points.length);
+*/
+			
 			$('input_json').value = exportToJson(points, envelop);
 		};
 		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));

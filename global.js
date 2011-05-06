@@ -71,7 +71,6 @@ var betterRight =  function (p1, p2, comparator) {
 Array.prototype.betterNextRight = function (index, comparator) {
 	return betterRight(this[index], this[this.nextIndex(index)], comparator);
 };
-
 Array.prototype.betterPreviousRight = function (index, comparator) {
 	return betterRight(this[index], this[this.previousIndex(index)], comparator);
 };
