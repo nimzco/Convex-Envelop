@@ -104,6 +104,16 @@ Array.prototype.minY = function () {
 	}
 	return iMin;
 };
+Array.prototype.contains = function (p) {
+	var i;
+	for (i = 0; i < this.length; i++) {
+		if (this[i].x === p.x && this[i].y === p.y) {
+			return true;
+		}
+	}
+	return false;
+};
+
 
 /*
  * Returns the dom element object

@@ -26,10 +26,19 @@
 			var randX = Math.floor(Math.random() * 600);
 			var randY = Math.floor(Math.random() * 600);
 			i += 1;
-			array.push(Object.create(point({
-				x: randX,
-				y: randY
-			})));
+			var p = Object.create(point({
+					x: randX,
+					y: randY
+				}));
+			while (array.contains(p)) {
+				randX = Math.floor(Math.random() * 600);
+				randY = Math.floor(Math.random() * 600);
+				p = Object.create(point({
+					x: randX,
+					y: randY
+				}));
+			}
+			array.push(p);
 		}
 	}
 
@@ -59,6 +68,7 @@
 					}
 				}
 			} catch (e) {
+				$("error").className = ""
 				$("error").innerHTML = "Your JSON Input is malformatted. Error: "  + e;
 			}
 		}	
@@ -76,7 +86,7 @@
 				json += "\t\t{'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
 				json += (i < (pointsArray.length - 1) ? ",\n" : "");
 			}
-			json += "]\n";
+			json += "\n\t]\n";
 		}
 		json += (pointsArray.length > 0 && envelop.length > 0) ? "," : "";
 		if (envelop.length > 0) {
@@ -85,7 +95,7 @@
 				json += "\t\t{'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
 				json += (i < (envelop.length - 1) ? ",\n" : "");
 			}
-			json += "]\n";
+			json += "\n\t]\n";
 		}
 		json += "}";
 		return json || "";
