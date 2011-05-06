@@ -8,7 +8,7 @@
  * Protecting global namespace
  */
 (function() {	
-	var m = new models();
+	var m = models();
 	/* 'Objects' */
 	var point = m.point, vector = m.vector;
 	/* Functions */
@@ -41,12 +41,14 @@
 		if (myJsonText !== "") {
 			try {
 				myObject = eval('(' + myJsonText + ')');
-				for (i = 0; i < myObject.points.length; i++) {
-					points.push(Object.create(point({
-						x: myObject.points[i].x,
-						y: myObject.points[i].y
-					})));
-				}
+				if (typeof myObject.points !== "undefined") {
+					for (i = 0; i < myObject.points.length; i++) {
+						points.push(Object.create(point({
+							x: myObject.points[i].x,
+							y: myObject.points[i].y
+						})));
+					}
+				}	
 				if (typeof myObject.envelop !== "undefined") {
 					for (i = 0; i < myObject.envelop.length; i++) {
 						envelop.push(Object.create(point({
@@ -66,24 +68,26 @@
    */
 	exportToJson = function (pointsArray, envelop) {
 		var json, i;
+		json = "{ ";
 		if (points.length > 0) {
-			json = "{ 'points': [";
+			json += "'points': [";
 			for(i = 0; i < pointsArray.length; i++) {
 				json += "{ 'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
 				json += (i < (pointsArray.length - 1) ? "," : "");
 			}
 			json += "]";
-			if (envelop.length > 0) {
-				json += ", 'envelop':";
-				json += " [";
-				for(i = 0; i < envelop.length; i++) {
-					json += "{ 'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
-					json += (i < (envelop.length - 1) ? "," : "");
-				}
-				json += "]";
-			}
-			json += "}";
 		}
+		json += (pointsArray.length > 0 && envelop.length > 0) ? "," : "";
+		if (envelop.length > 0) {
+			json += "'envelop':";
+			json += " [";
+			for(i = 0; i < envelop.length; i++) {
+				json += "{ 'x': " + envelop[i].x + ", 'y':" + envelop[i].y + '}';
+				json += (i < (envelop.length - 1) ? "," : "");
+			}
+			json += "]";
+		}
+		json += "}";
 		return json || "";
 	}
 
