@@ -32,10 +32,6 @@ fieldset {
 	margin-bottom: 1em;
 }
 
-#parse_button {
-	display: block;
-}
-
 h2, h1 {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
