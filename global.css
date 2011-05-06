@@ -24,6 +24,7 @@ fieldset {
 	margin: 0;
 	padding: 0;
 	background-color: #f7f7ff;
+	border: 1px solid #D8D8DD;
 }
 
 #exemple {
