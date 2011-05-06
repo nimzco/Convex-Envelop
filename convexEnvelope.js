@@ -75,7 +75,7 @@
 				json += "\t\t{'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
 				json += (i < (pointsArray.length - 1) ? ",\n" : "");
 			}
-			json += "]";
+			json += "]\n";
 		}
 		json += (pointsArray.length > 0 && envelop.length > 0) ? "," : "";
 		if (envelop.length > 0) {
