@@ -9,17 +9,17 @@
  * Add event being careful to not override existing onload methods 
  */
 function addOnLoadEvent (func) {
-  var oldonload = window.onload;
-  if (typeof window.onload != 'function') {
-    window.onload = func;
-  } else {
-    window.onload = function() {
-      if (oldonload) {
-        oldonload();
-      }
-      func();
-    }
-  }
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+	      	}
+			func();
+		}
+	}
 }
   
 /*
@@ -60,7 +60,7 @@ var betterLeft =  function (p1, p2, comparator) {
 /*
  * Returns true if p2 is better than p1 
  */
-var betterRight =  function (p1, p2, comparator) {
+var betterRight = function (p1, p2, comparator) {
 	if (p1.x == p2.x) {
 		return (comparator(p2.y, p1.y));
 	} else {
@@ -85,7 +85,7 @@ Array.prototype.betterNextLeft = function (index, comparator) {
  * Returns the previous index regarding the index parameter and the array length
  */	
 Array.prototype.previousIndex = function (index) {
-	return (index - 1 + this.length)  % this.length;
+	return (index - 1 + this.length) % this.length;
 };
 
 /*

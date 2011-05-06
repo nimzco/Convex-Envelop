@@ -106,18 +106,17 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
+			points = points.sort(function(a,b) {
+				var tmp = a.x - b.x;
+				if (tmp === 0) {
+					tmp = a.y - b.y;
+				}
+				return tmp;
+			});
 			envelop = execute(points);
 			canvas.displayPolygon(envelop, canvas.randomColor());
 			printPoints(points);
 			canvas.displayAllPoints(envelop);
-			points = points.sort(function(a,b) {
-					var tmp = a.x - b.x;
-					if (tmp === 0) {
-						tmp = a.y - b.y;
-					}
-					return tmp;
-			});
-			alert(points);
 		};
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
