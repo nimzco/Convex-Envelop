@@ -6,120 +6,108 @@
  */
  
 
-function execute (points) {
+function executeDivideAndConquer (points) {
 	var m = window.convlexEnvelop.models();
+	/* Getting shortcut name for method within window.convlexEnvelop.models */
 	var point = m.point;
 	var vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-
+	var divideAndConquer;
 	
-	var p1 = point({x: 0, y: 0});
-	var p2 = point({x: 0, y: 200});
-	var p3 = point({x: 100, y: 200});  
-	var p4 = point({x: 200, y: 400});		
-	
-	//cas limite : points alignŽs
-	
-	var p = [];
-	p.push(p2);
-	p.push(p3);
-	p.push(p4);
-	p.push(p1);
-			
-	divide = function (pointsArray) {
+	divideAndConquer = function (pointsArray) {
 		if (pointsArray.length < 4) {
 			if(pointsArray.length > 2) {
-				//When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
+				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 				if(pointCrossProduct(pointsArray[0], pointsArray[1], pointsArray[2]) <= 0) {
 					pointsArray.swap(1,2);
 				}
 			}
 			return pointsArray;
 		} else {
-			var median = pointsArray.length / 2;
-			var leftPointsArray = pointsArray.slice(0, median);
-			var rightPointsArray = pointsArray.slice(median, pointsArray.length);
+			var median, leftPointsArray, rightPointsArray, leftEnv, rightEnv, leftIndex, rightIndex, firstRightIndex, firstLeftIndex, finished = false, i, iGH, iDH, envelop = [];
+			median = pointsArray.length / 2;
+			leftPointsArray = pointsArray.slice(0, median);
+			rightPointsArray = pointsArray.slice(median, pointsArray.length);
 
-			var leftEnv = divide(leftPointsArray);
-			var rightEnv = divide(rightPointsArray);
+			leftEnv = divideAndConquer(leftPointsArray);
+			rightEnv = divideAndConquer(rightPointsArray);
 			rightEnv.reverse();//reverse the sub-envelope right
 			
-			var iGauche = leftEnv.maxX(); //index of the point having the largest abscissa
-			var iDroite = rightEnv.minX(); //index of the point having the smallest abscissa 
-			var iDroiteFirst = iDroite;
-			var iGaucheFirst = iGauche;
+			leftIndex = leftEnv.maxX(); //index of the point having the largest abscissa
+			rightIndex = rightEnv.minX(); //index of the point having the smallest abscissa 
+			firstRightIndex = rightIndex;
+			firstLeftIndex = leftIndex;
 			
-			var finished = false;
+			/* Computing vector top */
 			while (!finished) {
-				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
-				var v3 = Object.create(vector({p1: leftEnv[leftEnv.nextIndex(iGauche)], p2: rightEnv[iDroite]}));
-				var comparator = function (x, y) {
-					return x > y;
-				};
+				var v1, v2, v3, c1, c2, comparator;
+				v1 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]}));
+				v2 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.nextIndex(rightIndex)]}));
+				v3 = Object.create(vector({p1: leftEnv[leftEnv.nextIndex(leftIndex)], p2: rightEnv[rightIndex]}));
+				comparator = function (x, y) { return x > y; };
 				finished = true;
 				
 				// Cross product between v1 and v2
-				var c1 = crossProduct(v1, v2);
-				if((c1 == 0 && rightEnv.betterNextRight(iDroite, comparator)) || (comparator(c1, 0))) {
+				c1 = crossProduct(v1, v2);
+				if((c1 == 0 && rightEnv.betterNextRight(rightIndex, comparator)) || (comparator(c1, 0))) {
 					finished = false;
-					iDroite = rightEnv.nextIndex(iDroite);
+					rightIndex = rightEnv.nextIndex(rightIndex);
 				}
 				
 				// Cross product between v3 and v4
-				var c2 = crossProduct(v3, v1);
-				if((c2 == 0 && leftEnv.betterNextLeft(iGauche, comparator)) || (comparator(c2, 0))) {
+				c2 = crossProduct(v3, v1);
+				if((c2 == 0 && leftEnv.betterNextLeft(leftIndex, comparator)) || (comparator(c2, 0))) {
 					finished = false;
-					iGauche = leftEnv.nextIndex(iGauche);
+					leftIndex = leftEnv.nextIndex(leftIndex);
 				}
 			}
 			
-			var iGH = iGauche;
-			var iDH = iDroite;
-			var envelop = [];
+			iGH = leftIndex;
+			iDH = rightIndex;
 			envelop.push(leftEnv[iGH]);
-			var finished = false;
 			
-			iGauche = leftEnv.maxX(); 
-			iDroite = rightEnv.minX(); 
-			iDroiteFirst = iDroite;
-			iGaucheFirst = iGauche;
+			finished = false;
+			
+			leftIndex = leftEnv.maxX(); 
+			rightIndex = rightEnv.minX(); 
+			firstRightIndex = rightIndex;
+			firstLeftIndex = leftIndex;
 
+			/* Computing vector top */
 			while (!finished) {
-				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.previousIndex(iDroite)]}));
-				var v3 = Object.create(vector({p1: leftEnv[leftEnv.previousIndex(iGauche)], p2: rightEnv[iDroite]}));
-				var comparator = function (x, y) {
-					return x < y;
-				};
+				var v1, v2, v3, c1, c2, comparator;
+				v1 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]}));
+				v2 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.previousIndex(rightIndex)]}));
+				v3 = Object.create(vector({p1: leftEnv[leftEnv.previousIndex(leftIndex)], p2: rightEnv[rightIndex]}));
+				comparator = function (x, y) { return x < y; };
 				finished = true;
 				
 				// Cross product between v1 and v2
 				c1 = crossProduct(v1, v2);
 				
-				if((c1 == 0 && rightEnv.betterPreviousRight(iDroite, comparator)) || (comparator(c1, 0))) {
+				if((c1 == 0 && rightEnv.betterPreviousRight(rightIndex, comparator)) || (comparator(c1, 0))) {
 					finished = false;
-					iDroite = rightEnv.previousIndex(iDroite);
+					rightIndex = rightEnv.previousIndex(rightIndex);
 				}
 				
 				// Cross product between v3 and v4
 				c2 = crossProduct(v3, v1);
-				if((c2 == 0 && leftEnv.betterPreviousLeft(iGauche, comparator)) || (comparator(c2, 0))) {
+				if((c2 == 0 && leftEnv.betterPreviousLeft(leftIndex, comparator)) || (comparator(c2, 0))) {
 					finished = false;
-					iGauche = leftEnv.previousIndex(iGauche);
+					leftIndex = leftEnv.previousIndex(leftIndex);
 				}
 			}
 			
-			var i = iDH;
-			while (i != iDroite) {
+			i = iDH;
+			while (i != rightIndex) {
 				envelop.push(rightEnv[i]);
 				i = rightEnv.nextIndex(i); 
 			}
-			envelop.push(rightEnv[iDroite]);	
+			envelop.push(rightEnv[rightIndex]);	
 					
-			i = iGauche;
+			i = leftIndex;
 			while (i != iGH) {
 				envelop.push(leftEnv[i]);
 				i = leftEnv.previousIndex(i); 
@@ -129,6 +117,6 @@ function execute (points) {
 		}
 	}
 
-	envelop = divide(points);
+	envelop = divideAndConquer(points);
 	return envelop;
 };

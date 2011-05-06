@@ -113,7 +113,7 @@
 				}
 				return tmp;
 			});
-			envelop = execute(points);
+			envelop = executeDivideAndConquer(points);
 			canvas.displayPolygon(envelop, canvas.randomColor());	
 		};
 		$('populate_button').onclick = function (e) {
