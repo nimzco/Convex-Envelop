@@ -108,7 +108,7 @@
 		$('execute_button').onclick = function (e) {
 			envelop = execute(points);
 			canvas.displayPolygon(envelop, canvas.randomColor());
-			printPoints(envelop);
+			printPoints(points);
 			canvas.displayAllPoints(envelop);
 
 		};

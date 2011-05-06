@@ -52,28 +52,22 @@ function execute (points) {
 			var iGaucheFirst = iGauche;
 			
 			var finished = false;
-		//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 			while (!finished) {
 				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
-				var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
-				var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+				var v3 = Object.create(vector({p1: leftEnv[leftEnv.nextIndex(iGauche)], p2: rightEnv[iDroite]}));
 				
 				finished = true;
 				
 				// Cross product between v1 and v2
 				var c1 = crossProduct(v1, v2);
-				if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.nextIndex(iDroite)].x)) {
-					finished = false;
-					iDroite = rightEnv.nextIndex(iDroite);
-				}
-				if (c1 > 0) {
+				if((c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.nextIndex(iDroite)].x)) || (c1 > 0)) {
 					finished = false;
 					iDroite = rightEnv.nextIndex(iDroite);
 				}
 				
 				// Cross product between v3 and v4
-				var c2 = crossProduct(v3, v4);
+				var c2 = crossProduct(v3, v1);
 				if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.nextIndex(iGauche)].x)) {
 					finished = false;
 					iGauche = leftEnv.nextIndex(iGauche);
@@ -99,29 +93,20 @@ function execute (points) {
 			while (!finished) {
 				var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.previousIndex(iDroite)]}));
-				var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.previousIndex(iGauche)]}));
-				var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
+				var v3 = Object.create(vector({p1: leftEnv[leftEnv.previousIndex(iGauche)], p2: rightEnv[iDroite]}));
 				
 				finished = true;
 				
 				// Cross product between v1 and v2
 				c1 = crossProduct(v1, v2);
-				if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.previousIndex(iDroite)].x)) {
-					finished = false;
-					iDroite = rightEnv.previousIndex(iDroite);
-				}
-				if (c1 < 0) {
+				if((c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.previousIndex(iDroite)].x)) || (c1 < 0)) {
 					finished = false;
 					iDroite = rightEnv.previousIndex(iDroite);
 				}
 				
 				// Cross product between v3 and v4
-				c2 = crossProduct(v3, v4);
-				if(c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.previousIndex(iGauche)].x)) {
-					finished = false;
-					iGauche = leftEnv.previousIndex(iGauche);
-				}
-				if (c2 < 0) {
+				c2 = crossProduct(v3, v1);
+				if((c2 == 0 && (leftEnv[iGauche].x > leftEnv[leftEnv.previousIndex(iGauche)].x)) || (c2 < 0)) {
 					finished = false;
 					iGauche = leftEnv.previousIndex(iGauche);
 				}
@@ -143,26 +128,6 @@ function execute (points) {
 			return envelop;
 		}
 	}
-	joinTop = function (finished, leftEnv, rightEnv, iGauche, iDroite) {
-		var v1, v2, v3, v4;
-		while (!finished) {
-			finished = true;
-			v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
-			v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
-			v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
-			v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
-		
-			if (crossProduct(v1, v2) >= 0) {
-				finished = false;
-				iDroite = (iDroite + 1) % rightEnv.length;
-			}
-			
-			if (crossProduct(v3, v2) >= 0) {
-				finished = false;
-				iGauche = (iGauche + 1)  % leftEnv.length;
-			}
-		}
-	};
 
 	envelop = divide(points.sort(function(a,b) {
 		var tmp = a.x - b.x;
