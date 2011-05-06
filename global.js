@@ -38,12 +38,44 @@ Array.prototype.swap = function (a, b) {
   this[b] = this[a];
   this[a] = tmp;
 };
-	
+
 /*
  * Returns the next index regarding the index parameter and the array length
  */
 Array.prototype.nextIndex = function (index) {
 	return (index + 1) % this.length;
+};
+
+/*
+ * Returns true if p2 is better than p1 
+ */
+var betterLeft =  function (p1, p2, comparator) {
+	if (p1.x == p2.x) {
+		return (p1.y.comparator(p2.y));
+	} else {
+		return (p1.x > p2.x));
+	}
+};
+
+/*
+ * Returns true if p2 is better than p1 
+ */
+var betterRight =  function (p1, p2, comparator) {
+	if (p1.x == p2.x) {
+		return (p1.y.comparator(p2.y));
+	} else {
+		return (p1.x < p2.x));
+	}
+};
+function (p) {
+	return this < p;
+}
+Array.prototype.betterNextBottomIndex = function (index) {
+	return betterTo(this[index], this[this.nextIndex(index)]);
+};
+
+Array.prototype.betterPreviousIndex = function (index) {
+	return betterIndex(this[this.previousIndex(index)], this[index]);
 };
 
 /*
@@ -104,6 +136,10 @@ Array.prototype.minY = function () {
 	}
 	return iMin;
 };
+
+/*
+ * Returns wether or not the array contains p
+ */
 Array.prototype.contains = function (p) {
 	var i;
 	for (i = 0; i < this.length; i++) {
@@ -113,6 +149,7 @@ Array.prototype.contains = function (p) {
 	}
 	return false;
 };
+
 
 
 /*

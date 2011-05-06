@@ -58,16 +58,19 @@ function execute (points) {
 				var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
 				var v3 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[leftEnv.nextIndex(iGauche)]}));
 				var v4 = Object.create(vector({p1: rightEnv[iDroite], p2: leftEnv[iGauche]}));
-				
+				var comparator = function (y) {
+					return this > y;
+				};
 				finished = true;
 				
 				// Cross product between v1 and v2
 				var c1 = crossProduct(v1, v2);
+				
 				if(c1 == 0 && (rightEnv[iDroite].x < rightEnv[rightEnv.nextIndex(iDroite)].x)) {
 					finished = false;
 					iDroite = rightEnv.nextIndex(iDroite);
 				}
-				if (c1 > 0) {
+				if (c1.comparator(0)) {
 					finished = false;
 					iDroite = rightEnv.nextIndex(iDroite);
 				}
