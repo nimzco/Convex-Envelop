@@ -51,9 +51,9 @@ Array.prototype.nextIndex = function (index) {
  */
 var betterLeft =  function (p1, p2, comparator) {
 	if (p1.x == p2.x) {
-		return (p1.y.comparator(p2.y));
+		return (comparator(p2.y, p1.y));
 	} else {
-		return (p1.x > p2.x));
+		return (p1.x > p2.x);
 	}
 };
 
@@ -62,20 +62,24 @@ var betterLeft =  function (p1, p2, comparator) {
  */
 var betterRight =  function (p1, p2, comparator) {
 	if (p1.x == p2.x) {
-		return (p1.y.comparator(p2.y));
+		return (comparator(p2.y, p1.y));
 	} else {
-		return (p1.x < p2.x));
+		return (p1.x < p2.x);
 	}
 };
-function (p) {
-	return this < p;
-}
-Array.prototype.betterNextBottomIndex = function (index) {
-	return betterTo(this[index], this[this.nextIndex(index)]);
+
+Array.prototype.betterNextRight = function (index, comparator) {
+	return betterRight(this[index], this[this.nextIndex(index)], comparator);
 };
 
-Array.prototype.betterPreviousIndex = function (index) {
-	return betterIndex(this[this.previousIndex(index)], this[index]);
+Array.prototype.betterPreviousRight = function (index, comparator) {
+	return betterRight(this[index], this[this.previousIndex(index)], comparator);
+};
+Array.prototype.betterPreviousLeft = function (index, comparator) {
+	return betterLeft(this[index], this[this.previousIndex(index)], comparator);
+};
+Array.prototype.betterNextLeft = function (index, comparator) {
+	return betterLeft(this[index], this[this.nextIndex(index)], comparator);
 };
 
 /*

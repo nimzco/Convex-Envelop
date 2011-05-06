@@ -95,3 +95,13 @@ p {
 	margin: 0.1em;
 	padding: 0.1em;
 }
+
+#error {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background-color: rgba(230,0,0,0.2);
+	border: 1px solid #DD0000;
+	padding: 0.3em;
+	visibility: hidden;
+}
