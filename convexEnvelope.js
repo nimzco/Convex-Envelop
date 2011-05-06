@@ -114,7 +114,7 @@
 	 */
 	var point = function (spec) {
 		var that = {};
-		var x = spec.x†|| 0, y = spec.y ||†0;
+		var x = spec.x || 0, y = spec.y || 0;
 		that.x = x;
 		that.y = y;
 		that.toString = function() {
@@ -182,18 +182,26 @@
 				
 		//canvas.clearCanvas();
 		
-		var p1 = point({x: 0, y: 0});
-		var p2 = point({x: 0, y: 200});
-		var p3 = point({x: 100, y: 200});  
-		var p4 = point({x: 200, y: 400});		
+		var p1 = point({x: 100, y: 100});
+		var p2 = point({x: 100, y: 300});
+		var p3 = point({x: 300, y: 100});  
+		var p4 = point({x: 300, y: 300});	
+		var p5 = point({x: 300, y: 400});		
+		var p6 = point({x: 300, y: 500});		
+		var p7 = point({x: 300, y: 600});		
+
 		
-		//cas limite : points alignés
+		//cas limite : points align√©s
 		
 		var p = [];
 		p.push(p2);
 		p.push(p3);
 		p.push(p4);
 		p.push(p1);
+		p.push(p5);
+		p.push(p6);
+		p.push(p7);
+
 				
 		var divide = function (pointsArray) {
 			if (pointsArray.length < 4) {
@@ -219,7 +227,7 @@
 				var iGaucheFirst = iGauche;
 				
 				var finished = false;
-			//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
+				//	joinTop(finished, leftEnv, rightEnv, iGauche, iDroite)
 				while (!finished) {
 					var v1 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[iDroite]}));
 					var v2 = Object.create(vector({p1: leftEnv[iGauche], p2: rightEnv[rightEnv.nextIndex(iDroite)]}));
@@ -330,7 +338,7 @@
 			}
 		};
 
-		var env = divide(points.sort(function(a,b) { return a.x - b.x;}));
+		var env = divide(p.sort(function(a,b) { return a.x - b.x;}));
 		canvas.displayPolygon(env, canvas.randomColor());
 		
 		printPoints(env);
