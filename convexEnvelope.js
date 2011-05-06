@@ -18,7 +18,7 @@
 	var populate, exportPoints, joinTop, divide, populateFromJson, exportToJson;
 	/* Variables */
 	var canvas, points = [], envelop = [];
-	
+
 	populate = function (n, array) {
 		var i = 0;
 		while(i < n) {
@@ -122,6 +122,4 @@
 			$('output').innerHTML = "";
 		};	
 	});
-	
-	
 })();
