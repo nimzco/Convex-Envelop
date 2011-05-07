@@ -17,7 +17,7 @@
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var populate, exportPoints, joinTop, divide, populateFromJson, exportToJson;
+	var populate, exportPoints, joinTop, divide, populateFromJson, exportToJson, calculateTime;
 	/* Variables */
 	var canvas, points = [], envelop = [];
 
@@ -101,12 +101,28 @@
 		json += "}";
 		return json || "";
 	}
+	
+	/**
+	 * Returns the time of execution of an algorithm
+   */
+	calculateTime = function(algo, array) {
+			var result = {};
+			var date = new Date();
+			var t1 = date.getTime();
+			envelop = algo(array);
+			date = new Date();
+			var t2 = date.getTime();
+			result.time = t2-t1;
+			result.envelop = envelop; 
+			return result;
+	}
 
 	/**
 	 * Affecting onclick function to the execute button
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
+			points = algo.lozengeOptimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
 				if (tmp === 0) {
@@ -114,28 +130,27 @@
 				}
 				return tmp;
 			});
-			
-			envelop = algo.divideAndConquer(points);
-			canvas.displayPolygon(envelop, canvas.randomColor());	
+	
+			var calcul = calculateTime(algo.divideAndConquer, points);
+			$('time').innerHTML = 'Time of execution ' + calcul.time + 'ms';
+			envelop = calcul.envelop;
+			canvas.displayPolygon(envelop, canvas.randomColor());
 		};
+		
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
 			canvas.displayAllPoints(points);
 		};	
+		
 		$("parse_button").onclick =  function () {
 			populateFromJson();
 			canvas.displayAllPoints(points);
-			canvas.displayPolygon(envelop);
 		};
+		
 		$("export_button").onclick = function () {
-	/*
-		points= points.slice(points.length/4, points.length/2);
-			points= points.slice(points.length/2, points.length);
-			points= points.slice(points.length/2, points.length);
-*/
-			
 			$('input_json').value = exportToJson(points, envelop);
 		};
+		
 		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
 		$("clear_button").onclick = function () {
 			canvas.clear();

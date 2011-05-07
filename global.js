@@ -96,7 +96,12 @@ Array.prototype.maxX = function () {
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].x > this[iMax].x) {
 			iMax = i;
+		} else if (this[i].x === this[iMax].x) {
+			if (this[i].y < this[iMax].y) {
+				iMax = i;
+			}
 		}
+		
 	}
 	return iMax;
 };
@@ -109,6 +114,10 @@ Array.prototype.minX = function () {
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].x < this[iMin].x) {
 			iMin = i;
+		} else if (this[i].x === this[iMin].x) {
+			if (this[i].y > this[iMin].y) {
+				iMin = i;
+			}
 		}
 	}
 	return iMin;
@@ -122,6 +131,10 @@ Array.prototype.maxY = function () {
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].y > this[iMax].y) {
 			iMax = i;
+		} else if (this[i].y === this[iMax].y) {
+			if (this[i].x > this[iMax].x) {
+				iMax = i;
+			}
 		}
 	}
 	return iMax;
@@ -135,6 +148,10 @@ Array.prototype.minY = function () {
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].y < this[iMin].y) {
 			iMin = i;
+		} else if (this[i].y === this[iMin].y) {
+			if (this[i].x < this[iMin].x) {
+				iMin = i;
+			}
 		}
 	}
 	return iMin;
