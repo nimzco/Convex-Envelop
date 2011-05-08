@@ -9,10 +9,8 @@
  * Protecting global namespace
  */
 (function() {	
-	var m = window.convlexEnvelop.models();
+	var m = window.convlexEnvelop.models;
 	var algo = window.convlexEnvelop.algorithms();
-	/* 'Objects' */
-	var point = m.point, vector = m.vector;
 	/* Functions */
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
@@ -27,17 +25,17 @@
 			var randX = Math.floor(Math.random() * 600);
 			var randY = Math.floor(Math.random() * 600);
 			i += 1;
-			var p = Object.create(point({
+			var p = new m.Point({
 					x: randX,
 					y: randY
-				}));
+				});
 			while (array.contains(p)) {
 				randX = Math.floor(Math.random() * 600);
 				randY = Math.floor(Math.random() * 600);
-				p = Object.create(point({
+				p = new m.Point({
 					x: randX,
 					y: randY
-				}));
+				});
 			}
 			array.push(p);
 		}
@@ -54,18 +52,18 @@
 				myObject = eval('(' + myJsonText + ')');
 				if (typeof myObject.points !== "undefined") {
 					for (i = 0; i < myObject.points.length; i++) {
-						points.push(Object.create(point({
+						points.push(new m.Point({
 							x: myObject.points[i].x,
 							y: myObject.points[i].y
-						})));
+						}));
 					}
 				}	
 				if (typeof myObject.envelop !== "undefined") {
 					for (i = 0; i < myObject.envelop.length; i++) {
-						envelop.push(Object.create(point({
+						envelop.push(new m.Point({
 							x: myObject.envelop[i].x,
 							y: myObject.envelop[i].y
-						})));
+						}));
 					}
 				}
 			} catch (e) {
@@ -122,7 +120,19 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
-			points = algo.lozengeOptimization(points);
+			var algorithm, optimization;
+			if ($("select_algo").value === "divide") {
+				algorithm = algo.divideAndConquer;
+			} else {
+				algorithm = algo.randomizedAlgorithm;
+			};
+			if ($("optimized").checked) {
+				optimization = algo.lozengeOptimization;
+			} else {
+				optimization = function(points){ return points; };
+			};
+		
+			points = optimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
 				if (tmp === 0) {
@@ -130,8 +140,7 @@
 				}
 				return tmp;
 			});
-	
-			var calcul = calculateTime(algo.divideAndConquer, points);
+			var calcul = calculateTime(algorithm, points);
 			$('time').innerHTML = 'Time of execution ' + calcul.time + 'ms';
 			envelop = calcul.envelop;
 			canvas.displayPolygon(envelop, canvas.randomColor());
@@ -151,7 +160,7 @@
 			$('input_json').value = exportToJson(points, envelop);
 		};
 		
-		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
+		canvas = new window.convlexEnvelop.Viewer($('exemple'));
 		$("clear_button").onclick = function () {
 			canvas.clear();
 			points = [];
