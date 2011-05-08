@@ -28,7 +28,7 @@ window.convlexEnvelop.viewer = function (canvasDiv){
 		var context = canvas.getContext('2d');
 		context.fillStyle = color || "rgba(0,0,0,1)";
 		context.beginPath();
-		context.arc(point.x,600 - point.y, 3, 0, Math.PI * 2,true);
+		context.arc(point.x,600 - point.y, 2, 0, Math.PI * 2,true);
 		context.closePath();
 		context.fill();
 	};

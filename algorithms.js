@@ -22,7 +22,7 @@ window.convlexEnvelop.algorithms = function () {
 	
 	_segmentCrossing = function(p1, p2, p3, p4) {
 		var a1, a2, b1, b2, xCommon;
-		//Slope of lien (p1,p2)
+		//Slope of line (p1,p2)
 		a1 = (p2.y - p1.y) / (p2.x - p1.x);
 		
 		//Slope of line (p3,p4)
