@@ -17,7 +17,7 @@
 	var printPoints = m.printPoints;
 	var populate, exportPoints, joinTop, divide, populateFromJson, exportToJson, calculateTime;
 	/* Variables */
-	var canvas, points = [], envelop = [];
+	var canvas, _points = [], points = [], envelop = [];
 
 	populate = function (n, array) {
 		var i = 0;
@@ -129,9 +129,10 @@
 			if ($("optimized").checked) {
 				optimization = algo.lozengeOptimization;
 			} else {
+				points = _points.slice(0, _points.length);
 				optimization = function(points){ return points; };
 			};
-		
+
 			points = optimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
@@ -148,6 +149,8 @@
 		
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
+			_points = points.slice(0, points.length);			
+			
 			canvas.displayAllPoints(points);
 		};	
 		
