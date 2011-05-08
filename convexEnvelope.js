@@ -121,7 +121,7 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
-			points = algo.lozengeOptimization(points);
+			//points = algo.lozengeOptimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
 				if (tmp === 0) {
