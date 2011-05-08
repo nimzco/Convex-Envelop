@@ -155,7 +155,7 @@ window.convlexEnvelop.algorithms = function () {
 	that.divideAndConquer = _divideAndConquer;
 	
 	_randomizedAlgorithm = function(pointsArray) {
-		var a, randA, b, randB, c, randC, d, p, barycentre;
+		var a, randA, b, randB, c, randC, d, p, barycentre, iPrev, iNext;
 		
 		randA = Math.randomValue(0, pointsArray.length -1);
 		a = pointsArray[randA];
@@ -175,14 +175,23 @@ window.convlexEnvelop.algorithms = function () {
 		array.push(a);
 		array.push(b);
 		array.push(c);
-/*
+		
+		if(pointCrossProduct(array[0], array[1], array[2]) >= 0) {
+			array.swap(1,2);
+		}
 
-
-		while(pointsArray.length >= 0) {
-			var randP = Math.randomValue(0, pointsArray.length);
-			//alert(randP);
+		canvas.displayPoint(array[0], "#FF0000");
+		canvas.displayPoint(array[1], "#00FF00");
+		canvas.displayPoint(array[2], "#0000FF");
+		
+		canvas.displayPoint(barycentre);
+		
+//		alert(pointsArray.length);
+		while(pointsArray.length > 0) {
+			var randP = Math.randomValue(0, pointsArray.length - 1);
+//			alert(randP);
 			p = pointsArray[randP];
-			//alert(p.toString());
+//			alert(p.toString());
 			var inside = true;
 			var finished = false;
 			var i = 0;
@@ -190,25 +199,39 @@ window.convlexEnvelop.algorithms = function () {
 			while(!finished && i < array.length) {
 				p1 = array[i];
 				p2 = array[(i + 1) % array.length];
-				if(_segmentCrossing(p, barycentre, p1, p2 )) {
+				canvas.displayPoint(p1);
+				canvas.displayPoint(p);
+				//canvas.displayPoint(barycentre);
+				canvas.displayLine(p1,p);
+				canvas.displayLine(p,barycentre);	
+				alert(pointCrossProduct(p,barycentre,p1));		
+				if(pointCrossProduct(p,barycentre,p1) > 0) {
+				
+				}
+
+				if(_segmentCrossing(p, barycentre, p1, p2)) {
 					finished = true;
 					inside = false;
 				}
 				i += 1;
 			}
+			finished = false;
+		/*
+	
+			i -= 1;
 			
-			v1 = Object.create(vector({p1: p, p2: barycentre}));
-			v2 = Object.create(vector({p1: p, p2: p1}));
-			c1 = crossProduct(v1, v2);
-			alert(c1);
-			if (!inside) {
-				if() {
-					
-				}
+			while(!inside && !finished) {
+				v1 = Object.create(vector({p1: barycentre, p2: p}));
+				v2 = Object.create(vector({p1: p1, p2: p2}));
+				v3 = Object.create(vector({p1: array[i], p2: array.nextIndex(i)));
+				finished = true;
+				
 			}
+*/
+			
 			pointsArray.splice(randP, 1);
 		}
-*/
+
 		
 		return array;
 	};
