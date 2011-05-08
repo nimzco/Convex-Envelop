@@ -11,10 +11,10 @@ if (typeof window.convlexEnvelop === "undefined") {
 }
 window.convlexEnvelop.algorithms = function () {
 	var that = {};
-	var m = window.convlexEnvelop.models();
+	var m = window.convlexEnvelop.models;
 	/* Getting shortcut name for method within window.convlexEnvelop.models */
-	var point = m.point;
-	var vector = m.vector;
+	var Point = m.point;
+	var Vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
@@ -79,9 +79,9 @@ window.convlexEnvelop.algorithms = function () {
 			/* Computing vector top */
 			while (!finished) {
 				var v1, v2, v3, c1, c2, comparator;
-				v1 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]}));
-				v2 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.nextIndex(rightIndex)]}));
-				v3 = Object.create(vector({p1: leftEnv[leftEnv.nextIndex(leftIndex)], p2: rightEnv[rightIndex]}));
+				v1 = new m.Vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]});
+				v2 = new m.Vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.nextIndex(rightIndex)]});
+				v3 = new m.Vector({p1: leftEnv[leftEnv.nextIndex(leftIndex)], p2: rightEnv[rightIndex]});
 				comparator = function (x, y) { return x > y; };
 				finished = true;
 				
@@ -114,9 +114,9 @@ window.convlexEnvelop.algorithms = function () {
 			/* Computing vector bottom */
 			while (!finished) {
 				var v1, v2, v3, c1, c2, comparator;
-				v1 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]}));
-				v2 = Object.create(vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.previousIndex(rightIndex)]}));
-				v3 = Object.create(vector({p1: leftEnv[leftEnv.previousIndex(leftIndex)], p2: rightEnv[rightIndex]}));
+				v1 = new m.Vector({p1: leftEnv[leftIndex], p2: rightEnv[rightIndex]});
+				v2 = new m.Vector({p1: leftEnv[leftIndex], p2: rightEnv[rightEnv.previousIndex(rightIndex)]});
+				v3 = new m.Vector({p1: leftEnv[leftEnv.previousIndex(leftIndex)], p2: rightEnv[rightIndex]});
 				comparator = function (x, y) { return x < y; };
 				finished = true;
 				
@@ -169,7 +169,7 @@ window.convlexEnvelop.algorithms = function () {
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
 
-		barycentre = Object.create(point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3}));
+		barycentre = new Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
 
 		array = [];
 		array.push(a);
@@ -197,8 +197,8 @@ window.convlexEnvelop.algorithms = function () {
 				i += 1;
 			}
 			
-			v1 = Object.create(vector({p1: p, p2: barycentre}));
-			v2 = Object.create(vector({p1: p, p2: p1}));
+			v1 = new Vector({p1: p, p2: barycentre}));
+			v2 = new Vector({p1: p, p2: p1}));
 			c1 = crossProduct(v1, v2);
 			alert(c1);
 			if (!inside) {
@@ -230,7 +230,7 @@ window.convlexEnvelop.algorithms = function () {
 		array.splice(array.maxY(), 1);
 
 		// Calculating the centroid of the lozenge
-		barycentre = Object.create(m.point({x: ((minX.x + maxX.x + minY.x + maxY.x) / 4), y:((minX.y + maxX.y + minY.y + maxY.y) / 4)}));
+		barycentre = new m.Point({x: ((minX.x + maxX.x + minY.x + maxY.x) / 4), y:((minX.y + maxX.y + minY.y + maxY.y) / 4)});
 		
 		for(i = 0; i < array.length; i += 1) {
 			point = array[i];
@@ -259,7 +259,7 @@ window.convlexEnvelop.algorithms = function () {
 	that.lozengeOptimization = _lozengeOptimization;
 	
 	addOnLoadEvent(function () {
-		canvas = Object.create(window.convlexEnvelop.viewer($('exemple')));
+		canvas = new window.convlexEnvelop.Viewer($('exemple'));
 	})
 	
 	return that;
