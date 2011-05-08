@@ -149,13 +149,14 @@
 		
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points);
-			_points = points.slice(0, points.length);			
-			
+			_points = points.slice(0, points.length);
 			canvas.displayAllPoints(points);
 		};	
 		
 		$("parse_button").onclick =  function () {
+			_points = points = []
 			populateFromJson();
+			_points = points.slice(0, points.length);			
 			canvas.displayAllPoints(points);
 		};
 		
@@ -167,6 +168,7 @@
 		$("clear_button").onclick = function () {
 			canvas.clear();
 			points = [];
+			_points = [];
 			envelop = [];
 			$('output').innerHTML = "";
 		};	

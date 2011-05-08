@@ -153,7 +153,7 @@ window.convlexEnvelop.algorithms = function () {
 	that.divideAndConquer = _divideAndConquer;
 	
 	_randomizedAlgorithm = function(pointsArray) {
-		var a, randA, b, randB, c, randC, d, p, barycentre, iPrev, iNext;
+		var a, randA, b, randB, c, randC, d, p, centroid, iPrev, iNext;
 		
 		randA = Math.randomValue(0, pointsArray.length -1);
 		a = pointsArray[randA];
@@ -166,13 +166,14 @@ window.convlexEnvelop.algorithms = function () {
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
 
-		barycentre = new m.Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
+		centroid = new m.Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
 
 		array = [];
 		array.push(a);
 		array.push(b);
 		array.push(c);
 		
+		// Put the triangle in clockwise
 		if(pointCrossProduct(array[0], array[1], array[2]) >= 0) {
 			array.swap(1,2);
 		}
@@ -181,7 +182,7 @@ window.convlexEnvelop.algorithms = function () {
 		canvas.displayPoint(array[1], "#00FF00");
 		canvas.displayPoint(array[2], "#0000FF");
 		
-		canvas.displayPoint(barycentre);
+		canvas.displayPoint(centroid);
 		
 //		alert(pointsArray.length);
 		while(pointsArray.length > 0) {
@@ -192,31 +193,45 @@ window.convlexEnvelop.algorithms = function () {
 			var inside = true;
 			var finished = false;
 			var i = 0;
-			var p1,p2;
+			var p1, p2;
 			while(!finished && i < array.length) {
 				p1 = array[i];
-				p2 = array[(i + 1) % array.length];
-				canvas.displayPoint(p1);
-				canvas.displayPoint(p);
-				//canvas.displayPoint(barycentre);
-				canvas.displayLine(p1,p);
-				canvas.displayLine(p,barycentre);	
-				alert(pointCrossProduct(p,barycentre,p1));		
-				if(pointCrossProduct(p,barycentre,p1) > 0) {
+				p2 = array[array.nextIndex(i)];
+				//canvas.displayPoint(p1);
+				//canvas.displayPoint(p);
+				//canvas.displayPoint(centroid);
+				//canvas.displayLine(p1,p);
+				//canvas.displayLine(p,centroid);	
+				//alert(pointCrossProduct(p,centroid,p1));		
+/*
+				if(pointCrossProduct(p,centroid,p1) > 0) {
 				
 				}
+*/
 
-				if(_segmentCrossing(p, barycentre, p1, p2)) {
+				if(!_segmentCrossing(p, centroid, p1, p2)) {
 					finished = true;
 					inside = false;
 				}
 				i += 1;
 			}
-			finished = false;
+			if (!inside) {
+				var c1, c2, v1, v2, v3;
+				v1 = new m.Vector({p1: p, p2: centroid});
+				v2 = new m.Vector({p1: p, p2: p2});
+				v3 = new m.Vector({p1: p, p2: array[array.nextIndex(i)]});
+				c1 = crossProduct(v1, v2);
+				c2 = crossProduct(v1, v3);
+				if ((c1 >= 0 && c2 >= 0) || (c1 < 0 && c2 < 0)) {
+					array.splice(array[array.previousIndex(i)], 1);
+					array.push(p);
+				}
+			}
+			
 		/*
 	
 			i -= 1;
-			v1 = new Vector({p1: p, p2: barycentre}));
+			v1 = new Vector({p1: p, p2: centroid}));
 			v2 = new Vector({p1: p, p2: p1}));
 			c1 = crossProduct(v1, v2);
 			alert(c1);
@@ -236,7 +251,7 @@ window.convlexEnvelop.algorithms = function () {
 	that.randomizedAlgorithm = _randomizedAlgorithm;
 
 	_lozengeOptimization = function(array) {
-		var minX, maxX, minY, maxY, barycentre, i, point, toDelete = [];
+		var minX, maxX, minY, maxY, centroid, i, point, toDelete = [];
 		
 		// Min and Max values to define a lozenges
 		minX = array[array.minX()];
@@ -251,16 +266,16 @@ window.convlexEnvelop.algorithms = function () {
 		array.splice(array.maxY(), 1);
 
 		// Calculating the centroid of the lozenge
-		barycentre = new m.Point({x: ((minX.x + maxX.x + minY.x + maxY.x) / 4), y:((minX.y + maxX.y + minY.y + maxY.y) / 4)});
+		centroid = new m.Point({x: ((minX.x + maxX.x + minY.x + maxY.x) / 4), y:((minX.y + maxX.y + minY.y + maxY.y) / 4)});
 		
 		for(i = 0; i < array.length; i += 1) {
 			point = array[i];
 			
 			// if the point belongs to the lozenge, we add it to the deletion list
-			if(!_segmentCrossing(barycentre, point, minX, minY) && 
-			   !_segmentCrossing(barycentre, point, minY, maxX) && 
-			   !_segmentCrossing(barycentre, point, maxX, maxY) && 
-			   !_segmentCrossing(barycentre, point, maxY, minX)) {
+			if(!_segmentCrossing(centroid, point, minX, minY) && 
+			   !_segmentCrossing(centroid, point, minY, maxX) && 
+			   !_segmentCrossing(centroid, point, maxX, maxY) && 
+			   !_segmentCrossing(centroid, point, maxY, minX)) {
 				toDelete.push(i);
 			}
 		}
