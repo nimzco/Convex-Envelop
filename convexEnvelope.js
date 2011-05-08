@@ -11,7 +11,6 @@
 (function() {	
 	var m = window.convlexEnvelop.models;
 	var algo = window.convlexEnvelop.algorithms();
-	/* 'Objects' */
 	/* Functions */
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
