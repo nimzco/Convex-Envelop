@@ -120,7 +120,19 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
-			//points = algo.lozengeOptimization(points);
+			var algorithm, optimization;
+			if ($("select_algo").value === "divide") {
+				algorithm = algo.divideAndConquer;
+			} else {
+				algorithm = algo.randomizedAlgorithm;
+			};
+			if ($("optimized").checked) {
+				optimization = algo.lozengeOptimization;
+			} else {
+				optimization = function(points){ return points; };
+			};
+		
+			points = optimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
 				if (tmp === 0) {
@@ -128,7 +140,7 @@
 				}
 				return tmp;
 			});
-			var calcul = calculateTime(algo.divideAndConquer, points);
+			var calcul = calculateTime(algorithm, points);
 			$('time').innerHTML = 'Time of execution ' + calcul.time + 'ms';
 			envelop = calcul.envelop;
 			canvas.displayPolygon(envelop, canvas.randomColor());

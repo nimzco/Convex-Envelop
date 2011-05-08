@@ -13,8 +13,6 @@ window.convlexEnvelop.algorithms = function () {
 	var that = {};
 	var m = window.convlexEnvelop.models;
 	/* Getting shortcut name for method within window.convlexEnvelop.models */
-	var Point = m.point;
-	var Vector = m.vector;
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
@@ -160,7 +158,6 @@ window.convlexEnvelop.algorithms = function () {
 		randA = Math.randomValue(0, pointsArray.length -1);
 		a = pointsArray[randA];
 		pointsArray.splice(randA, 1);
-		
 		randB = Math.randomValue(0, pointsArray.length -1);
 		b = pointsArray[randB];
 		pointsArray.splice(randB, 1);
@@ -169,7 +166,7 @@ window.convlexEnvelop.algorithms = function () {
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
 
-		barycentre = new Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
+		barycentre = new m.Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
 
 		array = [];
 		array.push(a);
