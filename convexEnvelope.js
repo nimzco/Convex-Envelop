@@ -121,7 +121,7 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
-			var algorithm, optimization;
+			var algorithm, optimization, time;
 			if ($("select_algo").value === "divide") {
 				algorithm = algo.divideAndConquer;
 			} else {
@@ -133,7 +133,6 @@
 				points = _points.slice(0, _points.length);
 				optimization = function(points) { return points; };
 			};
-
 			points = optimization(points);
 			points = points.sort(function(a,b) {
 				var tmp = a.x - b.x;
