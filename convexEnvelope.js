@@ -156,7 +156,7 @@
 			if (points.length > 0) {
 				calculTime = calculateTime(executeAlgo);
 				$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calculTime + 'ms<br />';
-				canvas.displayPolygon(envelop, canvas.randomColor());
+				canvas.displayPolygon(envelop);
 			}
 		};
 		
