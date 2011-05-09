@@ -130,7 +130,7 @@
 				optimization = algo.lozengeOptimization;
 			} else {
 				points = _points.slice(0, _points.length);
-				optimization = function(points){ return points; };
+				optimization = function(points) { return points; };
 			};
 
 			points = optimization(points);
@@ -142,7 +142,7 @@
 				return tmp;
 			});
 			var calcul = calculateTime(algorithm, points);
-			$('time').innerHTML = 'Time of execution ' + calcul.time + 'ms';
+			$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calcul.time + 'ms<br />';
 			envelop = calcul.envelop;
 			canvas.displayPolygon(envelop, canvas.randomColor());
 		};
