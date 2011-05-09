@@ -18,32 +18,33 @@
 	var populate, exportPoints, joinTop, divide, populateFromJson, exportToJson, calculateTime;
 	/* Variables */
 	var canvas, _points = [], points = [], envelop = [];
-
+	var allPoints = [];
+	var generateAllPoints;
+	generateAllPoints = function (_allPoints, _width, _height) {
+		var height, width, i, j;
+		width = _width || 600;
+		height = _height || width;
+		_allPoints.splice(0, _allPoints.length);
+		for (i = 0; i < width; i += 1) {
+			for (j = 0; j < height; j += 1) {
+				_allPoints.push(new m.Point({x:i, y:j}));
+			}
+		}
+	};
+	generateAllPoints(allPoints, 600);
 	populate = function (n, array) {
 		var i = 0;
 		while(i < n) {
-			var randX = Math.floor(Math.random() * 600);
-			var randY = Math.floor(Math.random() * 600);
+			var rand = Math.floor(Math.random() * allPoints.length);
 			i += 1;
-			var p = new m.Point({
-					x: randX,
-					y: randY
-				});
-			while (array.contains(p)) {
-				randX = Math.floor(Math.random() * 600);
-				randY = Math.floor(Math.random() * 600);
-				p = new m.Point({
-					x: randX,
-					y: randY
-				});
-			}
-			array.push(p);
+			array.push(allPoints[rand]);
+			allPoints.splice(rand, 1);
 		}
-	}
+	};
 
 	/**
 	 * Parses the input to get Json and 
-   */
+	 */
 	populateFromJson = function () {
 		var myJsonText, myObject, i;
 		myJsonText = $("input_json").value;
@@ -98,7 +99,7 @@
 		}
 		json += "}";
 		return json || "";
-	}
+	};
 	
 	/**
 	 * Returns the time of execution of an algorithm
@@ -113,7 +114,7 @@
 			result.time = t2-t1;
 			result.envelop = envelop; 
 			return result;
-	}
+	};
 
 	/**
 	 * Affecting onclick function to the execute button
@@ -148,7 +149,7 @@
 		};
 		
 		$('populate_button').onclick = function (e) {
-			populate($('input').value, points);
+			populate($('input').value, points, allPoints);
 			_points = points.slice(0, points.length);
 			canvas.displayAllPoints(points);
 		};	
@@ -166,6 +167,7 @@
 		
 		canvas = new window.convlexEnvelop.Viewer($('exemple'));
 		$("clear_button").onclick = function () {
+			generateAllPoints(allPoints, 600);
 			canvas.clear();
 			points = [];
 			_points = [];
