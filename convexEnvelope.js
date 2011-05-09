@@ -20,6 +20,7 @@
 	var canvas, _points = [], points = [], envelop = [];
 	var allPoints = [];
 	var generateAllPoints;
+	
 	generateAllPoints = function (_allPoints, _width, _height) {
 		var height, width, i, j;
 		width = _width || 600;
@@ -104,16 +105,19 @@
 	/**
 	 * Returns the time of execution of an algorithm
    */
-	calculateTime = function(algo, array) {
-			var result = {};
-			var date = new Date();
-			var t1 = date.getTime();
-			envelop = algo(array);
+	calculateTime = function(func) {
+			var date, t1, t2, args;
+			var __slice = Array.prototype.slice;
+
 			date = new Date();
-			var t2 = date.getTime();
-			result.time = t2-t1;
-			result.envelop = envelop; 
-			return result;
+			t1 = date.getTime();
+
+			args = 2 <= arguments.length ? __slice.call(arguments, 1) : []
+			func(args);
+			
+			date = new Date();
+			t2 = date.getTime();
+			return t2-t1;
 	};
 
 	/**
@@ -121,7 +125,7 @@
 	 */
 	addOnLoadEvent(function () {
 		$('execute_button').onclick = function (e) {
-			var algorithm, optimization;
+			var algorithm, optimization, calculTime, executeAlgo;
 			if ($("select_algo").value === "divide") {
 				algorithm = algo.divideAndConquer;
 			} else {
@@ -134,17 +138,20 @@
 				optimization = function(points) { return points; };
 			};
 
-			points = optimization(points);
-			points = points.sort(function(a,b) {
-				var tmp = a.x - b.x;
-				if (tmp === 0) {
-					tmp = a.y - b.y;
-				}
-				return tmp;
-			});
-			var calcul = calculateTime(algorithm, points);
-			$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calcul.time + 'ms<br />';
-			envelop = calcul.envelop;
+			executeAlgo = function () {
+				points = optimization(points);
+				points = points.sort(function(a,b) {
+					var tmp = a.x - b.x;
+					if (tmp === 0) {
+						tmp = a.y - b.y;
+					}
+					return tmp;
+				});
+				envelop = algorithm(points);
+			};
+			
+			calculTime = calculateTime(executeAlgo);
+			$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calculTime + 'ms<br />';
 			canvas.displayPolygon(envelop, canvas.randomColor());
 		};
 		
