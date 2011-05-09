@@ -146,7 +146,7 @@
 					}
 					return tmp;
 				});
-				envelop = algorithm(points);
+				envelop = algorithm(points.slice(0, points.length));
 			};
 			if (points.length > 0) {
 				calculTime = calculateTime(executeAlgo);
@@ -162,9 +162,9 @@
 		};	
 		
 		$("parse_button").onclick =  function () {
-			_points = points = []
+			_points = points = [];
 			populateFromJson();
-			_points = points.slice(0, points.length);			
+			_points = points.slice(0, points.length);
 			canvas.displayAllPoints(points);
 			canvas.displayPolygon(envelop);
 		};
