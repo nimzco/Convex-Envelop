@@ -8,6 +8,7 @@
 if (typeof window.convlexEnvelop === "undefined") {
 	window.convlexEnvelop = {};
 }
+window.convlexEnvelop.sizeOfCanvas = 600;
 window.convlexEnvelop.Viewer = (function (){
 	function Viewer(canvasDiv) {
 		this.canvas = canvasDiv || document.getElementById("canvas");
@@ -34,7 +35,7 @@ window.convlexEnvelop.Viewer = (function (){
 		var context = this.canvas.getContext('2d');
 		context.fillStyle = color || "rgba(0,0,0,1)";
 		context.beginPath();
-		context.arc(point.x,600 - point.y, 2, 0, Math.PI * 2,true);
+		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 2, 0, Math.PI * 2,true);
 		context.closePath();
 		context.fill();
 	};
@@ -46,8 +47,8 @@ window.convlexEnvelop.Viewer = (function (){
 		var context = this.canvas.getContext('2d');
 	 	context.lineWidth=2;
 		context.lineCap='round'; 
-		context.moveTo(a.x,600 - a.y);
-		context.lineTo(b.x,600 - b.y);
+		context.moveTo(a.x, window.convlexEnvelop.sizeOfCanvas - a.y);
+		context.lineTo(b.x, window.convlexEnvelop.sizeOfCanvas - b.y);
 		context.strokeStyle = color || "rgba(0,0,0,1)";;
 		context.stroke();
 	};
@@ -59,7 +60,7 @@ window.convlexEnvelop.Viewer = (function (){
 		var context = this.canvas.getContext('2d');
 		context.fillStyle = color || "rgba(0,0,0,1)";
 		context.beginPath();
-		context.arc(point.x,600 - point.y, 2, 0, Math.PI * 2,true);
+		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 2, 0, Math.PI * 2,true);
 		context.closePath();
 		context.fill();
 	};

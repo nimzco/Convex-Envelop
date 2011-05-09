@@ -8,9 +8,10 @@
 /**
  * Protecting global namespace
  */
-(function() {	
+(function() {
 	var m = window.convlexEnvelop.models;
 	var algo = window.convlexEnvelop.algorithms();
+	var sizeOfCanvas = window.convlexEnvelop.sizeOfCanvas;
 	/* Functions */
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
@@ -23,7 +24,7 @@
 	
 	generateAllPoints = function (_allPoints, _width, _height) {
 		var height, width, i, j;
-		width = _width || 600;
+		width = _width || sizeOfCanvas;
 		height = _height || width;
 		_allPoints.splice(0, _allPoints.length);
 		for (i = 0; i < width; i += 1) {
@@ -32,11 +33,11 @@
 			}
 		}
 	};
-	generateAllPoints(allPoints, 600);
+	generateAllPoints(allPoints, sizeOfCanvas);
 	populate = function (n, array) {
 		var i = 0;
 		while(i < n) {
-			var rand = Math.floor(Math.random() * allPoints.length);
+			var rand = Math.randomValue(0, allPoints.length);
 			i += 1;
 			array.push(allPoints[rand]);
 			allPoints.splice(rand, 1);
@@ -124,6 +125,10 @@
 	 * Affecting onclick function to the execute button
 	 */
 	addOnLoadEvent(function () {
+		canvas = new window.convlexEnvelop.Viewer($('canvas'));
+		canvas.width = sizeOfCanvas;
+		canvas.height = sizeOfCanvas;
+
 		$('execute_button').onclick = function (e) {
 			var algorithm, optimization, calculTime, executeAlgo;
 			if ($("select_algo").value === "divide") {
@@ -173,14 +178,14 @@
 			$('input_json').value = exportToJson(_points, envelop);
 		};
 		
-		canvas = new window.convlexEnvelop.Viewer($('exemple'));
 		$("clear_button").onclick = function () {
-			generateAllPoints(allPoints, 600);
+			generateAllPoints(allPoints, sizeOfCanvas);
 			canvas.clear();
 			points = [];
 			_points = [];
 			envelop = [];
 			$('output').innerHTML = "";
-		};	
+			$('time').innerHTML = "";
+		};
 	});
 })();

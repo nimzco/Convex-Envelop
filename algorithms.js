@@ -313,7 +313,7 @@ window.convlexEnvelop.algorithms = function () {
 	that.lozengeOptimization = _lozengeOptimization;
 	
 	addOnLoadEvent(function () {
-		canvas = new window.convlexEnvelop.Viewer($('exemple'));
+		canvas = new window.convlexEnvelop.Viewer($('canvas'));
 	})
 	
 	return that;
