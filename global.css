@@ -105,3 +105,19 @@ p {
 	padding: 0.3em;
 	visibility: hidden;
 }
+
+#div_time {
+	margin-top: 0.4em;
+	background-color: #EEE;
+	border: 1px solid #D8D8DD;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+#div_time h4 {
+	text-align: center;
+	margin-top: 0em;
+	margin-bottom: 0.2em;
+}

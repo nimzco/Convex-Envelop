@@ -250,7 +250,7 @@ window.convlexEnvelop.algorithms = function () {
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
 
-	_lozengeOptimization = function(array) {
+	_lozengeOptimization = function(array, bool) {
 		var minX, maxX, minY, maxY, centroid, i, point, toDelete = [];
 		
 		// Min and Max values to define a lozenges
@@ -259,6 +259,14 @@ window.convlexEnvelop.algorithms = function () {
 		minY = array[array.minY()];
 		maxY = array[array.maxY()];
 
+		bool = true;
+		if (bool) {
+			canvas.displayLine(minX,minY);
+			canvas.displayLine(minY,maxX);
+			canvas.displayLine(maxX,maxY);
+			canvas.displayLine(maxY,minX);
+		}
+		
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		array.splice(array.minX(), 1);
 		array.splice(array.maxX(), 1);

@@ -19,6 +19,13 @@ window.convlexEnvelop.Viewer = (function (){
 	Viewer.prototype.randomColor =  function () {
 		return "rgba(" + Math.randomValue(200) + "," + Math.randomValue(200) + "," + Math.randomValue(200) + ",1)";
 	};
+	
+	/*
+ 	 * Returns a random color
+ 	 */
+	Viewer.prototype.randomDarkColor =  function () {
+		return "rgba(" + Math.randomValue(100) + "," + Math.randomValue(100) + "," + Math.randomValue(100) + ",1)";
+	};
 
 	/*
  	 * Display a colored point
