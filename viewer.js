@@ -29,19 +29,7 @@ window.convlexEnvelop.Viewer = (function (){
 	};
 
 	/*
- 	 * Display a colored point
- 	 */
-	Viewer.prototype.displayPoint = function (point, color) {
-		var context = this.canvas.getContext('2d');
-		context.fillStyle = color || "rgba(0,0,0,1)";
-		context.beginPath();
-		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 2, 0, Math.PI * 2,true);
-		context.closePath();
-		context.fill();
-	};
-
-	/*
- 	 * display a colored line between the point a and the point b
+ 	 * Display a colored line between the point a and the point b
  	 */
 	Viewer.prototype.displayLine = function (a, b, color) {
 		var context = this.canvas.getContext('2d');
@@ -60,7 +48,7 @@ window.convlexEnvelop.Viewer = (function (){
 		var context = this.canvas.getContext('2d');
 		context.fillStyle = color || "rgba(0,0,0,1)";
 		context.beginPath();
-		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 2, 0, Math.PI * 2,true);
+		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 1, 0, Math.PI * 2,true);
 		context.closePath();
 		context.fill();
 	};
