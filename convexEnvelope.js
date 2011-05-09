@@ -137,7 +137,6 @@
 				points = _points.slice(0, _points.length);
 				optimization = function(points) { return points; };
 			};
-
 			executeAlgo = function () {
 				points = optimization(points);
 				points = points.sort(function(a,b) {
