@@ -16,8 +16,21 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _centroid;
+	_centroid = function () {
+		var i, centroidX = 0, centroidY = 0;
+		for (i = 0; i < arguments.length; i += 1) {
+			centroidX += arguments[i].x;
+			centroidY += arguments[i].y;
+		}
+		centroidX = Math.floor(centroidX / i);
+		centroidY = Math.floor(centroidY / i);
+		return new m.Point({x: centroidX, y: centroidY});
+	};
 	
+	/**
+	 * Checks if the segment [p1, p2] and [p3, p4] crosses
+	 */
 	_segmentCrossing = function(p1, p2, p3, p4) {
 		var a1, a2, b1, b2, xCommon;
 		//Slope of line (p1,p2)
@@ -153,111 +166,108 @@ window.convlexEnvelop.algorithms = function () {
 	that.divideAndConquer = _divideAndConquer;
 	
 	_randomizedAlgorithm = function(pointsArray) {
-		var a, randA, b, randB, c, randC, d, p, centroid, iPrev, iNext;
+		var a, randA, b, randB, c, randC, centroid, envelop = [];
 		
-		randA = Math.randomValue(0, pointsArray.length -1);
+		// Taking three random point to make the first triangle of the envelop and removing it from pointsArray 
+		randA = Math.randomValue(0, pointsArray.length);
 		a = pointsArray[randA];
 		pointsArray.splice(randA, 1);
-		randB = Math.randomValue(0, pointsArray.length -1);
+		randB = Math.randomValue(0, pointsArray.length);
 		b = pointsArray[randB];
 		pointsArray.splice(randB, 1);
-		
-		randC = Math.randomValue(0, pointsArray.length -1);
+		randC = Math.randomValue(0, pointsArray.length);
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
+		// Taking the centroid of this triangle
+		centroid = _centroid(a, b, c);
+		// Adding points of the triangle in the envelop
+		envelop.push(a);
+		envelop.push(b);
+		envelop.push(c);
 
-		centroid = new m.Point({x: (a.x + b.x + c.x) / 3, y:(a.y + b.y + c.y) / 3});
-
-		array = [];
-		array.push(a);
-		array.push(b);
-		array.push(c);
-		
-		// Put the triangle in clockwise
-		if(pointCrossProduct(array[0], array[1], array[2]) >= 0) {
-			array.swap(1,2);
+		// Put the triangle in clockwise direction
+		if(pointCrossProduct(envelop[0], envelop[1], envelop[2]) >= 0) { // ça ça va dans une fonction, que vous devriez déjà avoir pour le premier algo
+			envelop.swap(1,2);
 		}
-
-		canvas.displayPoint(array[0], "#FF0000");
-		canvas.displayPoint(array[1], "#00FF00");
-		canvas.displayPoint(array[2], "#0000FF");
+			
+		// Drawing the first triangle
+//		canvas.displayPolygon([envelop[0], envelop[1], envelop[2]], "#000");
 		
-		canvas.displayPoint(centroid);
-		
-//		alert(pointsArray.length);
+		// Running through all points
 		while(pointsArray.length > 0) {
-			var randP = Math.randomValue(0, pointsArray.length - 1);
-//			alert(randP);
+			var c1, c2, v1, v2, v3, v4, distance;
+			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
+			// Getting a random point and removing it from the set
+			randP = Math.randomValue(0, pointsArray.length - 1);
 			p = pointsArray[randP];
-//			alert(p.toString());
-			var inside = true;
-			var finished = false;
-			var i = 0;
-			var p1, p2;
-			while(!finished && i < array.length) {
-				p1 = array[i];
-				p2 = array[array.nextIndex(i)];
-				//canvas.displayPoint(p1);
-				//canvas.displayPoint(p);
-				//canvas.displayPoint(centroid);
-				//canvas.displayLine(p1,p);
-				//canvas.displayLine(p,centroid);	
-				//alert(pointCrossProduct(p,centroid,p1));		
-/*
-				if(pointCrossProduct(p,centroid,p1) > 0) {
-				
-				}
-*/
-
-				if(!_segmentCrossing(p, centroid, p1, p2)) {
-					finished = true;
-					inside = false;
-				}
-				i += 1;
-			}
-			if (!inside) {
-				var c1, c2, v1, v2, v3;
-				v1 = new m.Vector({p1: p, p2: centroid});
-				v2 = new m.Vector({p1: p, p2: p2});
-				v3 = new m.Vector({p1: p, p2: array[array.nextIndex(i)]});
-				c1 = crossProduct(v1, v2);
-				c2 = crossProduct(v1, v3);
-				if ((c1 >= 0 && c2 >= 0) || (c1 < 0 && c2 < 0)) {
-					array.splice(array[array.previousIndex(i)], 1);
-					array.push(p);
-				}
-			}
-			
-		/*
-	
-			i -= 1;
-			v1 = new Vector({p1: p, p2: centroid}));
-			v2 = new Vector({p1: p, p2: p1}));
-			c1 = crossProduct(v1, v2);
-			alert(c1);
-			if (!inside) {
-				if() {
-					
-				}
-			}
-*/
-			
 			pointsArray.splice(randP, 1);
+
+			// Checking if the point is in the current envelop
+			for (i = 0; i < envelop.length; i += 1) {;
+				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
+					isOutside = true;
+					break;
+				}
+			} 
+			if (!isOutside) {
+				continue;
+			}
+
+			lastBottomIndex = i;
+			lastTopIndex = envelop.nextIndex(i);
+			
+			// -- If the point is outside
+			topLimitIndex = envelop.nextIndex(i);
+			bottomLimitIndex = i;
+			while (crossProduct(
+					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
+					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
+//				envelop.splice(topLimitIndex, 1);
+				topLimitIndex = envelop.nextIndex(topLimitIndex);
+			}
+			while (crossProduct(
+					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
+					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
+//				envelop.splice(bottomLimitIndex, 1);
+				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
+			}
+
+			// If top and Bottom are 
+			distance = Math.abs(topLimitIndex - bottomLimitIndex);
+			if ((distance > 1) && distance < (envelop.length - 1)) {
+				if (bottomLimitIndex < topLimitIndex) {
+					envelop.splice(bottomLimitIndex + 1, (topLimitIndex - bottomLimitIndex) - 1);
+					envelop.splice(bottomLimitIndex + 1, 0, p);
+				} else {
+					envelop.splice(bottomLimitIndex + 1, envelop.length);
+					envelop.splice(0, topLimitIndex);
+					envelop.splice(0, 0, p);
+				}
+			} else {
+				if (lastBottomIndex != bottomLimitIndex) { 
+					envelop[envelop.previousIndex(topLimitIndex)] = p;
+				} else if (lastTopIndex != topLimitIndex) {
+					envelop[envelop.nextIndex(bottomLimitIndex)] = p;
+				} else {
+					// Inserts p after botttomIndex
+					envelop.splice(bottomLimitIndex + 1, 0, p);
+				}
+			}
 		}
 
 		
-		return array;
+		return envelop;
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
 
-	_lozengeOptimization = function(array, bool) {
+	_lozengeOptimization = function(pointsArray, bool) {
 		var minX, maxX, minY, maxY, centroid, i, point, toDelete = [];
 		
 		// Min and Max values to define a lozenges
-		minX = array[array.minX()];
-		maxX = array[array.maxX()];
-		minY = array[array.minY()];
-		maxY = array[array.maxY()];
+		minX = pointsArray[pointsArray.minX()];
+		maxX = pointsArray[pointsArray.maxX()];
+		minY = pointsArray[pointsArray.minY()];
+		maxY = pointsArray[pointsArray.maxY()];
 
 		bool = true;
 		if (bool) {
@@ -268,16 +278,16 @@ window.convlexEnvelop.algorithms = function () {
 		}
 		
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
-		array.splice(array.minX(), 1);
-		array.splice(array.maxX(), 1);
-		array.splice(array.minY(), 1);
-		array.splice(array.maxY(), 1);
+		pointsArray.splice(pointsArray.minX(), 1);
+		pointsArray.splice(pointsArray.maxX(), 1);
+		pointsArray.splice(pointsArray.minY(), 1);
+		pointsArray.splice(pointsArray.maxY(), 1);
 
 		// Calculating the centroid of the lozenge
-		centroid = new m.Point({x: ((minX.x + maxX.x + minY.x + maxY.x) / 4), y:((minX.y + maxX.y + minY.y + maxY.y) / 4)});
+		centroid = _centroid(minX, maxX, minY, maxY);
 		
-		for(i = 0; i < array.length; i += 1) {
-			point = array[i];
+		for(i = 0; i < pointsArray.length; i += 1) {
+			point = pointsArray[i];
 			
 			// if the point belongs to the lozenge, we add it to the deletion list
 			if(!_segmentCrossing(centroid, point, minX, minY) && 
@@ -288,17 +298,17 @@ window.convlexEnvelop.algorithms = function () {
 			}
 		}
 		
-		// Deletion of the elements from the array
+		// Deletion of the elements from the pointsArray
 		for (i=0; i < toDelete.length; i += 1) {
-			array.splice(toDelete[i] - i, 1);
+			pointsArray.splice(toDelete[i] - i, 1);
 		}
 		
 		// Add back all the mins and the maxs 
-		array.push(minX);
-		array.push(minY);
-		array.push(maxX);
-		array.push(maxY);
-		return array;
+		pointsArray.push(minX);
+		pointsArray.push(minY);
+		pointsArray.push(maxX);
+		pointsArray.push(maxY);
+		return pointsArray;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
 	

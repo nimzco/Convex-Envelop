@@ -45,7 +45,7 @@ window.convlexEnvelop.Viewer = (function (){
 	Viewer.prototype.displayLine = function (a, b, color) {
 		var context = this.canvas.getContext('2d');
 	 	context.lineWidth=2;
-	  context.lineCap='round'; 
+		context.lineCap='round'; 
 		context.moveTo(a.x,600 - a.y);
 		context.lineTo(b.x,600 - b.y);
 		context.strokeStyle = color || "rgba(0,0,0,1)";;

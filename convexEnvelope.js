@@ -81,7 +81,7 @@
 	exportToJson = function (pointsArray, envelop) {
 		var json, i;
 		json = "{";
-		if (points.length > 0) {
+		if (pointsArray.length > 0) {
 			json += "\n\t'points': [\n";
 			for(i = 0; i < pointsArray.length; i++) {
 				json += "\t\t{'x': " + pointsArray[i].x + ", 'y':" + pointsArray[i].y + '}';
@@ -148,10 +148,11 @@
 				});
 				envelop = algorithm(points);
 			};
-			
-			calculTime = calculateTime(executeAlgo);
-			$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calculTime + 'ms<br />';
-			canvas.displayPolygon(envelop, canvas.randomColor());
+			if (points.length > 0) {
+				calculTime = calculateTime(executeAlgo);
+				$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calculTime + 'ms<br />';
+				canvas.displayPolygon(envelop, canvas.randomColor());
+			}
 		};
 		
 		$('populate_button').onclick = function (e) {
@@ -165,10 +166,11 @@
 			populateFromJson();
 			_points = points.slice(0, points.length);			
 			canvas.displayAllPoints(points);
+			canvas.displayPolygon(envelop);
 		};
 		
 		$("export_button").onclick = function () {
-			$('input_json').value = exportToJson(points, envelop);
+			$('input_json').value = exportToJson(_points, envelop);
 		};
 		
 		canvas = new window.convlexEnvelop.Viewer($('exemple'));

@@ -47,6 +47,14 @@ Array.prototype.nextIndex = function (index) {
 };
 
 /*
+ * Returns the previous index regarding the index parameter and the array length
+ */	
+Array.prototype.previousIndex = function (index) {
+	return (index - 1 + this.length) % this.length;
+};
+
+
+/*
  * Returns true if p2 is better than p1 
  */
 var betterLeft =  function (p1, p2, comparator) {
@@ -81,12 +89,6 @@ Array.prototype.betterNextLeft = function (index, comparator) {
 	return betterLeft(this[index], this[this.nextIndex(index)], comparator);
 };
 
-/*
- * Returns the previous index regarding the index parameter and the array length
- */	
-Array.prototype.previousIndex = function (index) {
-	return (index - 1 + this.length) % this.length;
-};
 
 /*
  * Returns the index of the point having the greatest abscissa
