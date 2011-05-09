@@ -269,6 +269,7 @@ window.convlexEnvelop.algorithms = function () {
 		minY = pointsArray[pointsArray.minY()];
 		maxY = pointsArray[pointsArray.maxY()];
 
+/*
 		bool = true;
 		if (bool) {
 			canvas.displayLine(minX,minY);
@@ -276,6 +277,7 @@ window.convlexEnvelop.algorithms = function () {
 			canvas.displayLine(maxX,maxY);
 			canvas.displayLine(maxY,minX);
 		}
+*/
 		
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(pointsArray.minX(), 1);
