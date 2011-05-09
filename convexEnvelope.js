@@ -37,7 +37,7 @@
 	populate = function (n, array) {
 		var i = 0;
 		while(i < n) {
-			var rand = Math.randomValue(0, allPoints.length);
+			var rand = Math.randomValue(allPoints.length);
 			i += 1;
 			array.push(allPoints[rand]);
 			allPoints.splice(rand, 1);
