@@ -27,7 +27,7 @@
 	stats.randomized = {};
 	stats.randomizedOptimized = {};
 	
-	generateAllPoints = function (_allPoints, _width, _height) {
+/*	generateAllPoints = function (_allPoints, _width, _height) {
 		var height, width, i, j;
 		width = _width || sizeOfCanvas;
 		height = _height || width;
@@ -39,13 +39,18 @@
 		}
 	};
 	generateAllPoints(allPoints, sizeOfCanvas);
-	populate = function (n, array) {
+*/
+	populate = function (n, pointsArray) {
 		var i = 0;
 		while(i < n) {
-			var rand = Math.randomValue(allPoints.length);
+			var p, randX, randY;
+			do {
+				randX = Math.randomValue(sizeOfCanvas);
+				randY = Math.randomValue(sizeOfCanvas);
+				p = new m.Point({x: randX, y:randY});
+			} while(pointsArray.contains(p));
+			pointsArray.push(p);
 			i += 1;
-			array.push(allPoints[rand]);
-			allPoints.splice(rand, 1);
 		}
 	};
 
@@ -250,7 +255,7 @@
 		};
 		
 		$("clear_button").onclick = function () {
-			generateAllPoints(allPoints, sizeOfCanvas);
+//			generateAllPoints(allPoints, sizeOfCanvas);
 			canvas.clear();
 			points = [];
 			_points = [];
