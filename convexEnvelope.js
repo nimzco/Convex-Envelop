@@ -21,8 +21,13 @@
 	var canvas, _points = [], points = [], envelop = [];
 	var allPoints = [];
 	var generateAllPoints;
+	var stats = {}, returnStats;
+	stats.divide = {};
+	stats.divideOptimized = {};
+	stats.randomized = {};
+	stats.randomizedOptimized = {};
 	
-	generateAllPoints = function (_allPoints, _width, _height) {
+/*	generateAllPoints = function (_allPoints, _width, _height) {
 		var height, width, i, j;
 		width = _width || sizeOfCanvas;
 		height = _height || width;
@@ -34,13 +39,18 @@
 		}
 	};
 	generateAllPoints(allPoints, sizeOfCanvas);
-	populate = function (n, array) {
+*/
+	populate = function (n, pointsArray) {
 		var i = 0;
 		while(i < n) {
-			var rand = Math.randomValue(0, allPoints.length);
+			var p, randX, randY;
+			do {
+				randX = Math.randomValue(sizeOfCanvas);
+				randY = Math.randomValue(sizeOfCanvas);
+				p = new m.Point({x: randX, y:randY});
+			} while(pointsArray.contains(p));
+			pointsArray.push(p);
 			i += 1;
-			array.push(allPoints[rand]);
-			allPoints.splice(rand, 1);
 		}
 	};
 
@@ -121,6 +131,26 @@
 			return t2-t1;
 	};
 
+	returnStats = function () {
+		var i, statsStr;
+		statsStr = "<h4>Divide and Conquer</h4>"
+		for (i in stats.divide) {
+			statsStr +=  i + " points: " + (stats.divide[i].time / stats.divide[i].i).toFixed(2) + "ms <br />";
+		}
+		statsStr += "<h4>Divide and Conquer - Optimized</h4>"
+		for (i in stats.divideOptimized) {
+			statsStr +=  i + " points: " + (stats.divideOptimized[i].time / stats.divideOptimized[i].i).toFixed(2) + "ms<br />";
+		}
+		statsStr += "<h4>Randomized</h4>"
+		for (i in stats.randomized) {
+			statsStr +=  i + " points: " + (stats.randomized[i].time / stats.randomized[i].i).toFixed(2) + "ms<br />";
+		}
+		statsStr += "<h4>Randomized - Optimized</h4>"
+		for (i in stats.randomizedOptimized) {
+			statsStr +=  i + " points: " + (stats.randomizedOptimized[i].time / stats.randomizedOptimized[i].i).toFixed(2) + "ms<br />";
+		}
+		return statsStr;
+	};
 	/**
 	 * Affecting onclick function to the execute button
 	 */
@@ -130,8 +160,9 @@
 		canvas.height = sizeOfCanvas;
 
 		$('execute_button').onclick = function (e) {
-			var algorithm, optimization, calculTime, executeAlgo;
-			if ($("select_algo").value === "divide") {
+			var algorithm, optimization, calculTime, executeAlgo, tempPoints;
+			tempPoints = _points.slice(0, _points.length);
+			if ($("divide").checked) {
 				algorithm = algo.divideAndConquer;
 			} else {
 				algorithm = algo.randomizedAlgorithm;
@@ -139,31 +170,76 @@
 			if ($("optimized").checked) {
 				optimization = algo.lozengeOptimization;
 			} else {
-				points = _points.slice(0, _points.length);
-				optimization = function(points) { return points; };
+				optimization = function(pointsArray) { return pointsArray; };
 			};
 			executeAlgo = function () {
-				points = optimization(points);
-				points = points.sort(function(a,b) {
+				tempPoints = optimization(tempPoints);
+				tempPoints = tempPoints.sort(function(a,b) {
 					var tmp = a.x - b.x;
 					if (tmp === 0) {
 						tmp = a.y - b.y;
 					}
 					return tmp;
 				});
-				envelop = algorithm(points.slice(0, points.length));
+				envelop = algorithm(tempPoints);
 			};
-			if (points.length > 0) {
+			if (tempPoints.length > 0) {
 				calculTime = calculateTime(executeAlgo);
-				$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ': Time of execution ' + calculTime + 'ms<br />';
+			//	$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ' - (' + points.length + ' points) -  Time of execution ' + calculTime + 'ms<br />';
 				canvas.displayPolygon(envelop);
 			}
+			
+			// Getting stats
+			if ($("divide").checked) {
+				if ($("optimized").checked) {
+					if (typeof stats.divideOptimized[points.length] !==  "undefined") {
+						stats.divideOptimized[points.length].i += 1;
+						stats.divideOptimized[points.length].time += calculTime;
+					} else {
+						stats.divideOptimized[points.length] = {};
+						stats.divideOptimized[points.length].i = 1;
+						stats.divideOptimized[points.length].time = calculTime;
+					}
+				} else {
+					if (typeof stats.divide[points.length] !==  "undefined") {
+						stats.divide[points.length].i += 1;
+						stats.divide[points.length].time += calculTime;
+					} else {
+						stats.divide[points.length] = {};
+						stats.divide[points.length].i = 1;
+						stats.divide[points.length].time = calculTime;
+					}
+				}
+			} else {
+				if ($("optimized").checked) {
+					if (typeof stats.randomizedOptimized[points.length] !==  "undefined") {
+						stats.randomizedOptimized[points.length].i += 1;
+						stats.randomizedOptimized[points.length].time += calculTime;
+					} else {
+						stats.randomizedOptimized[points.length] = {};
+						stats.randomizedOptimized[points.length].i = 1;
+						stats.randomizedOptimized[points.length].time = calculTime;
+					}
+				} else {
+					if (typeof stats.randomized[points.length] !==  "undefined") {
+						stats.randomized[points.length].i += 1;
+						stats.randomized[points.length].time += calculTime;
+					} else {
+						stats.randomized[points.length] = {};
+						stats.randomized[points.length].i = 1;
+						stats.randomized[points.length].time = calculTime;
+					}
+				}
+			}
+			$('time').innerHTML = returnStats();
 		};
+		
 		
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points, allPoints);
 			_points = points.slice(0, points.length);
 			canvas.displayAllPoints(points);
+			$("nbPoints").innerHTML = "" + _points.length + " points";
 		};	
 		
 		$("parse_button").onclick =  function () {
@@ -179,7 +255,7 @@
 		};
 		
 		$("clear_button").onclick = function () {
-			generateAllPoints(allPoints, sizeOfCanvas);
+//			generateAllPoints(allPoints, sizeOfCanvas);
 			canvas.clear();
 			points = [];
 			_points = [];

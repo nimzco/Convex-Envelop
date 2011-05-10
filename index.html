@@ -15,11 +15,12 @@
 			<p><label for="input">Number of points :</label>
 			<input type="text" id="input" value="500"/></p>
 			<br />
-			<label for="select_algo">Algorithm:</label>
-			<select id="select_algo">
-				<option value="randomized">Randomized</option>
-				<option value="divide">Divide And Conquer</option>
-			</select>
+
+			<label for="divide">Divide And Conquer:</label>
+			<input type="radio" name="algorithm" value="divide" id="divide" > 
+			<label for="randomized">Randomized:</label>
+			<input type="radio" name="algorithm" value="randomized" id="randomized" checked="true">
+			<br />
 			<label for="optimized">Optimized</label>
 			<input id="optimized" type="checkbox" />
 			<br />
@@ -32,7 +33,7 @@
 			<h4>Time of execution</h4>
 			<p id="time"></p>
 		</div>
-		<p>Size of the Canvas: 600x600</p>
+		<p>Size of the Canvas: 600x600 - <span id="nbPoints"></span></p>
 		<canvas id="canvas" width="600" height="600">
 			Votre navigateur ne supporte pas les canvas.
 		</canvas>
