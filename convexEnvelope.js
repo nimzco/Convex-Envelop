@@ -113,7 +113,7 @@
 			date = new Date();
 			t1 = date.getTime();
 
-			args = 2 <= arguments.length ? __slice.call(arguments, 1) : []
+			args = 2 <= arguments.length ? __slice.call(arguments, 1) : [] // manque pas un ; par hasard ???
 			func(args);
 			
 			date = new Date();

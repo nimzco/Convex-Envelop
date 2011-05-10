@@ -33,7 +33,7 @@ window.convlexEnvelop.Viewer = (function (){
  	 */
 	Viewer.prototype.displayLine = function (a, b, color) {
 		var context = this.canvas.getContext('2d');
-	 	context.lineWidth=2;
+	 	context.lineWidth=1;
 		context.lineCap='round'; 
 		context.moveTo(a.x, window.convlexEnvelop.sizeOfCanvas - a.y);
 		context.lineTo(b.x, window.convlexEnvelop.sizeOfCanvas - b.y);
