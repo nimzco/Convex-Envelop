@@ -244,13 +244,13 @@ window.convlexEnvelop.algorithms = function () {
 			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
-//				envelop.splice(topLimitIndex, 1);
+				envelop.splice(topLimitIndex, 1);
 				topLimitIndex = envelop.nextIndex(topLimitIndex);
 			}
 			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
 					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
-//				envelop.splice(bottomLimitIndex, 1);
+				envelop.splice(bottomLimitIndex, 1);
 				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 			}
 
@@ -317,7 +317,7 @@ window.convlexEnvelop.algorithms = function () {
 		}
 		
 		// Deletion of the elements from the pointsArray
-		for (i=0; i < toDelete.length; i += 1) {
+		for (i = 0; i < toDelete.length; i += 1) {
 			pointsArray.splice(toDelete[i] - i, 1);
 		}
 		
