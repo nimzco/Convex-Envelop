@@ -116,7 +116,8 @@ p {
 	text-align: right;
 }
 
-#div_time h4 {
+#div_time h3 {
+	font-size: larger;
 	text-align: center;
 	margin-top: 0em;
 	margin-bottom: 0.2em;

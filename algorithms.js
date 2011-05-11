@@ -16,15 +16,37 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _centroid;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _centroid, turnClockwise;
+	
+	/*
+	 * Turns a triangle clockwise
+	 */
+	turnClockwise = function (triangle){
+		if(pointCrossProduct(triangle[0], triangle[1], triangle[2]) >= 0) {
+			triangle.swap(1,2);
+		}
+	};
+	
+	/*
+	 * Turns a triangle counter clockwise
+	 */
+	turnCounterClockwise = function (triangle){
+		if(pointCrossProduct(triangle[0], triangle[1], triangle[2]) <= 0) {
+			triangle.swap(1,2);
+		}
+	};
+	
+	/*
+	 * Returns the centroid of points passed in parameters
+	 */
 	_centroid = function () {
 		var i, centroidX = 0, centroidY = 0;
 		for (i = 0; i < arguments.length; i += 1) {
 			centroidX += arguments[i].x;
 			centroidY += arguments[i].y;
 		}
-		centroidX = Math.floor(centroidX / i);
-		centroidY = Math.floor(centroidY / i);
+		centroidX = (centroidX / i);
+		centroidY = (centroidY / i);
 		return new m.Point({x: centroidX, y: centroidY});
 	};
 	
@@ -63,13 +85,14 @@ window.convlexEnvelop.algorithms = function () {
 	};
 	that.segmentCrossing = _segmentCrossing;
 	
+	/*
+	 * Divide And Conquer Algorithm
+	 */
 	_divideAndConquer = function (pointsArray) {
 		if (pointsArray.length < 4) {
 			if(pointsArray.length > 2) {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
-				if(pointCrossProduct(pointsArray[0], pointsArray[1], pointsArray[2]) <= 0) {
-					pointsArray.swap(1,2);
-				}
+				turnCounterClockwise(pointsArray);
 			}
 			return pointsArray;
 		} else {
@@ -164,7 +187,10 @@ window.convlexEnvelop.algorithms = function () {
 		}
 	};
 	that.divideAndConquer = _divideAndConquer;
-	
+
+	/*
+	 * Randomized algorithm
+	 */
 	_randomizedAlgorithm = function(pointsArray) {
 		var a, randA, b, randB, c, randC, centroid, envelop = [];
 		
@@ -180,19 +206,15 @@ window.convlexEnvelop.algorithms = function () {
 		pointsArray.splice(randC, 1);
 		// Taking the centroid of this triangle
 		centroid = _centroid(a, b, c);
+
 		// Adding points of the triangle in the envelop
 		envelop.push(a);
 		envelop.push(b);
 		envelop.push(c);
 
 		// Put the triangle in clockwise direction
-		if(pointCrossProduct(envelop[0], envelop[1], envelop[2]) >= 0) { // ça ça va dans une fonction, que vous devriez déjà avoir pour le premier algo
-			envelop.swap(1,2);
-		}
+		turnClockwise(envelop);
 			
-		// Drawing the first triangle
-//		canvas.displayPolygon([envelop[0], envelop[1], envelop[2]], "#000");
-		
 		// Running through all points
 		while(pointsArray.length > 0) {
 			var c1, c2, v1, v2, v3, v4, distance;
@@ -234,7 +256,7 @@ window.convlexEnvelop.algorithms = function () {
 
 			// If top and Bottom are 
 			distance = Math.abs(topLimitIndex - bottomLimitIndex);
-			if ((distance > 1) && distance < (envelop.length - 1)) {
+			if ((distance > 1) && (distance < (envelop.length - 1))) {
 				if (bottomLimitIndex < topLimitIndex) {
 					envelop.splice(bottomLimitIndex + 1, (topLimitIndex - bottomLimitIndex) - 1);
 					envelop.splice(bottomLimitIndex + 1, 0, p);
@@ -253,6 +275,7 @@ window.convlexEnvelop.algorithms = function () {
 					envelop.splice(bottomLimitIndex + 1, 0, p);
 				}
 			}
+			
 		}
 
 		
@@ -260,6 +283,9 @@ window.convlexEnvelop.algorithms = function () {
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
 
+	/*
+	 * Lozenge optimization
+	 */
 	_lozengeOptimization = function(pointsArray, bool) {
 		var minX, maxX, minY, maxY, centroid, i, point, toDelete = [];
 		
@@ -269,16 +295,6 @@ window.convlexEnvelop.algorithms = function () {
 		minY = pointsArray[pointsArray.minY()];
 		maxY = pointsArray[pointsArray.maxY()];
 
-/*
-		bool = true;
-		if (bool) {
-			canvas.displayLine(minX,minY);
-			canvas.displayLine(minY,maxX);
-			canvas.displayLine(maxX,maxY);
-			canvas.displayLine(maxY,minX);
-		}
-*/
-		
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(pointsArray.minX(), 1);
 		pointsArray.splice(pointsArray.maxX(), 1);

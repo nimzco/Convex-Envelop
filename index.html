@@ -13,13 +13,13 @@
 		<h1>Viewer</h1>
 		<fieldset>
 			<p><label for="input">Number of points :</label>
-			<input type="text" id="input" value="500"/></p>
+			<input type="text" id="input" value="400"/></p>
 			<br />
 
 			<label for="divide">Divide And Conquer:</label>
-			<input type="radio" name="algorithm" value="divide" id="divide" > 
+			<input type="radio" name="algorithm" value="divide" id="divide" checked="true"> 
 			<label for="randomized">Randomized:</label>
-			<input type="radio" name="algorithm" value="randomized" id="randomized" checked="true">
+			<input type="radio" name="algorithm" value="randomized" id="randomized">
 			<br />
 			<label for="optimized">Optimized</label>
 			<input id="optimized" type="checkbox" />
@@ -30,7 +30,7 @@
 			<button id="clear_button">Clear</button>
 		</fieldset>
 		<div id="div_time">
-			<h4>Time of execution</h4>
+			<h3>Average time of execution</h3>
 			<p id="time"></p>
 		</div>
 		<p>Size of the Canvas: 600x600 - <span id="nbPoints"></span></p>
