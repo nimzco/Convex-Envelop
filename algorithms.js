@@ -94,7 +94,8 @@ window.convlexEnvelop.algorithms = function () {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 				turnCounterClockwise(pointsArray);
 			}
-			// View
+			/*
+// View
 			if (pointsArray.length === 3) {
 				canvas.displayLine(pointsArray[0], pointsArray[1], "#0000FF");
 				canvas.displayLine(pointsArray[1], pointsArray[2], "#0000FF");
@@ -104,6 +105,7 @@ window.convlexEnvelop.algorithms = function () {
 				canvas.displayLine(pointsArray[0], pointsArray[1], "#0000FF");
 			}
 			//Fin View
+*/
 			return pointsArray;
 		} else {
 			var median, leftPointsArray, rightPointsArray, leftEnv, rightEnv, leftIndex, rightIndex, firstRightIndex, firstLeftIndex, finished = false, i, iGH, iDH, envelop = [];
@@ -146,9 +148,11 @@ window.convlexEnvelop.algorithms = function () {
 			
 			iGH = leftIndex;
 			iDH = rightIndex;
-			// View
+		/*
+	// View
 			canvas.displayLine(leftEnv[iGH], rightEnv[iDH], "FF0000");
 			// View 
+*/
 			envelop.push(leftEnv[iGH]);
 			
 			finished = false;
@@ -183,7 +187,7 @@ window.convlexEnvelop.algorithms = function () {
 				}
 			}
 			
-						canvas.displayLine(leftEnv[leftIndex], rightEnv[rightIndex], "FF0000");
+/* 						canvas.displayLine(leftEnv[leftIndex], rightEnv[rightIndex], "FF0000"); */
 
 			i = iDH;
 			while (i != rightIndex) {
@@ -269,8 +273,19 @@ window.convlexEnvelop.algorithms = function () {
 				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 			}
 
-			// If top and Bottom are 
-			distance = Math.abs(topLimitIndex - bottomLimitIndex);
+			// If top and Bottom are
+			var tmpArray = [];
+			var w = topLimitIndex;
+			var z = 0;
+			while(envelop[w] !== envelop[bottomLimitIndex]) {
+				tmpArray[z] = envelop[w];
+				w = envelop.previousIndex(w);
+				z += 1;
+			}
+			tmpArray.push(p);
+			
+			/*
+distance = Math.abs(topLimitIndex - bottomLimitIndex);
 			if ((distance > 1) && (distance < (envelop.length - 1))) {
 				if (bottomLimitIndex < topLimitIndex) {
 					envelop.splice(bottomLimitIndex + 1, (topLimitIndex - bottomLimitIndex) - 1);
@@ -290,6 +305,7 @@ window.convlexEnvelop.algorithms = function () {
 					envelop.splice(bottomLimitIndex + 1, 0, p);
 				}
 			}
+*/
 			
 		}
 
