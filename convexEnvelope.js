@@ -123,7 +123,7 @@
 			date = new Date();
 			t1 = date.getTime();
 
-			args = 2 <= arguments.length ? __slice.call(arguments, 1) : []
+			args = 2 <= arguments.length ? __slice.call(arguments, 1) : [] // manque pas un ; par hasard ???
 			func(args);
 			
 			date = new Date();
@@ -174,13 +174,15 @@
 			};
 			executeAlgo = function () {
 				tempPoints = optimization(tempPoints);
-				tempPoints = tempPoints.sort(function(a,b) {
-					var tmp = a.x - b.x;
-					if (tmp === 0) {
-						tmp = a.y - b.y;
-					}
-					return tmp;
-				});
+				if($("divide").checked){
+					tempPoints = tempPoints.sort(function(a,b) {
+						var tmp = a.x - b.x;
+						if (tmp === 0) {
+							tmp = a.y - b.y;
+						}
+						return tmp;
+					});
+				}
 				envelop = algorithm(tempPoints);
 			};
 			if (tempPoints.length > 0) {

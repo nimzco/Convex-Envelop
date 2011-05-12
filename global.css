@@ -1,5 +1,5 @@
 body {
-	max-width: 600px;
+	max-width: 1000px;
 	margin: auto;
 	text-align: center;
 }
@@ -20,7 +20,7 @@ fieldset {
 }
 
 #input_json {
-	max-width: 600px;
+/* 	max-width: 600px; */
 	margin: 0;
 	padding: 0;
 	background-color: #f7f7ff;
@@ -32,12 +32,17 @@ fieldset {
 	margin-bottom: 1em;
 }
 
-h2, h1 {
+h2, h1, h3 {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	background: #f0f0ff;
 	border: 1px solid #D8D8DD;
+}
+
+h1 {
+	padding-bottom: 0;
+	margin-bottom: 0;
 }
 	
 pre {
@@ -100,13 +105,12 @@ p {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	background-color: rgba(230,0,0,0.2);
-	border: 1px solid #DD0000;
-	padding: 0.3em;
-	visibility: hidden;
+	background-color: rgba(220,0,0,0.5);
+/* 	border: 1px solid #DD0000; */
+/* 	padding: 0.3em; */
 }
 
-#div_time {
+#time {
 	margin-top: 0.4em;
 	background-color: #EEE;
 	border: 1px solid #D8D8DD;
@@ -114,6 +118,11 @@ p {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	text-align: left;
+	height: 100%;
+}
+
+#div_time {
+	height: 100%;
 }
 
 #div_time h3 {
@@ -121,4 +130,34 @@ p {
 	text-align: center;
 	margin-top: 0em;
 	margin-bottom: 0.2em;
+}
+
+body > div {
+	display: table;
+}
+
+#left {
+	display: table-cell;
+/* 	width: 20%; */
+}
+
+#left textarea {
+	width: 100%;
+	min-height: 20em;
+}
+
+#center {
+	display: table-cell;
+	max-width: 600px;
+	padding: 1em;
+}
+
+#center fieldset {
+	width: 600px;
+	padding: 0;
+}
+
+#div_time {
+	min-width: 15%;
+	display: table-cell;
 }
