@@ -233,10 +233,9 @@ window.convlexEnvelop.algorithms = function () {
 
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
-			
 		// Running through all points
-		while(pointsArray.length > 0) {
-			var c1, c2, v1, v2, v3, v4, distance;
+		while(pointsArray.length > 1) {
+			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
 			randP = Math.randomValue(0, pointsArray.length - 1);
@@ -263,53 +262,22 @@ window.convlexEnvelop.algorithms = function () {
 			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
-//				envelop.splice(topLimitIndex, 1);
 				topLimitIndex = envelop.nextIndex(topLimitIndex);
 			}
 			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
 					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
-//				envelop.splice(bottomLimitIndex, 1);
 				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 			}
 
-			// If top and Bottom are
-			var tmpArray = [];
-			var w = topLimitIndex;
-			var z = 0;
-			while(envelop[w] !== envelop[bottomLimitIndex]) {
-				tmpArray[z] = envelop[w];
-				w = envelop.previousIndex(w);
-				z += 1;
+			while(topLimitIndex != bottomLimitIndex) {
+				temp.push(envelop[topLimitIndex]);
+				topLimitIndex = envelop.nextIndex(topLimitIndex);
 			}
-			tmpArray.push(p);
-			
-			/*
-distance = Math.abs(topLimitIndex - bottomLimitIndex);
-			if ((distance > 1) && (distance < (envelop.length - 1))) {
-				if (bottomLimitIndex < topLimitIndex) {
-					envelop.splice(bottomLimitIndex + 1, (topLimitIndex - bottomLimitIndex) - 1);
-					envelop.splice(bottomLimitIndex + 1, 0, p);
-				} else {
-					envelop.splice(bottomLimitIndex + 1, envelop.length);
-					envelop.splice(0, topLimitIndex);
-					envelop.splice(0, 0, p);
-				}
-			} else {
-				if (lastBottomIndex != bottomLimitIndex) { 
-					envelop[envelop.previousIndex(topLimitIndex)] = p;
-				} else if (lastTopIndex != topLimitIndex) {
-					envelop[envelop.nextIndex(bottomLimitIndex)] = p;
-				} else {
-					// Inserts p after botttomIndex
-					envelop.splice(bottomLimitIndex + 1, 0, p);
-				}
-			}
-*/
-			
+			temp.push(envelop[bottomLimitIndex]);
+			temp.push(p);
+			envelop = temp.slice(0, temp.length);
 		}
-
-		
 		return envelop;
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
@@ -348,7 +316,7 @@ distance = Math.abs(topLimitIndex - bottomLimitIndex);
 		}
 		
 		// Deletion of the elements from the pointsArray
-		for (i=0; i < toDelete.length; i += 1) {
+		for (i = 0; i < toDelete.length; i += 1) {
 			pointsArray.splice(toDelete[i] - i, 1);
 		}
 		
