@@ -135,19 +135,19 @@
 		var i, statsStr;
 		statsStr = "<h4>Divide and Conquer</h4>"
 		for (i in stats.divide) {
-			statsStr +=  i + " points: " + (stats.divide[i].time / stats.divide[i].i).toFixed(2) + "ms <br />";
+			statsStr +=  i + " points: " + (stats.divide[i].time / stats.divide[i].i).toFixed(2) + "ms  - (" + stats.divide[i].i + ")<br />";
 		}
 		statsStr += "<h4>Divide and Conquer - Optimized</h4>"
 		for (i in stats.divideOptimized) {
-			statsStr +=  i + " points: " + (stats.divideOptimized[i].time / stats.divideOptimized[i].i).toFixed(2) + "ms<br />";
+			statsStr +=  i + " points: " + (stats.divideOptimized[i].time / stats.divideOptimized[i].i).toFixed(2) + "ms  - (" + stats.divideOptimized[i].i + ")<br />";
 		}
 		statsStr += "<h4>Randomized</h4>"
 		for (i in stats.randomized) {
-			statsStr +=  i + " points: " + (stats.randomized[i].time / stats.randomized[i].i).toFixed(2) + "ms<br />";
+			statsStr +=  i + " points: " + (stats.randomized[i].time / stats.randomized[i].i).toFixed(2) + "  - (" + stats.randomized[i].i + ")<br />";
 		}
 		statsStr += "<h4>Randomized - Optimized</h4>"
 		for (i in stats.randomizedOptimized) {
-			statsStr +=  i + " points: " + (stats.randomizedOptimized[i].time / stats.randomizedOptimized[i].i).toFixed(2) + "ms<br />";
+			statsStr +=  i + " points: " + (stats.randomizedOptimized[i].time / stats.randomizedOptimized[i].i).toFixed(2) + "  - (" + stats.randomizedOptimized[i].i + ")<br />";
 		}
 		return statsStr;
 	};

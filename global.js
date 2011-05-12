@@ -91,9 +91,9 @@ Array.prototype.betterNextLeft = function (index, comparator) {
 
 
 /*
- * Returns the index of the point having the greatest abscissa
+ * Returns the index of the point having the greatest abscissa and the smallest ordinate
  */
-Array.prototype.maxX = function () {
+Array.prototype.maxXminY = function () {
 	var iMax = 0, i;
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].x > this[iMax].x) {
@@ -103,15 +103,30 @@ Array.prototype.maxX = function () {
 				iMax = i;
 			}
 		}
-		
+	}
+	return iMax;
+};
+/*
+ * Returns the index of the point having the greatest abscissa and the smallest ordinate
+ */
+Array.prototype.maxXmaxY = function () {
+	var iMax = 0, i;
+	for (i = 1; i < this.length; i+= 1) {
+		if (this[i].x > this[iMax].x) {
+			iMax = i;
+		} else if (this[i].x === this[iMax].x) {
+			if (this[i].y > this[iMax].y) {
+				iMax = i;
+			}
+		}
 	}
 	return iMax;
 };
 
 /*
- * Returns the index of the point having the smallest abscissa
+ * Returns the index of the point having the smallest abscissa and the highest ordinate
  */
-Array.prototype.minX = function () {
+Array.prototype.minXmaxY = function () {
 	var iMin = 0, i;
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].x < this[iMin].x) {
@@ -126,9 +141,26 @@ Array.prototype.minX = function () {
 };
 
 /*
- * Returns the index of the point having the greatest ordinate
+ * Returns the index of the point having the smallest abscissa and the smallest ordinate
  */
-Array.prototype.maxY = function () {
+Array.prototype.minXminY = function () {
+	var iMin = 0, i;
+	for (i = 1; i < this.length; i+= 1) {
+		if (this[i].x < this[iMin].x) {
+			iMin = i;
+		} else if (this[i].x === this[iMin].x) {
+			if (this[i].y < this[iMin].y) {
+				iMin = i;
+			}
+		}
+	}
+	return iMin;
+};
+
+/*
+ * Returns the index of the point having the greatest ordinate and the highest abscissa
+ */
+Array.prototype.maxYmaxX = function () {
 	var iMax = 0, i;
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].y > this[iMax].y) {
@@ -142,16 +174,51 @@ Array.prototype.maxY = function () {
 	return iMax;
 };
 
+
 /*
- * Returns the index of the point having the smallest ordinate
+ * Returns the index of the point having the greatest ordinate and the smallest abscissa
  */
-Array.prototype.minY = function () {
+Array.prototype.maxYminX = function () {
+	var iMax = 0, i;
+	for (i = 1; i < this.length; i+= 1) {
+		if (this[i].y > this[iMax].y) {
+			iMax = i;
+		} else if (this[i].y === this[iMax].y) {
+			if (this[i].x < this[iMax].x) {
+				iMax = i;
+			}
+		}
+	}
+	return iMax;
+};
+
+/*
+ * Returns the index of the point having the smallest ordinate and the smallest abscissa
+ */
+Array.prototype.minYminX = function () {
 	var iMin = 0, i;
 	for (i = 1; i < this.length; i+= 1) {
 		if (this[i].y < this[iMin].y) {
 			iMin = i;
 		} else if (this[i].y === this[iMin].y) {
 			if (this[i].x < this[iMin].x) {
+				iMin = i;
+			}
+		}
+	}
+	return iMin;
+};
+
+/*
+ * Returns the index of the point having the smallest ordinate and the highest abscissa
+ */
+Array.prototype.minYmaxX = function () {
+	var iMin = 0, i;
+	for (i = 1; i < this.length; i+= 1) {
+		if (this[i].y < this[iMin].y) {
+			iMin = i;
+		} else if (this[i].y === this[iMin].y) {
+			if (this[i].x > this[iMin].x) {
 				iMin = i;
 			}
 		}

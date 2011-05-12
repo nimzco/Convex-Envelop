@@ -68,7 +68,7 @@ window.convlexEnvelop.algorithms = function () {
 		b2 = p3.y - (a2 * p3.x);
 		
 		// If the lines have the same slope, they are parallel, and they do not intersect.
-		if(a1 === a2) {
+		if (a1 === a2) {
 			return false;
 		} else {
 			xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
@@ -105,8 +105,8 @@ window.convlexEnvelop.algorithms = function () {
 			rightEnv = _divideAndConquer(rightPointsArray);
 			rightEnv.reverse();//reverse the sub-envelope right
 			
-			leftIndex = leftEnv.maxX(); //index of the point having the largest abscissa
-			rightIndex = rightEnv.minX(); //index of the point having the smallest abscissa 
+			leftIndex = leftEnv.maxXminY(); //index of the point having the largest abscissa
+			rightIndex = rightEnv.minXmaxY(); //index of the point having the smallest abscissa 
 			firstRightIndex = rightIndex;
 			firstLeftIndex = leftIndex;
 			
@@ -140,8 +140,8 @@ window.convlexEnvelop.algorithms = function () {
 			
 			finished = false;
 			
-			leftIndex = leftEnv.maxX(); 
-			rightIndex = rightEnv.minX(); 
+			leftIndex = leftEnv.maxXminY(); 
+			rightIndex = rightEnv.minXmaxY(); 
 			firstRightIndex = rightIndex;
 			firstLeftIndex = leftIndex;
 
@@ -258,6 +258,7 @@ window.convlexEnvelop.algorithms = function () {
 			temp.push(envelop[bottomLimitIndex]);
 			temp.push(p);
 			envelop = temp.slice(0, temp.length);
+
 		}
 		return envelop;
 	};
@@ -267,19 +268,34 @@ window.convlexEnvelop.algorithms = function () {
 	 * Lozenge optimization
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
-		var minX, maxX, minY, maxY, centroid, i, point, toDelete = [];
+		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [];
 		
 		// Min and Max values to define a lozenges
-		minX = pointsArray[pointsArray.minX()];
-		maxX = pointsArray[pointsArray.maxX()];
-		minY = pointsArray[pointsArray.minY()];
-		maxY = pointsArray[pointsArray.maxY()];
+		minXIndex = pointsArray.minXmaxY();
+		minX = pointsArray[minXIndex];
+		maxXIndex = pointsArray.maxXminY();
+		maxX = pointsArray[maxXIndex];
+		minXIndex = pointsArray.minYminX();
+		minY = pointsArray[minXIndex];
+		maxYIndex = pointsArray.maxYmaxX();
+		maxY = pointsArray[maxYIndex];
+		
+/*
+		if(minY === maxX) {		
+			maxXIndex = pointsArray.maxXmaxY();
+			maxX = pointsArray[maxXIndex];
+		}
+		if (minX === maxY) {
+			minXIndex = pointsArray.minXminY();
+			minX = pointsArray[minXIndex];
+		}
+*/
 
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
-		pointsArray.splice(pointsArray.minX(), 1);
-		pointsArray.splice(pointsArray.maxX(), 1);
-		pointsArray.splice(pointsArray.minY(), 1);
-		pointsArray.splice(pointsArray.maxY(), 1);
+		pointsArray.splice(minXIndex, 1);
+		pointsArray.splice(maxXIndex, 1);
+		pointsArray.splice(minYIndex, 1);
+		pointsArray.splice(maxYIndex, 1);
 
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
