@@ -11,41 +11,14 @@
 	</head>
 	<body>
 		<h1>Viewer</h1>
-		<fieldset>
-			<p><label for="input">Number of points :</label>
-			<input type="text" id="input" value="400"/></p>
-			<br />
-
-			<label for="divide">Divide And Conquer:</label>
-			<input type="radio" name="algorithm" value="divide" id="divide"> 
-			<label for="randomized">Randomized:</label>
-			<input type="radio" name="algorithm" value="randomized" id="randomized" checked="true">
-			<br />
-			<label for="optimized">Optimized</label>
-			<input id="optimized" type="checkbox" />
-			<br />
-			<button id="execute_button">Execute</button>
-			<button id="populate_button">Add points</button>
-			<button id="export_button">Export to JSON</button>
-			<button id="clear_button">Clear</button>
-		</fieldset>
-		<div id="div_time">
-			<h3>Average time of execution</h3>
-			<p id="time"></p>
-		</div>
-		<p>Size of the Canvas: 600x600 - <span id="nbPoints"></span></p>
-		<canvas id="canvas" width="600" height="600">
-			Votre navigateur ne supporte pas les canvas.
-		</canvas>
-		<div id="output">
-		</div>
-		<h2>Json Input/Output</h2>
-		<textarea id="input_json" cols="100" rows="20" ></textarea>
-		<button id="parse_button">Draw from Json</button> <br />
-		<div id="error"></div>
-		<h2>Json Format</h2>
-
-		<pre>
+		<div>
+			<div id="left">
+				<h2>Json Input/Output</h2>
+				<textarea id="input_json" ></textarea>
+				<button id="parse_button">Draw from Json</button> <br />
+				<div id="error"></div>
+				<h2>Json Format</h2>
+				<pre>
 {
   'points': [
     {'x': 29, 'y':119},
@@ -60,6 +33,39 @@
     {'x': 259, 'y':445},
     {'x': 29, 'y':119}
   ]
-}</pre>
+}
+				</pre>
+			</div>
+			<div id="center">
+				<fieldset>
+					<p><label for="input">Number of points :</label>
+					<input type="text" id="input" value="400"/></p>
+					<br />
+		
+					<label for="divide">Divide And Conquer:</label>
+					<input type="radio" name="algorithm" value="divide" id="divide"> 
+					<label for="randomized">Randomized:</label>
+					<input type="radio" name="algorithm" value="randomized" id="randomized" checked="true">
+					<br />
+					<label for="optimized">Optimized</label>
+					<input id="optimized" type="checkbox" />
+					<br />
+					<button id="execute_button">Execute</button>
+					<button id="populate_button">Add points</button>
+					<button id="export_button">Export to JSON</button>
+					<button id="clear_button">Clear</button>
+				</fieldset>
+				<p>Size of the Canvas: 600x600 - <span id="nbPoints"></span></p>
+				<canvas id="canvas" width="600" height="600">
+					Votre navigateur ne supporte pas les canvas.
+				</canvas>
+			</div>
+			<div id="div_time">
+				<h3>Average time of execution</h3>
+				<p id="time"></p>
+			</div>
+			<div id="output">
+			</div>
+		</div>
 	</body>
 </html>
