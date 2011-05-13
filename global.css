@@ -46,6 +46,8 @@ h1 {
 	margin: 0;
 	background: #FFFFFF;
 	background: -webkit-linear-gradient(top, #FFFFFF, #F0F0FE 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F0F0FE');
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#F0F0FE));
 	background: -moz-linear-gradient(top,  #FFFFFF,  #b9b9b9);
 	border-bottom: 1px solid #CCC;
 }
@@ -124,6 +126,7 @@ p {
 	border-radius: 5px;
 	text-align: left;
 	height: 100%;
+	min-height: 5em;
 }
 
 #div_time {
