@@ -292,12 +292,19 @@ window.convlexEnvelop.algorithms = function () {
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
 		minX = pointsArray[minXIndex];
+		
 		maxXIndex = pointsArray.maxXminY();
 		maxX = pointsArray[maxXIndex];
-		minXIndex = pointsArray.minYminX();
-		minY = pointsArray[minXIndex];
+		
+		minYIndex = pointsArray.minYminX();
+		minY = pointsArray[minYIndex];
+		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
+		canvas.displayLine(minX, minY);
+		canvas.displayLine(minY, maxX);
+		canvas.displayLine(maxX, maxY);
+		canvas.displayLine(maxY, minX);
 		
 /*
 		if(minY === maxX) {		
