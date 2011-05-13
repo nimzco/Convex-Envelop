@@ -263,7 +263,7 @@
 			_points = [];
 			envelop = [];
 			$('output').innerHTML = "";
-			$('time').innerHTML = "";
+//			$('time').innerHTML = "";
 		};
 	});
 })();

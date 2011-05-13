@@ -94,18 +94,6 @@ window.convlexEnvelop.algorithms = function () {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 				turnCounterClockwise(pointsArray);
 			}
-			/*
-// View
-			if (pointsArray.length === 3) {
-				canvas.displayLine(pointsArray[0], pointsArray[1], "#0000FF");
-				canvas.displayLine(pointsArray[1], pointsArray[2], "#0000FF");
-				canvas.displayLine(pointsArray[2], pointsArray[0], "#0000FF");
-			}
-			else {
-				canvas.displayLine(pointsArray[0], pointsArray[1], "#0000FF");
-			}
-			//Fin View
-*/
 			return pointsArray;
 		} else {
 			var median, leftPointsArray, rightPointsArray, leftEnv, rightEnv, leftIndex, rightIndex, firstRightIndex, firstLeftIndex, finished = false, i, iGH, iDH, envelop = [];
@@ -148,11 +136,7 @@ window.convlexEnvelop.algorithms = function () {
 			
 			iGH = leftIndex;
 			iDH = rightIndex;
-		/*
-	// View
-			canvas.displayLine(leftEnv[iGH], rightEnv[iDH], "FF0000");
-			// View 
-*/
+
 			envelop.push(leftEnv[iGH]);
 			
 			finished = false;
@@ -187,8 +171,6 @@ window.convlexEnvelop.algorithms = function () {
 				}
 			}
 			
-/* 						canvas.displayLine(leftEnv[leftIndex], rightEnv[rightIndex], "FF0000"); */
-
 			i = iDH;
 			while (i != rightIndex) {
 				envelop.push(rightEnv[i]);
@@ -301,6 +283,7 @@ window.convlexEnvelop.algorithms = function () {
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
+
 		canvas.displayLine(minX, minY);
 		canvas.displayLine(minY, maxX);
 		canvas.displayLine(maxX, maxY);
@@ -316,6 +299,7 @@ window.convlexEnvelop.algorithms = function () {
 			minX = pointsArray[minXIndex];
 		}
 */
+
 
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(minXIndex, 1);
