@@ -68,21 +68,38 @@ window.convlexEnvelop.algorithms = function () {
 		b2 = p3.y - (a2 * p3.x);
 		
 		// If the lines have the same slope, they are parallel, and they do not intersect.
-/*
 		if (a1 === a2) {
 			return false;
 		} else {
-*/
-		xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
-		
-		// If xCommon is between the first segment and the second, the two segments intersect.
-		if ((xCommon > Math.min(p1.x, p2.x)) && 
-			(xCommon < Math.max(p1.x, p2.x)) && 
-			(xCommon > Math.min(p3.x, p4.x)) && 
-			(xCommon < Math.max(p3.x, p4.x))) {
-			return true;
+			if((a2 === Infinity) || (a2 === -Infinity)) {
+				xCommon = p3.x;
+				if ((xCommon > Math.min(p1.x, p2.x)) && 
+					(xCommon < Math.max(p1.x, p2.x)) && 
+					(xCommon >= Math.min(p3.x, p4.x)) && 
+					(xCommon <= Math.max(p3.x, p4.x))) {
+					return true;
+				}
+			} 
+			else if((a1 == Infinity) || (a1 == -Infinity)) {
+				xCommon = p1.x;
+				if ((xCommon > Math.min(p1.x, p2.x)) && 
+					(xCommon < Math.max(p1.x, p2.x)) && 
+					(xCommon >= Math.min(p3.x, p4.x)) && 
+					(xCommon <= Math.max(p3.x, p4.x))) {
+					return true;
+				}
+			}
+			else {
+				xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
+			}		
+			// If xCommon is between the first segment and the second, the two segments intersect.
+			if ((xCommon > Math.min(p1.x, p2.x)) && 
+				(xCommon < Math.max(p1.x, p2.x)) && 
+				(xCommon > Math.min(p3.x, p4.x)) && 
+				(xCommon < Math.max(p3.x, p4.x))) {
+				return true;
+			}
 		}
-//		}
 		return false;
 	};
 	that.segmentCrossing = _segmentCrossing;
@@ -209,6 +226,7 @@ window.convlexEnvelop.algorithms = function () {
 		pointsArray.splice(randC, 1);
 		// Taking the centroid of this triangle
 		centroid = _centroid(a, b, c);
+/* 		canvas.displayPoint(centroid); */
 
 		// Adding points of the triangle in the envelop
 		envelop.push(a);
@@ -223,12 +241,14 @@ window.convlexEnvelop.algorithms = function () {
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
 			randP = Math.randomValue(pointsArray.length - 1);
+
 			p = pointsArray[randP];
 			pointsArray.splice(randP, 1);
 			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
-				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
+				var bool = _segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
+				if (bool) {
 					isOutside = true;
 					break;
 				}
@@ -258,10 +278,7 @@ window.convlexEnvelop.algorithms = function () {
 				temp.push(envelop[bottomLimitIndex]);
 				temp.push(p);
 				envelop = temp.slice(0, temp.length);
-			} else {
-				alert(a + " " + b + " " + c + " - " + p);
 			}
-
 		}
 		return envelop;
 	};
