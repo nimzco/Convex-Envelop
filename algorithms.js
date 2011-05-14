@@ -49,7 +49,7 @@ window.convlexEnvelop.algorithms = function () {
 		centroidY = (centroidY / i);
 		return new m.Point({x: centroidX, y: centroidY});
 	};
-	
+	that.centroid = _centroid;
 	/**
 	 * Checks if the segment [p1, p2] and [p3, p4] crosses
 	 */
@@ -216,7 +216,7 @@ window.convlexEnvelop.algorithms = function () {
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
 		// Running through all points
-		while(pointsArray.length > 1) {
+		while(pointsArray.length > 0) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
