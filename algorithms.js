@@ -231,40 +231,32 @@ window.convlexEnvelop.algorithms = function () {
 					break;
 				}
 			} 
-			if (!isOutside) {
-				continue;
+			if (isOutside) {	
+				lastBottomIndex = i;
+				lastTopIndex = envelop.nextIndex(i);
+				
+				// -- If the point is outside
+				topLimitIndex = envelop.nextIndex(i);
+				bottomLimitIndex = i;
+				while (crossProduct(
+						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
+						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) >= 0) {
+					topLimitIndex = envelop.nextIndex(topLimitIndex);
+				}
+				while (crossProduct(
+						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
+						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) <= 0) {
+					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
+				}
+	
+				while(topLimitIndex != bottomLimitIndex) {
+					temp.push(envelop[topLimitIndex]);
+					topLimitIndex = envelop.nextIndex(topLimitIndex);
+				}
+				temp.push(envelop[bottomLimitIndex]);
+				temp.push(p);
+				envelop = temp.slice(0, temp.length);
 			}
-
-			lastBottomIndex = i;
-			lastTopIndex = envelop.nextIndex(i);
-			
-			// -- If the point is outside
-			topLimitIndex = envelop.nextIndex(i);
-			bottomLimitIndex = i;
-			comparator = function (x, y) { return x > y; };
-			while ((crossProduct(
-					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) == 0 /* && envelop.betterNextRight(topLimitIndex, comparator) */) || crossProduct(
-					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
-				topLimitIndex = envelop.nextIndex(topLimitIndex);
-			}
-			comparator = function (x, y) { return x < y; };
-			while ((crossProduct(
-					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(bottomLimitIndex)]})) == 0 /* && envelop.betterNextRight(bottomLimitIndex, comparator) */) || crossProduct(
-					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
-				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
-			}
-
-			while(topLimitIndex != bottomLimitIndex) {
-				temp.push(envelop[topLimitIndex]);
-				topLimitIndex = envelop.nextIndex(topLimitIndex);
-			}
-			temp.push(envelop[bottomLimitIndex]);
-			temp.push(p);
-			envelop = temp.slice(0, temp.length);
 
 		}
 		return envelop;
@@ -290,11 +282,13 @@ window.convlexEnvelop.algorithms = function () {
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
 
-		canvas.displayLine(minX, minY);
+	/*
+	canvas.displayLine(minX, minY);
 		canvas.displayLine(minY, maxX);
 		canvas.displayLine(maxX, maxY);
 		canvas.displayLine(maxY, minX);
 		
+*/
 /*
 		if(minY === maxX) {		
 			maxXIndex = pointsArray.maxXmaxY();
