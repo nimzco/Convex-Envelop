@@ -161,7 +161,6 @@
 
 		$('execute_button').onclick = function (e) {
 			var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
-			for (i = 0; i < 25; i += 1) {
 			tempPoints = _points.slice(0, _points.length);
 			if ($("divide").checked) {
 				algorithm = algo.divideAndConquer;
@@ -234,7 +233,7 @@
 					}
 				}
 			}
-			}
+			
 			$('time').innerHTML = returnStats();
 		};
 		
