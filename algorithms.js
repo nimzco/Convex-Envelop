@@ -216,7 +216,7 @@ window.convlexEnvelop.algorithms = function () {
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
 		// Running through all points
-		while(pointsArray.length > 1) {
+		while(pointsArray.length > 0) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
@@ -241,12 +241,18 @@ window.convlexEnvelop.algorithms = function () {
 			// -- If the point is outside
 			topLimitIndex = envelop.nextIndex(i);
 			bottomLimitIndex = i;
-			while (crossProduct(
+			comparator = function (x, y) { return x > y; };
+			while ((crossProduct(
+					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
+					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) == 0 /* && envelop.betterNextRight(topLimitIndex, comparator) */) || crossProduct(
 					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
 				topLimitIndex = envelop.nextIndex(topLimitIndex);
 			}
-			while (crossProduct(
+			comparator = function (x, y) { return x < y; };
+			while ((crossProduct(
+					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}),
+					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(bottomLimitIndex)]})) == 0 /* && envelop.betterNextRight(bottomLimitIndex, comparator) */) || crossProduct(
 					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
 					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
