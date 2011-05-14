@@ -160,21 +160,6 @@
 		canvas.height = sizeOfCanvas;
 
 		$('execute_button').onclick = function (e) {
-			/*
-var p1, p2, p3, p4;
-			p1 = new m.Point({x: 100, y: 500});
-			p2 = new m.Point({x: 283, y: 416});
-			p3 = new m.Point({x: 250, y: 550});
-			p4 = new m.Point({x: 250, y: 250});
-			
-			canvas.displayPoint(p1)
-			canvas.displayPoint(p2)
-			canvas.displayPoint(p3)
-			canvas.displayPoint(p4)
-			canvas.displayLine(p1,p2);
-			canvas.displayLine(p3,p4);			
-			alert(algo.segmentCrossing(p1,p2,p4,p3));
-*/
 			
 			var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 			tempPoints = _points.slice(0, _points.length);
@@ -249,10 +234,6 @@ var p1, p2, p3, p4;
 					}
 				}
 			}
-<<<<<<< HEAD
-=======
-			
->>>>>>> c3af14826fbbed94bb0e2e4ccee9ec99b7e57369
 			$('time').innerHTML = returnStats();
 		};
 		
