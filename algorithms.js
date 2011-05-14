@@ -68,11 +68,31 @@ window.convlexEnvelop.algorithms = function () {
 		b2 = p3.y - (a2 * p3.x);
 		
 		// If the lines have the same slope, they are parallel, and they do not intersect.
+		
 		if (a1 === a2) {
 			return false;
 		} else {
-			xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
-			
+			if((a2 === Infinity) || (a2 === -Infinity)) {
+				xCommon = p3.x;
+				if ((xCommon > Math.min(p1.x, p2.x)) && 
+					(xCommon < Math.max(p1.x, p2.x)) && 
+					(xCommon >= Math.min(p3.x, p4.x)) && 
+					(xCommon <= Math.max(p3.x, p4.x))) {
+					return true;
+				}
+			} 
+			else if((a1 == Infinity) || (a1 == -Infinity)) {
+				xCommon = p1.x;
+				if ((xCommon > Math.min(p1.x, p2.x)) && 
+					(xCommon < Math.max(p1.x, p2.x)) && 
+					(xCommon >= Math.min(p3.x, p4.x)) && 
+					(xCommon <= Math.max(p3.x, p4.x))) {
+					return true;
+				}
+			}
+			else {
+				xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
+			}		
 			// If xCommon is between the first segment and the second, the two segments intersect.
 			if ((xCommon > Math.min(p1.x, p2.x)) && 
 				(xCommon < Math.max(p1.x, p2.x)) && 
@@ -196,17 +216,18 @@ window.convlexEnvelop.algorithms = function () {
 		var a, randA, b, randB, c, randC, centroid, envelop = [];
 		
 		// Taking three random point to make the first triangle of the envelop and removing it from pointsArray 
-		randA = Math.randomValue(0, pointsArray.length);
+		randA = Math.randomValue(pointsArray.length - 1, 0);
 		a = pointsArray[randA];
 		pointsArray.splice(randA, 1);
-		randB = Math.randomValue(0, pointsArray.length);
+		randB = Math.randomValue(pointsArray.length - 1, 0);
 		b = pointsArray[randB];
 		pointsArray.splice(randB, 1);
-		randC = Math.randomValue(0, pointsArray.length);
+		randC = Math.randomValue(pointsArray.length - 1, 0);
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
 		// Taking the centroid of this triangle
 		centroid = _centroid(a, b, c);
+/* 		canvas.displayPoint(centroid); */
 
 		// Adding points of the triangle in the envelop
 		envelop.push(a);
@@ -220,13 +241,14 @@ window.convlexEnvelop.algorithms = function () {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
-			randP = Math.randomValue(0, pointsArray.length - 1);
+			randP = Math.randomValue(pointsArray.length - 1, 0);
 			p = pointsArray[randP];
 			pointsArray.splice(randP, 1);
 
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
-				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
+				var bool = _segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
+				if (bool) {
 					isOutside = true;
 					break;
 				}
@@ -256,8 +278,9 @@ window.convlexEnvelop.algorithms = function () {
 				temp.push(envelop[bottomLimitIndex]);
 				temp.push(p);
 				envelop = temp.slice(0, temp.length);
+			} else {
+/* 			alert(p); */
 			}
-
 		}
 		return envelop;
 	};
