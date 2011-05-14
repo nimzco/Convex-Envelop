@@ -242,19 +242,15 @@ window.convlexEnvelop.algorithms = function () {
 			topLimitIndex = envelop.nextIndex(i);
 			bottomLimitIndex = i;
 			comparator = function (x, y) { return x > y; };
-			while ((crossProduct(
+			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) == 0 /* && envelop.betterNextRight(topLimitIndex, comparator) */) || crossProduct(
-					new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
+					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) >= 0) {
 				topLimitIndex = envelop.nextIndex(topLimitIndex);
 			}
 			comparator = function (x, y) { return x < y; };
-			while ((crossProduct(
-					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}),
-					new m.Vector({p1: p, p2: envelop[envelop.nextIndex(bottomLimitIndex)]})) == 0 /* && envelop.betterNextRight(bottomLimitIndex, comparator) */) || crossProduct(
+			while (crossProduct(
 					new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
+					new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) <= 0) {
 				bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 			}
 
@@ -289,11 +285,6 @@ window.convlexEnvelop.algorithms = function () {
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
-
-		canvas.displayLine(minX, minY);
-		canvas.displayLine(minY, maxX);
-		canvas.displayLine(maxX, maxY);
-		canvas.displayLine(maxY, minX);
 
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(minXIndex, 1);
