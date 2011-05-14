@@ -143,11 +143,11 @@
 		}
 		statsStr += "<h4>Randomized</h4>"
 		for (i in stats.randomized) {
-			statsStr +=  i + " points: " + (stats.randomized[i].time / stats.randomized[i].i).toFixed(2) + "  - (" + stats.randomized[i].i + ")<br />";
+			statsStr +=  i + " points: " + (stats.randomized[i].time / stats.randomized[i].i).toFixed(2) + "ms  - (" + stats.randomized[i].i + ")<br />";
 		}
 		statsStr += "<h4>Randomized - Optimized</h4>"
 		for (i in stats.randomizedOptimized) {
-			statsStr +=  i + " points: " + (stats.randomizedOptimized[i].time / stats.randomizedOptimized[i].i).toFixed(2) + "  - (" + stats.randomizedOptimized[i].i + ")<br />";
+			statsStr +=  i + " points: " + (stats.randomizedOptimized[i].time / stats.randomizedOptimized[i].i).toFixed(2) + "ms  - (" + stats.randomizedOptimized[i].i + ")<br />";
 		}
 		return statsStr;
 	};
@@ -160,7 +160,8 @@
 		canvas.height = sizeOfCanvas;
 
 		$('execute_button').onclick = function (e) {
-			var algorithm, optimization, calculTime, executeAlgo, tempPoints;
+			var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
+			for (i = 0; i < 25; i += 1) {
 			tempPoints = _points.slice(0, _points.length);
 			if ($("divide").checked) {
 				algorithm = algo.divideAndConquer;
@@ -232,6 +233,7 @@
 						stats.randomized[points.length].time = calculTime;
 					}
 				}
+			}
 			}
 			$('time').innerHTML = returnStats();
 		};

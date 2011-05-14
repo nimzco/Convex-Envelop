@@ -49,7 +49,7 @@ window.convlexEnvelop.algorithms = function () {
 		centroidY = (centroidY / i);
 		return new m.Point({x: centroidX, y: centroidY});
 	};
-	
+	that.centroid = _centroid;
 	/**
 	 * Checks if the segment [p1, p2] and [p3, p4] crosses
 	 */
@@ -287,19 +287,7 @@ window.convlexEnvelop.algorithms = function () {
 		canvas.displayLine(minY, maxX);
 		canvas.displayLine(maxX, maxY);
 		canvas.displayLine(maxY, minX);
-		
 */
-/*
-		if(minY === maxX) {		
-			maxXIndex = pointsArray.maxXmaxY();
-			maxX = pointsArray[maxXIndex];
-		}
-		if (minX === maxY) {
-			minXIndex = pointsArray.minXminY();
-			minX = pointsArray[minXIndex];
-		}
-*/
-
 
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(minXIndex, 1);
