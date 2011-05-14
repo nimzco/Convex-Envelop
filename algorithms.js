@@ -68,7 +68,6 @@ window.convlexEnvelop.algorithms = function () {
 		b2 = p3.y - (a2 * p3.x);
 		
 		// If the lines have the same slope, they are parallel, and they do not intersect.
-		
 		if (a1 === a2) {
 			return false;
 		} else {
@@ -216,13 +215,13 @@ window.convlexEnvelop.algorithms = function () {
 		var a, randA, b, randB, c, randC, centroid, envelop = [];
 		
 		// Taking three random point to make the first triangle of the envelop and removing it from pointsArray 
-		randA = Math.randomValue(pointsArray.length - 1, 0);
+		randA = Math.randomValue(pointsArray.length - 1);
 		a = pointsArray[randA];
 		pointsArray.splice(randA, 1);
-		randB = Math.randomValue(pointsArray.length - 1, 0);
+		randB = Math.randomValue(pointsArray.length - 1);
 		b = pointsArray[randB];
 		pointsArray.splice(randB, 1);
-		randC = Math.randomValue(pointsArray.length - 1, 0);
+		randC = Math.randomValue(pointsArray.length - 1);
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
 		// Taking the centroid of this triangle
@@ -241,10 +240,11 @@ window.convlexEnvelop.algorithms = function () {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
 			// Getting a random point and removing it from the set
-			randP = Math.randomValue(pointsArray.length - 1, 0);
+			randP = Math.randomValue(pointsArray.length - 1);
+
 			p = pointsArray[randP];
 			pointsArray.splice(randP, 1);
-
+			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
 				var bool = _segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
@@ -278,8 +278,6 @@ window.convlexEnvelop.algorithms = function () {
 				temp.push(envelop[bottomLimitIndex]);
 				temp.push(p);
 				envelop = temp.slice(0, temp.length);
-			} else {
-/* 			alert(p); */
 			}
 		}
 		return envelop;
@@ -305,11 +303,13 @@ window.convlexEnvelop.algorithms = function () {
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
 
+/*
 		canvas.displayLine(minX, minY);
 		canvas.displayLine(minY, maxX);
 		canvas.displayLine(maxX, maxY);
 		canvas.displayLine(maxY, minX);
 
+*/
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(minXIndex, 1);
 		pointsArray.splice(maxXIndex, 1);
