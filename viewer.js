@@ -68,8 +68,8 @@ var line = this.canvas.display.line({
 		context.lineWidth = 2;
 		context.strokeStyle = color || "rgba(0,0,0,1)";;
 		context.beginPath();
-		context.moveTo(a.x, window.convlexEnvelop.sizeOfCanvas - a.y);
-		context.lineTo(b.x, window.convlexEnvelop.sizeOfCanvas - b.y);
+		context.moveTo(a.x + 5, window.convlexEnvelop.sizeOfCanvas + 5 - a.y);
+		context.lineTo(b.x + 5, window.convlexEnvelop.sizeOfCanvas + 5 - b.y);
 		context.stroke();
 		context.closePath();
 	};
@@ -93,7 +93,7 @@ var line = this.canvas.display.line({
 		var context = this.canvas.getContext('2d');
 		context.fillStyle = color || "rgba(0,0,0,1)";
 		context.beginPath();
-		context.arc(point.x, window.convlexEnvelop.sizeOfCanvas - point.y, 2, 0, Math.PI * 2,true);
+		context.arc(point.x + 5, window.convlexEnvelop.sizeOfCanvas + 5 - point.y, 2, 0, Math.PI * 2,true);
 		context.closePath();
 		context.fill();
 	};
