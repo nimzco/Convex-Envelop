@@ -16,7 +16,7 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _centroid, turnClockwise;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _centroid, turnClockwise;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -104,6 +104,12 @@ window.convlexEnvelop.algorithms = function () {
 	};
 	that.segmentCrossing = _segmentCrossing;
 	
+	_intersect = function(p1,p2,p3,p4) {
+	 return (((pointCrossProduct(p1, p2, p3) * pointCrossProduct(p1, p2, p4)) <= 0) && 
+	 			((pointCrossProduct(p3, p4, p1) * pointCrossProduct(p3, p4, p2)) <= 0));
+	};
+	that.intersect = _intersect;
+	
 	/*
 	 * Divide And Conquer Algorithm
 	 */
@@ -112,6 +118,12 @@ window.convlexEnvelop.algorithms = function () {
 			if(pointsArray.length > 2) {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 				turnCounterClockwise(pointsArray);
+				var i;
+				/*
+for(i=0; i < pointsArray.length; i+= 1) {
+					canvas.displayLine(pointsArray[i],pointsArray[pointsArray.nextIndex(i)], "#CCC");
+				}
+*/
 			}
 			return pointsArray;
 		} else {
@@ -153,6 +165,8 @@ window.convlexEnvelop.algorithms = function () {
 				}
 			}
 			
+/* 			canvas.displayLine(pointsArray[leftIndex],pointsArray[rightIndex], "#F00"); */
+
 			iGH = leftIndex;
 			iDH = rightIndex;
 
@@ -189,7 +203,9 @@ window.convlexEnvelop.algorithms = function () {
 					leftIndex = leftEnv.previousIndex(leftIndex);
 				}
 			}
-			
+
+/* 			canvas.displayLine(pointsArray[leftIndex],pointsArray[rightIndex], "#F00"); */
+
 			i = iDH;
 			while (i != rightIndex) {
 				envelop.push(rightEnv[i]);

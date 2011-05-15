@@ -66,7 +66,7 @@ var line = this.canvas.display.line({
 */
 		
 		context.lineWidth = 2;
-		context.strokeStyle = this.strokeColor;
+		context.strokeStyle = color || "rgba(0,0,0,1)";;
 		context.beginPath();
 		context.moveTo(a.x, window.convlexEnvelop.sizeOfCanvas - a.y);
 		context.lineTo(b.x, window.convlexEnvelop.sizeOfCanvas - b.y);
@@ -124,10 +124,9 @@ var line = this.canvas.display.line({
 	Viewer.prototype.displayPolygon = function (pointsArray, color) {
 		var k, color = color || "rgba(0,0,0,1)";
 		if (pointsArray.length > 0) {
-			for (k = 0; k < pointsArray.length - 1; k+= 1) {
-				this.displayLine(pointsArray[k], pointsArray[k + 1], color);
+			for (k = 0; k < pointsArray.length; k+= 1) {
+				this.displayLine(pointsArray[k], pointsArray[pointsArray.nextIndex(k)], color);
 			}
-			this.displayLine(pointsArray[0], pointsArray[pointsArray.length - 1], color);
 		}
 	};
 	return Viewer;
