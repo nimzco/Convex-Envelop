@@ -82,10 +82,10 @@ window.convlexEnvelop.algorithms = function () {
 			} 
 			else if((a1 == Infinity) || (a1 == -Infinity)) {
 				xCommon = p1.x;
-				if ((xCommon > Math.min(p1.x, p2.x)) && 
-					(xCommon < Math.max(p1.x, p2.x)) && 
-					(xCommon >= Math.min(p3.x, p4.x)) && 
-					(xCommon <= Math.max(p3.x, p4.x))) {
+				if ((xCommon >= Math.min(p1.x, p2.x)) && 
+					(xCommon <= Math.max(p1.x, p2.x)) && 
+					(xCommon > Math.min(p3.x, p4.x)) && 
+					(xCommon < Math.max(p3.x, p4.x))) {
 					return true;
 				}
 			}
@@ -305,7 +305,7 @@ for(i=0; i < pointsArray.length; i+= 1) {
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
 		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [];
-		
+
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
 		minX = pointsArray[minXIndex];
@@ -319,13 +319,11 @@ for(i=0; i < pointsArray.length; i+= 1) {
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
 
-/*
-		canvas.displayLine(minX, minY);
-		canvas.displayLine(minY, maxX);
-		canvas.displayLine(maxX, maxY);
-		canvas.displayLine(maxY, minX);
+		canvas.displayLine(minX, minY,"#0AA");
+		canvas.displayLine(minY, maxX,"#0AA");
+		canvas.displayLine(maxX, maxY,"#0AA");
+		canvas.displayLine(maxY, minX, "#0AA");
 
-*/
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 		pointsArray.splice(minXIndex, 1);
 		pointsArray.splice(maxXIndex, 1);
@@ -339,10 +337,10 @@ for(i=0; i < pointsArray.length; i+= 1) {
 			point = pointsArray[i];
 			
 			// if the point belongs to the lozenge, we add it to the deletion list
-			if(!_intersect(centroid, point, minX, minY) && 
-			   !_intersect(centroid, point, minY, maxX) && 
-			   !_intersect(centroid, point, maxX, maxY) && 
-			   !_intersect(centroid, point, maxY, minX)) {
+			if(!_segmentCrossing(centroid, point, minX, minY) && 
+			   !_segmentCrossing(centroid, point, minY, maxX) && 
+			   !_segmentCrossing(centroid, point, maxX, maxY) && 
+			   !_segmentCrossing(centroid, point, maxY, minX)) {
 				toDelete.push(i);
 			}
 		}
@@ -364,6 +362,6 @@ for(i=0; i < pointsArray.length; i+= 1) {
 	addOnLoadEvent(function () {
 		canvas = new window.convlexEnvelop.Viewer($('canvas'));
 	})
-	
+
 	return that;
 };

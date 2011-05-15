@@ -160,7 +160,8 @@
 		canvas.height = sizeOfCanvas;
 
 		$('execute_button').onclick = function (e) {
-			
+			var k;
+			for(k = 0; k < 25; k += 1) {
 			var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 			tempPoints = _points.slice(0, _points.length);
 			if ($("divide").checked) {
@@ -170,10 +171,12 @@
 			};
 			if ($("optimized").checked) {
 				optimization = algo.lozengeOptimization;
+
 			} else {
 				optimization = function(pointsArray) { return pointsArray; };
 			};
 			executeAlgo = function () {
+			
 				tempPoints = optimization(tempPoints);
 				if($("divide").checked){
 					tempPoints = tempPoints.sort(function(a,b) {
@@ -235,6 +238,7 @@
 				}
 			}
 			$('time').innerHTML = returnStats();
+			}
 		};
 		
 		
