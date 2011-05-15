@@ -263,13 +263,13 @@ for(i=0; i < pointsArray.length; i+= 1) {
 			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
-				var bool = _segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
+				var bool = _intersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
 				if (bool) {
 					isOutside = true;
 					break;
 				}
 			} 
-			if (isOutside) {	
+			if (isOutside) {
 				lastBottomIndex = i;
 				lastTopIndex = envelop.nextIndex(i);
 				
@@ -278,12 +278,12 @@ for(i=0; i < pointsArray.length; i+= 1) {
 				bottomLimitIndex = i;
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) >= 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
 				}
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) <= 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 				}
 	
