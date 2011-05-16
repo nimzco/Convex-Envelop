@@ -161,7 +161,7 @@
 
 		$('execute_button').onclick = function (e) {
 			var k;
-			for(k = 0; k < 25; k += 1) {
+			for(k = 0; k < 10; k += 1) {
 				var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 				tempPoints = _points.slice(0, _points.length);
 				if ($("divide").checked) {
@@ -193,51 +193,50 @@
 					calculTime = calculateTime(executeAlgo);
 				//	$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ' - (' + points.length + ' points) -  Time of execution ' + calculTime + 'ms<br />';
 					canvas.displayPolygon(envelop/* , 'rgba(100, 100, 100, 0.1)' */);
-				}
-				
-				// Getting stats
-				if ($("divide").checked) {
-					if ($("optimized").checked) {
-						if (typeof stats.divideOptimized[points.length] !==  "undefined") {
-							stats.divideOptimized[points.length].i += 1;
-							stats.divideOptimized[points.length].time += calculTime;
+					// Getting stats
+					if ($("divide").checked) {
+						if ($("optimized").checked) {
+							if (typeof stats.divideOptimized[points.length] !==  "undefined") {
+								stats.divideOptimized[points.length].i += 1;
+								stats.divideOptimized[points.length].time += calculTime;
+							} else {
+								stats.divideOptimized[points.length] = {};
+								stats.divideOptimized[points.length].i = 1;
+								stats.divideOptimized[points.length].time = calculTime;
+							}
 						} else {
-							stats.divideOptimized[points.length] = {};
-							stats.divideOptimized[points.length].i = 1;
-							stats.divideOptimized[points.length].time = calculTime;
+							if (typeof stats.divide[points.length] !==  "undefined") {
+								stats.divide[points.length].i += 1;
+								stats.divide[points.length].time += calculTime;
+							} else {
+								stats.divide[points.length] = {};
+								stats.divide[points.length].i = 1;
+								stats.divide[points.length].time = calculTime;
+							}
 						}
 					} else {
-						if (typeof stats.divide[points.length] !==  "undefined") {
-							stats.divide[points.length].i += 1;
-							stats.divide[points.length].time += calculTime;
+						if ($("optimized").checked) {
+							if (typeof stats.randomizedOptimized[points.length] !==  "undefined") {
+								stats.randomizedOptimized[points.length].i += 1;
+								stats.randomizedOptimized[points.length].time += calculTime;
+							} else {
+								stats.randomizedOptimized[points.length] = {};
+								stats.randomizedOptimized[points.length].i = 1;
+								stats.randomizedOptimized[points.length].time = calculTime;
+							}
 						} else {
-							stats.divide[points.length] = {};
-							stats.divide[points.length].i = 1;
-							stats.divide[points.length].time = calculTime;
+							if (typeof stats.randomized[points.length] !==  "undefined") {
+								stats.randomized[points.length].i += 1;
+								stats.randomized[points.length].time += calculTime;
+							} else {
+								stats.randomized[points.length] = {};
+								stats.randomized[points.length].i = 1;
+								stats.randomized[points.length].time = calculTime;
+							}
 						}
 					}
-				} else {
-					if ($("optimized").checked) {
-						if (typeof stats.randomizedOptimized[points.length] !==  "undefined") {
-							stats.randomizedOptimized[points.length].i += 1;
-							stats.randomizedOptimized[points.length].time += calculTime;
-						} else {
-							stats.randomizedOptimized[points.length] = {};
-							stats.randomizedOptimized[points.length].i = 1;
-							stats.randomizedOptimized[points.length].time = calculTime;
-						}
-					} else {
-						if (typeof stats.randomized[points.length] !==  "undefined") {
-							stats.randomized[points.length].i += 1;
-							stats.randomized[points.length].time += calculTime;
-						} else {
-							stats.randomized[points.length] = {};
-							stats.randomized[points.length].i = 1;
-							stats.randomized[points.length].time = calculTime;
-						}
-					}
+					$('time').innerHTML = returnStats();
 				}
-				$('time').innerHTML = returnStats();
 			}
 		};
 		
