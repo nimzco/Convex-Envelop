@@ -312,10 +312,10 @@ window.convlexEnvelop.algorithms = function () {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_segmentCrossing(centroid, point, minX, minY) && 
-				   !_segmentCrossing(centroid, point, minY, maxX) && 
-				   !_segmentCrossing(centroid, point, maxX, maxY) && 
-				   !_segmentCrossing(centroid, point, maxY, minX)) {
+				if(!_intersect(centroid, point, minX, minY) && 
+				   !_intersect(centroid, point, minY, maxX) && 
+				   !_intersect(centroid, point, maxX, maxY) && 
+				   !_intersect(centroid, point, maxY, minX)) {
 					toDelete.push(i);
 				}
 			}
