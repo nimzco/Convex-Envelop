@@ -68,9 +68,6 @@ window.convlexEnvelop.algorithms = function () {
 		b2 = p3.y - (a2 * p3.x);
 		
 		// If the lines have the same slope, they are parallel, and they do not intersect.
-		if (a1 === a2) {
-			return false;
-		} else {
 			if((a2 === Infinity) || (a2 === -Infinity)) {
 				xCommon = p3.x;
 				if ((xCommon > Math.min(p1.x, p2.x)) && 
@@ -99,7 +96,6 @@ window.convlexEnvelop.algorithms = function () {
 				(xCommon < Math.max(p3.x, p4.x))) {
 				return true;
 			}
-		}
 		return false;
 	};
 	that.segmentCrossing = _segmentCrossing;
@@ -118,12 +114,6 @@ window.convlexEnvelop.algorithms = function () {
 			if(pointsArray.length > 2) {
 				// When we have an array of size 3, we sort its elements in counterclockwise by swapping two elements
 				turnCounterClockwise(pointsArray);
-				var i;
-				/*
-for(i=0; i < pointsArray.length; i+= 1) {
-					canvas.displayLine(pointsArray[i],pointsArray[pointsArray.nextIndex(i)], "#CCC");
-				}
-*/
 			}
 			return pointsArray;
 		} else {
@@ -165,8 +155,6 @@ for(i=0; i < pointsArray.length; i+= 1) {
 				}
 			}
 			
-/* 			canvas.displayLine(pointsArray[leftIndex],pointsArray[rightIndex], "#F00"); */
-
 			iGH = leftIndex;
 			iDH = rightIndex;
 
@@ -204,8 +192,6 @@ for(i=0; i < pointsArray.length; i+= 1) {
 				}
 			}
 
-/* 			canvas.displayLine(pointsArray[leftIndex],pointsArray[rightIndex], "#F00"); */
-
 			i = iDH;
 			while (i != rightIndex) {
 				envelop.push(rightEnv[i]);
@@ -240,9 +226,9 @@ for(i=0; i < pointsArray.length; i+= 1) {
 		randC = Math.randomValue(pointsArray.length - 1);
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
+		
 		// Taking the centroid of this triangle
 		centroid = _centroid(a, b, c);
-/* 		canvas.displayPoint(centroid); */
 
 		// Adding points of the triangle in the envelop
 		envelop.push(a);
@@ -305,49 +291,19 @@ for(i=0; i < pointsArray.length; i+= 1) {
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
 		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [];
-		/*
-var w;
-		for (w = 0; w < pointsArray.length; w += 1) {
-			document.getElementById('output').innerHTML += pointsArray[w];
-		}
-		document.getElementById('output').innerHTML += '<br />';
-		w = 0;	
-*/
+
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
 		minX = pointsArray[minXIndex];
-/* 		pointsArray.splice(minXIndex, 1); */
-
 		
 		maxXIndex = pointsArray.maxXminY();
 		maxX = pointsArray[maxXIndex];
-/* 		pointsArray.splice(maxXIndex, 1); */
-		
-	
+			
 		minYIndex = pointsArray.minYminX();
 		minY = pointsArray[minYIndex];
-/* 		pointsArray.splice(minYIndex, 1); */
-
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
-/* 		pointsArray.splice(maxYIndex, 1); */
-
-/*
-			document.getElementById('output').innerHTML += minX;
-			document.getElementById('output').innerHTML += maxX;
-			document.getElementById('output').innerHTML += minY;
-			document.getElementById('output').innerHTML += maxY;
-*/
-/*
-		canvas.displayLine(minX, minY,"#066");
-		canvas.displayLine(minY, maxX,"#066");
-		canvas.displayLine(maxX, maxY,"#066");
-		canvas.displayLine(maxY, minX, "#066");
-*/
-
-
-		// Temporary removal all the mins and the maxs to prevent a definitive deletion
 
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
@@ -356,10 +312,10 @@ var w;
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_intersect(centroid, point, minX, minY) && 
-				   !_intersect(centroid, point, minY, maxX) && 
-				   !_intersect(centroid, point, maxX, maxY) && 
-				   !_intersect(centroid, point, maxY, minX)) {
+				if(!_segmentCrossing(centroid, point, minX, minY) && 
+				   !_segmentCrossing(centroid, point, minY, maxX) && 
+				   !_segmentCrossing(centroid, point, maxX, maxY) && 
+				   !_segmentCrossing(centroid, point, maxY, minX)) {
 					toDelete.push(i);
 				}
 			}
@@ -369,19 +325,7 @@ var w;
 		for (i = 0; i < toDelete.length; i += 1) {
 			pointsArray.splice(toDelete[i] - i, 1);
 		}
-		
-		// Add back all the mins and the maxs 
-/*
-		pointsArray.push(minX);
-		pointsArray.push(minY);
-		pointsArray.push(maxX);
-		pointsArray.push(maxY);
-*/
-		/*
-for (w = 0; w < pointsArray.length; w += 1) {
-			document.getElementById('output').innerHTML += pointsArray[w];
-		}
-*/
+
 		return pointsArray;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
