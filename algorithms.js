@@ -305,43 +305,63 @@ for(i=0; i < pointsArray.length; i+= 1) {
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
 		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [];
-
+		/*
+var w;
+		for (w = 0; w < pointsArray.length; w += 1) {
+			document.getElementById('output').innerHTML += pointsArray[w];
+		}
+		document.getElementById('output').innerHTML += '<br />';
+		w = 0;	
+*/
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
 		minX = pointsArray[minXIndex];
+/* 		pointsArray.splice(minXIndex, 1); */
+
 		
 		maxXIndex = pointsArray.maxXminY();
 		maxX = pointsArray[maxXIndex];
+/* 		pointsArray.splice(maxXIndex, 1); */
 		
+	
 		minYIndex = pointsArray.minYminX();
 		minY = pointsArray[minYIndex];
+/* 		pointsArray.splice(minYIndex, 1); */
+
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
+/* 		pointsArray.splice(maxYIndex, 1); */
 
-		canvas.displayLine(minX, minY,"#0AA");
-		canvas.displayLine(minY, maxX,"#0AA");
-		canvas.displayLine(maxX, maxY,"#0AA");
-		canvas.displayLine(maxY, minX, "#0AA");
+/*
+			document.getElementById('output').innerHTML += minX;
+			document.getElementById('output').innerHTML += maxX;
+			document.getElementById('output').innerHTML += minY;
+			document.getElementById('output').innerHTML += maxY;
+*/
+/*
+		canvas.displayLine(minX, minY,"#066");
+		canvas.displayLine(minY, maxX,"#066");
+		canvas.displayLine(maxX, maxY,"#066");
+		canvas.displayLine(maxY, minX, "#066");
+*/
+
 
 		// Temporary removal all the mins and the maxs to prevent a definitive deletion
-		pointsArray.splice(minXIndex, 1);
-		pointsArray.splice(maxXIndex, 1);
-		pointsArray.splice(minYIndex, 1);
-		pointsArray.splice(maxYIndex, 1);
 
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
 		
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
-			
-			// if the point belongs to the lozenge, we add it to the deletion list
-			if(!_segmentCrossing(centroid, point, minX, minY) && 
-			   !_segmentCrossing(centroid, point, minY, maxX) && 
-			   !_segmentCrossing(centroid, point, maxX, maxY) && 
-			   !_segmentCrossing(centroid, point, maxY, minX)) {
-				toDelete.push(i);
+			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
+				// if the point belongs to the lozenge, we add it to the deletion list
+				if(!_segmentCrossing(centroid, point, minX, minY) && 
+				   !_segmentCrossing(centroid, point, minY, maxX) && 
+				   !_segmentCrossing(centroid, point, maxX, maxY) && 
+				   !_segmentCrossing(centroid, point, maxY, minX)) {
+					toDelete.push(i);
+				}
 			}
 		}
 		
@@ -351,10 +371,18 @@ for(i=0; i < pointsArray.length; i+= 1) {
 		}
 		
 		// Add back all the mins and the maxs 
+/*
 		pointsArray.push(minX);
 		pointsArray.push(minY);
 		pointsArray.push(maxX);
 		pointsArray.push(maxY);
+*/
+		/*
+for (w = 0; w < pointsArray.length; w += 1) {
+			document.getElementById('output').innerHTML += pointsArray[w];
+		}
+*/
+		document.getElementById('output').innerHTML += '<br />';	
 		return pointsArray;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
