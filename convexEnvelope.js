@@ -160,8 +160,47 @@
 		canvas.height = sizeOfCanvas;
 
 		$('execute_button').onclick = function (e) {
+			
+			var p1, p2, p3, p4;
+			
+/*
+			p1 = new m.Point({x: 100, y: 100});
+			p2 = new m.Point({x: 100, y: 200});
+			p3 = new m.Point({x: 100, y: 200});
+			p4 = new m.Point({x: 100, y: 400});
+*/
+			
+			p1 = new m.Point({x: 100, y: 100});
+			p2 = new m.Point({x: 100, y: 300});
+			p3 = new m.Point({x: 100, y: 250});
+			p4 = new m.Point({x: 200, y: 250});
+
+	/*
+		p1 = new m.Point({x: 100, y: 100});
+			p2 = new m.Point({x: 300, y: 300});
+			p3 = new m.Point({x: 200, y: 150});
+			p4 = new m.Point({x: 400, y: 350});
+*/
+
+			
+/*
+			canvas.displayLine(p1,p2);
+			canvas.displayLine(p3,p4);
+
+			alert(algo.segmentCrossing(p1,p2,p3,p4));
+			alert(algo.segmentCrossing(p2,p1,p4,p3));
+ 			alert(algo.intersect(p1,p2,p3,p4));
+						
+			canvas.displayPoint(p1, "#FF0000");
+			canvas.displayPoint(p2, "#FF0000");
+			canvas.displayPoint(p3, "#00FF00");
+			canvas.displayPoint(p4, "#00FF00");
+*/
+			
+		
+	
 			var k;
-			for(k = 0; k < 10; k += 1) {
+			for(k = 0; k < 1; k += 1) {
 				var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 				tempPoints = _points.slice(0, _points.length);
 				if ($("divide").checked) {
@@ -192,7 +231,9 @@
 				if (tempPoints.length > 0) {
 					calculTime = calculateTime(executeAlgo);
 				//	$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ' - (' + points.length + ' points) -  Time of execution ' + calculTime + 'ms<br />';
-					canvas.displayPolygon(envelop/* , 'rgba(100, 100, 100, 0.1)' */);
+					canvas.displayPolygon(envelop, "#00A");
+					//canvas.displayAllPoints(points);
+
 					// Getting stats
 					if ($("divide").checked) {
 						if ($("optimized").checked) {
@@ -238,6 +279,8 @@
 					$('time').innerHTML = returnStats();
 				}
 			}
+
+
 		};
 		
 		

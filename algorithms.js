@@ -16,7 +16,7 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _centroid, turnClockwise;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect,_newIntersect, _centroid, turnClockwise;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -55,56 +55,105 @@ window.convlexEnvelop.algorithms = function () {
 	 */
 	_segmentCrossing = function(p1, p2, p3, p4) {
 		var a1, a2, b1, b2, xCommon;
+/*
+		canvas.clear();
+		canvas.displayLine(p1,p2);
+		canvas.displayLine(p3,p4);
+		
+*/
 		//Slope of line (p1,p2)
 		a1 = (p2.y - p1.y) / (p2.x - p1.x);
 		
 		//Slope of line (p3,p4)
 		a2 = (p4.y - p3.y) / (p4.x - p3.x);
-		
+/* 		alert(a1 + " , " + a2); */
 		// Y-intercept of line (p1,p2)
 		b1 = p1.y - (a1 * p1.x);
 
 		// Y-intercept of line (p3,p4)
 		b2 = p3.y - (a2 * p3.x);
-		
-		// If the lines have the same slope, they are parallel, and they do not intersect.
-			if((a2 === Infinity) || (a2 === -Infinity)) {
-				xCommon = p3.x;
-				if ((xCommon > Math.min(p1.x, p2.x)) && 
-					(xCommon < Math.max(p1.x, p2.x)) && 
-					(xCommon >= Math.min(p3.x, p4.x)) && 
-					(xCommon <= Math.max(p3.x, p4.x))) {
-					return true;
+/* 		alert(b1 + " , " + b2);		 */
+		// If the lines have the same slope, they are parallel, and they do not intersect.			
+		if(a1 === a2 && b1 === b2) {
+			if((a1 == Infinity) || (a1 == -Infinity)) {
+				if (p1.x != p3.x) {
+					return false;
 				}
-			} 
-			else if((a1 == Infinity) || (a1 == -Infinity)) {
-				xCommon = p1.x;
-				if ((xCommon >= Math.min(p1.x, p2.x)) && 
-					(xCommon <= Math.max(p1.x, p2.x)) && 
-					(xCommon > Math.min(p3.x, p4.x)) && 
-					(xCommon < Math.max(p3.x, p4.x))) {
+				if ((Math.min(p3.y,p4.y) >= Math.min(p1.y, p2.y)) && 
+					(Math.min(p3.y,p4.y) <= Math.max(p1.y, p2.y))
+				) {
 					return true;
+				} else {
+					return false;
+				}	
+			} else {
+				if (a1 === 0 && a2 === 0 && p1.y != p3.y) {
+					return false;
 				}
+				if ((Math.min(p3.x,p4.x) >= Math.min(p1.x, p2.x)) && 
+					(Math.min(p3.x,p4.x) <= Math.max(p1.x, p2.x))
+				) {
+					return true;
+				} else {
+					return false;
+				}	
 			}
-			else {
-				xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
-			}		
-			// If xCommon is between the first segment and the second, the two segments intersect.
-			if ((xCommon > Math.min(p1.x, p2.x)) && 
-				(xCommon < Math.max(p1.x, p2.x)) && 
-				(xCommon > Math.min(p3.x, p4.x)) && 
-				(xCommon < Math.max(p3.x, p4.x))) {
+		}
+			
+		if(a1 === 0 && a2 === 0) {
+			if(p1.y === p3.y) {
 				return true;
 			}
+		}		
+		if((a2 === Infinity) || (a2 === -Infinity)) {
+			xCommon = p3.x;
+			if ((xCommon >= Math.min(p1.x, p2.x)) && (xCommon <= Math.max(p1.x, p2.x))) {
+				return true;
+			}
+		} 
+		else if((a1 == Infinity) || (a1 == -Infinity)) {
+			xCommon = p1.x;
+			if ((xCommon >= Math.min(p3.x, p4.x)) && (xCommon <= Math.max(p3.x, p4.x))) {
+				return true;
+			}
+		}
+		else {
+			xCommon = (b2 - b1) / (a1 - a2); // abscissa of intersection
+		}		
+		// If xCommon is between the first segment and the second, the two segments intersect.
+		if ((xCommon >= Math.min(p1.x, p2.x)) && 
+			(xCommon <= Math.max(p1.x, p2.x)) && 
+			(xCommon >= Math.min(p3.x, p4.x)) && 
+			(xCommon <= Math.max(p3.x, p4.x))) {
+			return true;
+		}
 		return false;
 	};
 	that.segmentCrossing = _segmentCrossing;
 	
 	_intersect = function(p1,p2,p3,p4) {
-	 return (((pointCrossProduct(p1, p2, p3) * pointCrossProduct(p1, p2, p4)) <= 0) && 
+		return (((pointCrossProduct(p1, p2, p3) * pointCrossProduct(p1, p2, p4)) <= 0) && 
 	 			((pointCrossProduct(p3, p4, p1) * pointCrossProduct(p3, p4, p2)) <= 0));
 	};
 	that.intersect = _intersect;
+	
+	_newIntersect = function(p1,p2,p3,p4) {
+		var p, s, r, tmp;
+		tmp = (p1.y-p3.y)*(p4.x-p3.x)-(p1.x-p3.x)*(p4.y-p3.y);
+		r = ((tmp) / ((p2.x-p1.x)*(p4.y-p3.y)-(p2.y-p1.y)*(p4.x-p3.x)));
+		s = (((p1.y-p3.y)*(p2.x-p1.x)-(p1.x-p3.x)*(p2.y-p1.y)) / ((p2.x-p1.x)*(p4.y-p3.y)-(p2.y-p1.y)*(p4.x-p3.x)));
+		if ((r == Infinity) || (r == -Infinity)) {
+			return false;
+		}
+		if (tmp == 0) {
+			return true;
+		}
+		if ((r >= 0) && (r <= 1) && (s >= 0) && (s <=1)) {
+			return true;
+		}
+		return false;
+	};
+	that.newIntersect = _newIntersect;
 	
 	/*
 	 * Divide And Conquer Algorithm
@@ -249,8 +298,10 @@ window.convlexEnvelop.algorithms = function () {
 			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
-				var bool = _intersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]);
-				if (bool) {
+				//alert(bool + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
+				//alert(_newIntersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]) + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
+				//alert(_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]));
+				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
 					isOutside = true;
 					break;
 				}
@@ -304,28 +355,31 @@ window.convlexEnvelop.algorithms = function () {
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
-
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
+/*
+		canvas.displayLine(minX, minY);
+		canvas.displayLine(minY, maxX);
+		canvas.displayLine(maxX, maxY);
+		canvas.displayLine(maxY, minX);
+*/
 		
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_intersect(centroid, point, minX, minY) && 
-				   !_intersect(centroid, point, minY, maxX) && 
-				   !_intersect(centroid, point, maxX, maxY) && 
-				   !_intersect(centroid, point, maxY, minX)) {
+				if(!_newIntersect(centroid, point, minX, minY) && 
+				   !_newIntersect(centroid, point, minY, maxX) && 
+				   !_newIntersect(centroid, point, maxX, maxY) && 
+				   !_newIntersect(centroid, point, maxY, minX)) {
 					toDelete.push(i);
 				}
 			}
 		}
-		
 		// Deletion of the elements from the pointsArray
 		for (i = 0; i < toDelete.length; i += 1) {
 			pointsArray.splice(toDelete[i] - i, 1);
 		}
-
 		return pointsArray;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
