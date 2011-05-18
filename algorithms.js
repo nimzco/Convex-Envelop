@@ -16,7 +16,7 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect,_newIntersect, _centroid, turnClockwise;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _intersect2 ,_newIntersect, _centroid, turnClockwise;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -131,12 +131,51 @@ window.convlexEnvelop.algorithms = function () {
 	};
 	that.segmentCrossing = _segmentCrossing;
 	
-	_intersect = function(p1,p2,p3,p4) {
+	_intersect = function (p1, p2, p3, p4) {
 		return (((pointCrossProduct(p1, p2, p3) * pointCrossProduct(p1, p2, p4)) <= 0) && 
 	 			((pointCrossProduct(p3, p4, p1) * pointCrossProduct(p3, p4, p2)) <= 0));
 	};
 	that.intersect = _intersect;
-	
+
+	_intersect2 = function (p1, p2, p3, p4) {
+		var Sx, Sy;
+ 
+		if(p1.x === p2.x) {
+			if(p3.x === p4.x) {
+				return false;
+			} else {
+				var pCD = (p3.y - p4.y) / (p3.x - p4.x);
+				Sx = p1.x;
+				Sy = pCD * (p1.x - p3.x) + p3.y;
+			}
+		} else {
+			if(p3.x === p4.x) {
+				var pAB = (p1.y - p2.y) / (p1.x - p2.x);
+				Sx = p3.x;
+				Sy = pAB * (p3.x - p1.x) + p1.y;
+			} else {
+				var pCD = (p3.y - p4.y) / (p3.x - p4.x);
+				var pAB = (p1.y - p2.y) / (p1.x - p2.x);
+				var oCD = p3.y - pCD * p3.x;
+				var oAB = p1.y - pAB * p1.x;
+				Sx = (oAB - oCD) / (pCD - pAB);
+				Sy = pCD * Sx + oCD;
+			}
+		}
+		if((Sx < p1.x && Sx < p2.x) 
+		|| (Sx > p1.x && Sx > p2.x) 
+		|| (Sx < p3.x && Sx < p4.x) 
+		|| (Sx > p3.x && Sx > p4.x)
+		|| (Sy < p1.y && Sy < p2.y)
+		|| (Sy > p1.y && Sy > p2.y) 
+		|| (Sy < p3.y && Sy < p4.y)
+		|| (Sy > p3.y && Sy > p4.y)
+		) {
+			return false;
+		} 
+		return true;
+	};
+
 	_newIntersect = function(p1,p2,p3,p4) {
 		var p, s, r, tmp;
 		tmp = (p1.y-p3.y)*(p4.x-p3.x)-(p1.x-p3.x)*(p4.y-p3.y);
@@ -301,7 +340,7 @@ window.convlexEnvelop.algorithms = function () {
 				//alert(bool + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
 				//alert(_newIntersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]) + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
 				//alert(_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]));
-				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
+				if (_intersect2(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
 					isOutside = true;
 					break;
 				}
