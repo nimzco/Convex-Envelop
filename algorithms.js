@@ -16,7 +16,7 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _segmentCrossing ,_newIntersect, _centroid, turnClockwise;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing__old, _lozengeOptimization, _intersect, _segmentCrossing ,_newIntersect, _centroid, turnClockwise;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -320,7 +320,7 @@ window.convlexEnvelop.algorithms = function () {
 		// Running through all points
 		while(pointsArray.length > 0) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
-			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex, lastBottomIndex, lastTopIndex;
+			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex;
 			// Getting a random point and removing it from the set
 			randP = Math.randomValue(pointsArray.length - 1);
 
@@ -329,21 +329,17 @@ window.convlexEnvelop.algorithms = function () {
 			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
-				//alert(bool + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
-				//alert(_newIntersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]) + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
-				//alert(_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]));
 				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
 					isOutside = true;
 					break;
 				}
 			} 
+			
+			// -- If the point is outside the current envelop
 			if (isOutside) {
-				lastBottomIndex = i;
-				lastTopIndex = envelop.nextIndex(i);
-				
-				// -- If the point is outside
 				topLimitIndex = envelop.nextIndex(i);
 				bottomLimitIndex = i;
+
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
@@ -388,7 +384,7 @@ window.convlexEnvelop.algorithms = function () {
 		maxY = pointsArray[maxYIndex];
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
-		
+
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {

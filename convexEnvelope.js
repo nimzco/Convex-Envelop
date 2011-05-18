@@ -171,8 +171,8 @@
 				} else {
 					optimization = function(pointsArray) { return pointsArray; };
 				};
-				executeAlgo = function () {
 				
+				executeAlgo = function () {				
 					tempPoints = optimization(tempPoints);
 					if($("divide").checked){
 						tempPoints = tempPoints.sort(function(a,b) {
