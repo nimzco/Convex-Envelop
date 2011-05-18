@@ -16,7 +16,7 @@ window.convlexEnvelop.algorithms = function () {
 	var pointCrossProduct = m.pointCrossProduct;
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
-	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _intersect2 ,_newIntersect, _centroid, turnClockwise;
+	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing, _lozengeOptimization, _intersect, _segmentCrossing ,_newIntersect, _centroid, turnClockwise;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -50,29 +50,23 @@ window.convlexEnvelop.algorithms = function () {
 		return new m.Point({x: centroidX, y: centroidY});
 	};
 	that.centroid = _centroid;
+	
 	/**
-	 * Checks if the segment [p1, p2] and [p3, p4] crosses
+	 * /!\ Do not work /!\
+	 * Checks if the segment [p1, p2] and [p3, p4] crosses 
 	 */
-	_segmentCrossing = function(p1, p2, p3, p4) {
+	_segmentCrossing__old = function(p1, p2, p3, p4) {
 		var a1, a2, b1, b2, xCommon;
-/*
-		canvas.clear();
-		canvas.displayLine(p1,p2);
-		canvas.displayLine(p3,p4);
-		
-*/
 		//Slope of line (p1,p2)
 		a1 = (p2.y - p1.y) / (p2.x - p1.x);
 		
 		//Slope of line (p3,p4)
 		a2 = (p4.y - p3.y) / (p4.x - p3.x);
-/* 		alert(a1 + " , " + a2); */
 		// Y-intercept of line (p1,p2)
 		b1 = p1.y - (a1 * p1.x);
 
 		// Y-intercept of line (p3,p4)
 		b2 = p3.y - (a2 * p3.x);
-/* 		alert(b1 + " , " + b2);		 */
 		// If the lines have the same slope, they are parallel, and they do not intersect.			
 		if(a1 === a2 && b1 === b2) {
 			if((a1 == Infinity) || (a1 == -Infinity)) {
@@ -129,70 +123,68 @@ window.convlexEnvelop.algorithms = function () {
 		}
 		return false;
 	};
-	that.segmentCrossing = _segmentCrossing;
 	
+	/**
+	 * /!\ Too long /!\
+	 */
 	_intersect = function (p1, p2, p3, p4) {
 		return (((pointCrossProduct(p1, p2, p3) * pointCrossProduct(p1, p2, p4)) <= 0) && 
 	 			((pointCrossProduct(p3, p4, p1) * pointCrossProduct(p3, p4, p2)) <= 0));
 	};
-	that.intersect = _intersect;
+	//that.intersect = _intersect;
 
-	_intersect2 = function (p1, p2, p3, p4) {
+	/**
+	 * Checks if the segment [p1, p2] and [p3, p4] crosses 
+	 */
+	_segmentCrossing = function (p1, p2, p3, p4) {
 		var Sx, Sy;
- 
-		if(p1.x === p2.x) {
-			if(p3.x === p4.x) {
+ 		var Ax, Ay, Bx, By, Cx, Cy, Dx, Dy;
+ 		Ax = p1.x;
+ 		Ay = p1.y;
+ 		Bx = p2.x;
+ 		By = p2.y;
+ 		Cx = p3.x;
+ 		Cy = p3.y;
+ 		Dx = p4.x;
+ 		Dy = p4.y;
+ 		
+		if(Ax === Bx) {
+			if(Cx === Dx) {
 				return false;
 			} else {
-				var pCD = (p3.y - p4.y) / (p3.x - p4.x);
-				Sx = p1.x;
-				Sy = pCD * (p1.x - p3.x) + p3.y;
+				var pCD = (Cy - Dy) / (Cx - Dx);
+				Sx = Ax;
+				Sy = pCD * (Ax - Cx) + Cy;
 			}
 		} else {
-			if(p3.x === p4.x) {
-				var pAB = (p1.y - p2.y) / (p1.x - p2.x);
-				Sx = p3.x;
-				Sy = pAB * (p3.x - p1.x) + p1.y;
+			if(Cx === Dx) {
+				var pAB = (Ay - By) / (Ax - Bx);
+				Sx = Cx;
+				Sy = pAB * (Cx - Ax) + Ay;
 			} else {
-				var pCD = (p3.y - p4.y) / (p3.x - p4.x);
-				var pAB = (p1.y - p2.y) / (p1.x - p2.x);
-				var oCD = p3.y - pCD * p3.x;
-				var oAB = p1.y - pAB * p1.x;
+				var pCD, pAB, oCD, oAB;
+				pCD = (Cy - Dy) / (Cx - Dx);
+				pAB = (Ay - By) / (Ax - Bx);
+				oCD = Cy - pCD * Cx;
+				oAB = Ay - pAB * Ax;
 				Sx = (oAB - oCD) / (pCD - pAB);
 				Sy = pCD * Sx + oCD;
 			}
 		}
-		if((Sx < p1.x && Sx < p2.x) 
-		|| (Sx > p1.x && Sx > p2.x) 
-		|| (Sx < p3.x && Sx < p4.x) 
-		|| (Sx > p3.x && Sx > p4.x)
-		|| (Sy < p1.y && Sy < p2.y)
-		|| (Sy > p1.y && Sy > p2.y) 
-		|| (Sy < p3.y && Sy < p4.y)
-		|| (Sy > p3.y && Sy > p4.y)
+		if((Sx < Ax && Sx < Bx) 
+		|| (Sx > Ax && Sx > Bx) 
+		|| (Sx < Cx && Sx < Dx) 
+		|| (Sx > Cx && Sx > Dx)
+		|| (Sy < Ay && Sy < By)
+		|| (Sy > Ay && Sy > By) 
+		|| (Sy < Cy && Sy < Dy)
+		|| (Sy > Cy && Sy > Dy)
 		) {
 			return false;
 		} 
 		return true;
 	};
-
-	_newIntersect = function(p1,p2,p3,p4) {
-		var p, s, r, tmp;
-		tmp = (p1.y-p3.y)*(p4.x-p3.x)-(p1.x-p3.x)*(p4.y-p3.y);
-		r = ((tmp) / ((p2.x-p1.x)*(p4.y-p3.y)-(p2.y-p1.y)*(p4.x-p3.x)));
-		s = (((p1.y-p3.y)*(p2.x-p1.x)-(p1.x-p3.x)*(p2.y-p1.y)) / ((p2.x-p1.x)*(p4.y-p3.y)-(p2.y-p1.y)*(p4.x-p3.x)));
-		if ((r == Infinity) || (r == -Infinity)) {
-			return false;
-		}
-		if (tmp == 0) {
-			return true;
-		}
-		if ((r >= 0) && (r <= 1) && (s >= 0) && (s <=1)) {
-			return true;
-		}
-		return false;
-	};
-	that.newIntersect = _newIntersect;
+	that.segmentCrossing = _segmentCrossing;
 	
 	/*
 	 * Divide And Conquer Algorithm
@@ -340,7 +332,7 @@ window.convlexEnvelop.algorithms = function () {
 				//alert(bool + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
 				//alert(_newIntersect(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]) + p + centroid + envelop[i] + envelop[envelop.nextIndex(i)]);
 				//alert(_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)]));
-				if (_intersect2(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
+				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
 					isOutside = true;
 					break;
 				}
@@ -396,21 +388,15 @@ window.convlexEnvelop.algorithms = function () {
 		maxY = pointsArray[maxYIndex];
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
-/*
-		canvas.displayLine(minX, minY);
-		canvas.displayLine(minY, maxX);
-		canvas.displayLine(maxX, maxY);
-		canvas.displayLine(maxY, minX);
-*/
 		
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_newIntersect(centroid, point, minX, minY) && 
-				   !_newIntersect(centroid, point, minY, maxX) && 
-				   !_newIntersect(centroid, point, maxX, maxY) && 
-				   !_newIntersect(centroid, point, maxY, minX)) {
+				if(!_segmentCrossing(centroid, point, minX, minY) && 
+				   !_segmentCrossing(centroid, point, minY, maxX) && 
+				   !_segmentCrossing(centroid, point, maxX, maxY) && 
+				   !_segmentCrossing(centroid, point, maxY, minX)) {
 					toDelete.push(i);
 				}
 			}
