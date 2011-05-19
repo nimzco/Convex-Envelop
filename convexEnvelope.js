@@ -231,7 +231,7 @@
 				if (tempPoints.length > 0) {
 					calculTime = calculateTime(executeAlgo);
 				//	$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ' - (' + points.length + ' points) -  Time of execution ' + calculTime + 'ms<br />';
-					canvas.displayPolygon(envelop, "#00A");
+					canvas.displayPolygon(envelop);
 					//canvas.displayAllPoints(points);
 
 					// Getting stats
