@@ -26,20 +26,12 @@
 	stats.divideOptimized = {};
 	stats.randomized = {};
 	stats.randomizedOptimized = {};
-	
-/*	generateAllPoints = function (_allPoints, _width, _height) {
-		var height, width, i, j;
-		width = _width || sizeOfCanvas;
-		height = _height || width;
-		_allPoints.splice(0, _allPoints.length);
-		for (i = 0; i < width; i += 1) {
-			for (j = 0; j < height; j += 1) {
-				_allPoints.push(new m.Point({x:i, y:j}));
-			}
-		}
-	};
-	generateAllPoints(allPoints, sizeOfCanvas);
-*/
+
+	/**
+	 * n: number of points to generate
+	 * pointsArray: array to populate
+	 * Populate randomly the array of points by avoiding duplicates points
+	 */
 	populate = function (n, pointsArray) {
 		var i = 0;
 		while(i < n) {
@@ -55,7 +47,7 @@
 	};
 
 	/**
-	 * Parses the input to get Json and 
+	 * Parses the input to get Json and populate the arrray and draw points in the canvas
 	 */
 	populateFromJson = function () {
 		var myJsonText, myObject, i;
@@ -88,7 +80,7 @@
 	
 	/**
 	 * Returns points and envelop into Json format for the parser
-   */
+	 */
 	exportToJson = function (pointsArray, envelop) {
 		var json, i;
 		json = "{";
@@ -115,7 +107,7 @@
 	
 	/**
 	 * Returns the time of execution of an algorithm
-   */
+    */
 	calculateTime = function(func) {
 			var date, t1, t2, args;
 			var __slice = Array.prototype.slice;
@@ -131,6 +123,9 @@
 			return t2-t1;
 	};
 
+	/**
+	 * Returns the string for the stats
+	 */
 	returnStats = function () {
 		var i, statsStr;
 		statsStr = "<h4>Divide and Conquer</h4>"
@@ -161,45 +156,7 @@
 
 		$('execute_button').onclick = function (e) {
 			
-			var p1, p2, p3, p4;
-			
-/*
-			p1 = new m.Point({x: 100, y: 100});
-			p2 = new m.Point({x: 100, y: 200});
-			p3 = new m.Point({x: 100, y: 200});
-			p4 = new m.Point({x: 100, y: 400});
-*/
-			
-			p1 = new m.Point({x: 100, y: 100});
-			p2 = new m.Point({x: 100, y: 300});
-			p3 = new m.Point({x: 100, y: 250});
-			p4 = new m.Point({x: 200, y: 250});
-
-	/*
-		p1 = new m.Point({x: 100, y: 100});
-			p2 = new m.Point({x: 300, y: 300});
-			p3 = new m.Point({x: 200, y: 150});
-			p4 = new m.Point({x: 400, y: 350});
-*/
-
-			
-/*
-			canvas.displayLine(p1,p2);
-			canvas.displayLine(p3,p4);
-
-			alert(algo.segmentCrossing(p1,p2,p3,p4));
-			alert(algo.segmentCrossing(p2,p1,p4,p3));
- 			alert(algo.intersect(p1,p2,p3,p4));
-						
-			canvas.displayPoint(p1, "#FF0000");
-			canvas.displayPoint(p2, "#FF0000");
-			canvas.displayPoint(p3, "#00FF00");
-			canvas.displayPoint(p4, "#00FF00");
-*/
-			
-		
-	
-			var k;
+			var p1, p2, p3, p4, k;	
 			for(k = 0; k < 1; k += 1) {
 				var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 				tempPoints = _points.slice(0, _points.length);
@@ -214,8 +171,8 @@
 				} else {
 					optimization = function(pointsArray) { return pointsArray; };
 				};
-				executeAlgo = function () {
 				
+				executeAlgo = function () {				
 					tempPoints = optimization(tempPoints);
 					if($("divide").checked){
 						tempPoints = tempPoints.sort(function(a,b) {
@@ -230,9 +187,7 @@
 				};
 				if (tempPoints.length > 0) {
 					calculTime = calculateTime(executeAlgo);
-				//	$('time').innerHTML += ($("select_algo").value === "divide" ? "Divide and conquer " : "Randomized Algorithm") + ($("optimized").checked ? " (optimized)" : "" ) + ' - (' + points.length + ' points) -  Time of execution ' + calculTime + 'ms<br />';
 					canvas.displayPolygon(envelop);
-					//canvas.displayAllPoints(points);
 
 					// Getting stats
 					if ($("divide").checked) {
@@ -279,18 +234,21 @@
 					$('time').innerHTML = returnStats();
 				}
 			}
-
-
 		};
 		
-		
+		/**
+		 * Populate the canvas
+		 */
 		$('populate_button').onclick = function (e) {
 			populate($('input').value, points, allPoints);
 			_points = points.slice(0, points.length);
 			canvas.displayAllPoints(points);
 			$("nbPoints").innerHTML = "" + _points.length + " points";
 		};	
-		
+
+		/**
+		 * Populate from JSON input
+		 */		
 		$("parse_button").onclick =  function () {
 			_points = points = [];
 			populateFromJson();
@@ -299,18 +257,21 @@
 			canvas.displayPolygon(envelop);
 		};
 		
+		/**
+		 * Export to JSON
+		 */		
 		$("export_button").onclick = function () {
 			$('input_json').value = exportToJson(_points, envelop);
 		};
 		
+		/**
+		 * Clears the Canvas, the points array and the envelop array
+		 */
 		$("clear_button").onclick = function () {
-//			generateAllPoints(allPoints, sizeOfCanvas);
 			canvas.clear();
 			points = [];
 			_points = [];
 			envelop = [];
-			$('output').innerHTML = "";
-//			$('time').innerHTML = "";
 		};
 	});
 })();
