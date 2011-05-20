@@ -68,7 +68,8 @@ window.convlexEnvelop.algorithms = function () {
 		// Y-intercept of line (p3,p4)
 		b2 = p3.y - (a2 * p3.x);
 		// If the lines have the same slope, they are parallel, and they do not intersect.			
-		if(a1 === a2 && b1 === b2) {
+		/*
+if(a1 === a2 && b1 === b2) {
 			if((a1 == Infinity) || (a1 == -Infinity)) {
 				if (p1.x != p3.x) {
 					return false;
@@ -98,7 +99,8 @@ window.convlexEnvelop.algorithms = function () {
 			if(p1.y === p3.y) {
 				return true;
 			}
-		}		
+		}
+*/		
 		if((a2 === Infinity) || (a2 === -Infinity)) {
 			xCommon = p3.x;
 			if ((xCommon >= Math.min(p1.x, p2.x)) && (xCommon <= Math.max(p1.x, p2.x))) {
@@ -137,48 +139,38 @@ window.convlexEnvelop.algorithms = function () {
 	 * Checks if the segment [p1, p2] and [p3, p4] crosses 
 	 */
 	_segmentCrossing = function (p1, p2, p3, p4) {
-		var Sx, Sy;
- 		var Ax, Ay, Bx, By, Cx, Cy, Dx, Dy;
- 		Ax = p1.x;
- 		Ay = p1.y;
- 		Bx = p2.x;
- 		By = p2.y;
- 		Cx = p3.x;
- 		Cy = p3.y;
- 		Dx = p4.x;
- 		Dy = p4.y;
+		var Sx, Sy, pCD, pAB, oCD, oAB;
  		
-		if(Ax === Bx) {
-			if(Cx === Dx) {
+		if(p1.x === p2.x) {
+			if(p3.x === p4.x) {
 				return false;
 			} else {
-				var pCD = (Cy - Dy) / (Cx - Dx);
-				Sx = Ax;
-				Sy = pCD * (Ax - Cx) + Cy;
+				pCD = (p3.y - p4.y) / (p3.x - p4.x);
+				Sx = p1.x;
+				Sy = pCD * (p1.x - p3.x) + p3.y;
 			}
 		} else {
-			if(Cx === Dx) {
-				var pAB = (Ay - By) / (Ax - Bx);
-				Sx = Cx;
-				Sy = pAB * (Cx - Ax) + Ay;
+			if(p3.x === p4.x) {
+				pAB = (p1.y - p2.y) / (p1.x - p2.x);
+				Sx = p3.x;
+				Sy = pAB * (p3.x - p1.x) + p1.y;
 			} else {
-				var pCD, pAB, oCD, oAB;
-				pCD = (Cy - Dy) / (Cx - Dx);
-				pAB = (Ay - By) / (Ax - Bx);
-				oCD = Cy - pCD * Cx;
-				oAB = Ay - pAB * Ax;
+				pCD = (p3.y - p4.y) / (p3.x - p4.x);
+				pAB = (p1.y - p2.y) / (p1.x - p2.x);
+				oCD = p3.y - pCD * p3.x;
+				oAB = p1.y - pAB * p1.x;
 				Sx = (oAB - oCD) / (pCD - pAB);
 				Sy = pCD * Sx + oCD;
 			}
 		}
-		if((Sx < Ax && Sx < Bx) 
-		|| (Sx > Ax && Sx > Bx) 
-		|| (Sx < Cx && Sx < Dx) 
-		|| (Sx > Cx && Sx > Dx)
-		|| (Sy < Ay && Sy < By)
-		|| (Sy > Ay && Sy > By) 
-		|| (Sy < Cy && Sy < Dy)
-		|| (Sy > Cy && Sy > Dy)
+		if((Sx < p1.x && Sx < p2.x) 
+		|| (Sx > p1.x && Sx > p2.x) 
+		|| (Sx < p3.x && Sx < p4.x) 
+		|| (Sx > p3.x && Sx > p4.x)
+		|| (Sy < p1.y && Sy < p2.y)
+		|| (Sy > p1.y && Sy > p2.y) 
+		|| (Sy < p3.y && Sy < p4.y)
+		|| (Sy > p3.y && Sy > p4.y)
 		) {
 			return false;
 		} 
@@ -337,18 +329,30 @@ window.convlexEnvelop.algorithms = function () {
 			
 			// -- If the point is outside the current envelop
 			if (isOutside) {
-				topLimitIndex = envelop.nextIndex(i);
 				bottomLimitIndex = i;
-
-				while (crossProduct(
+				topLimitIndex = envelop.nextIndex(i);
+				var c1, comparator;
+				comparator = function (x, y) { return x > y; };
+				c1 = crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]}));
+				while (/* (c1 == 0 && envelop.betterNextRight(topLimitIndex, comparator)) ||  */c1 > 0) {
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
+					c1 = crossProduct(
+						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
+						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]}));
 				}
-				while (crossProduct(
+
+				comparator = function (x, y) { return x < y; };
+				c1 = crossProduct(
 						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]}));
+						
+				while (/* (c1 == 0 && envelop.betterPreviousRight(bottomLimitIndex, comparator)) ||  */c1 < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
+					c1 = crossProduct(
+						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
+						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]}));
 				}
 	
 				while(topLimitIndex != bottomLimitIndex) {
@@ -360,6 +364,7 @@ window.convlexEnvelop.algorithms = function () {
 				envelop = temp.slice(0, temp.length);
 			}
 		}
+		alert(envelop);
 		return envelop;
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
@@ -389,17 +394,10 @@ window.convlexEnvelop.algorithms = function () {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
 				// if the point belongs to the lozenge, we add it to the deletion list
-<<<<<<< HEAD
-				if(!_intersect(centroid, point, minX, minY) && 
-				   !_intersect(centroid, point, minY, maxX) && 
-				   !_intersect(centroid, point, maxX, maxY) && 
-				   !_intersect(centroid, point, maxY, minX)) {
-=======
 				if(!_segmentCrossing(centroid, point, minX, minY) && 
 				   !_segmentCrossing(centroid, point, minY, maxX) && 
 				   !_segmentCrossing(centroid, point, maxX, maxY) && 
 				   !_segmentCrossing(centroid, point, maxY, minX)) {
->>>>>>> 74633235187e759a8fe9770cc87dc25b8da0bd83
 					toDelete.push(i);
 				}
 			}
