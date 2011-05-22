@@ -359,7 +359,7 @@ if(a1 === a2 && b1 === b2) {
 	 * Lozenge optimization
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
-		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [], k;
+		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, result = [];
 
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
@@ -373,27 +373,26 @@ if(a1 === a2 && b1 === b2) {
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
+		
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
-		k = 0;
+
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
+			
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
+				
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_segmentCrossing(centroid, point, minX, minY) && 
-				   !_segmentCrossing(centroid, point, minY, maxX) && 
-				   !_segmentCrossing(centroid, point, maxX, maxY) && 
-				   !_segmentCrossing(centroid, point, maxY, minX)) {
-					toDelete[k] = i;
-					k += 1;
+				if(_segmentCrossing(centroid, point, minX, minY) || 
+				   _segmentCrossing(centroid, point, minY, maxX) || 
+				   _segmentCrossing(centroid, point, maxX, maxY) || 
+				   _segmentCrossing(centroid, point, maxY, minX)) {
+   					result.push(point);
 				}
 			}
 		}
-		// Deletion of the elements from the pointsArray
-		for (i = 0; i < toDelete.length; i += 1) {
-			pointsArray.splice(toDelete[i] - i, 1);
-		}
-		return pointsArray;
+
+		return result;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
 	
