@@ -157,6 +157,14 @@
 		$('execute_button').onclick = function (e) {
 			
 			var p1, p2, p3, p4, k;	
+/*
+			
+			p1 = new m.Point({x: 100, y: 100});
+			p2 = new m.Point({x: 100, y: 100});
+			p3 = new m.Point({x: 100, y: 100});
+			p4 = new m.Point({x: 100, y: 100});		
+*/			
+			
 			for(k = 0; k < 1; k += 1) {
 				var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 				tempPoints = _points.slice(0, _points.length);
@@ -187,7 +195,7 @@
 				};
 				if (tempPoints.length > 0) {
 					calculTime = calculateTime(executeAlgo);
-					canvas.displayPolygon(envelop, "#00A");
+					canvas.displayPolygon(envelop);
 
 					// Getting stats
 					if ($("divide").checked) {
@@ -233,6 +241,7 @@
 					}
 					$('time').innerHTML = returnStats();
 				}
+
 			}
 		};
 		
