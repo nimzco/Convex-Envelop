@@ -17,6 +17,7 @@ window.convlexEnvelop.algorithms = function () {
 	var crossProduct = m.crossProduct;
 	var printPoints = m.printPoints;
 	var _divideAndConquer, _randomizedAlgorithm, _segmentCrossing__old, _lozengeOptimization, _intersect, _segmentCrossing ,_newIntersect, _centroid, turnClockwise;
+	var isInsidePolygon;
 	
 	/*
 	 * Turns a triangle clockwise
@@ -306,7 +307,6 @@ if(a1 === a2 && b1 === b2) {
 
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
-		
 		// Running through all points
 		for (k = 3; k < pointsArray.length; k += 1) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
@@ -316,12 +316,15 @@ if(a1 === a2 && b1 === b2) {
 			p = pointsArray[k];
 			isOutside = false;
 			// Checking if the point is in the current envelop
+
 			for (i = 0; i < envelop.length; i += 1) {;
 				if (_segmentCrossing(p, centroid, envelop[i], envelop[envelop.nextIndex(i)])) {
 					isOutside = true;
 					break;
 				}
-			} 
+			}
+			
+
 			// -- If the point is outside the current envelop
 			if (isOutside) {
 				bottomLimitIndex = i;
