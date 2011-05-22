@@ -307,24 +307,19 @@ if(a1 === a2 && b1 === b2) {
 		centroid = _centroid(a, b, c);
 
 		// Adding points of the triangle in the envelop
-		envelop.push(a);
-		envelop.push(b);
-		envelop.push(c);
+		envelop[0] = a;
+		envelop[1] = b;
+		envelop[2] = c;
 
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
 		
 		// Running through all points
-//		while(pointsArray.length > 0) {
 		for (k = 3; k < pointsArray.length; k += 1) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex;
+
 			// Getting a random point and removing it from the set
-//			randP = Math.randomValue(pointsArray.length - 1);
-
-//			p = pointsArray[randP];
-//			pointsArray.splice(randP, 1);
-
 			p = pointsArray[k];
 			isOutside = false;
 			// Checking if the point is in the current envelop
@@ -334,44 +329,35 @@ if(a1 === a2 && b1 === b2) {
 					break;
 				}
 			} 
-			
 			// -- If the point is outside the current envelop
 			if (isOutside) {
 				bottomLimitIndex = i;
 				topLimitIndex = envelop.nextIndex(i);
 				var c1, comparator;
 				comparator = function (x, y) { return x > y; };
-				c1 = crossProduct(
+				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]}));
-				while (/* (c1 == 0 && envelop.betterNextRight(topLimitIndex, comparator)) ||  */c1 > 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
-					c1 = crossProduct(
-						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
-						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]}));
 				}
 
 				comparator = function (x, y) { return x < y; };
-				c1 = crossProduct(
+				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]}));
-						
-				while (/* (c1 == 0 && envelop.betterPreviousRight(bottomLimitIndex, comparator)) ||  */c1 < 0) {
+						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
-					c1 = crossProduct(
-						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
-						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]}));
 				}
+				i = 0;
 				while(topLimitIndex != bottomLimitIndex) {
-					temp.push(envelop[topLimitIndex]);
+					temp[i] = envelop[topLimitIndex];
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
+					i += 1;
 				}
-				temp.push(envelop[bottomLimitIndex]);
-				temp.push(p);
-				envelop = temp.slice(0, temp.length);
+				temp[i] = envelop[bottomLimitIndex];
+				temp[i + 1] = p;
+				envelop = temp;
 			}
 		}
-		alert(envelop);
 		return envelop;
 	};
 	that.randomizedAlgorithm = _randomizedAlgorithm;
