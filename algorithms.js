@@ -230,7 +230,7 @@ if(a1 === a2 && b1 === b2) {
 			iGH = leftIndex;
 			iDH = rightIndex;
 
-			envelop[envelopIndex] = leftEnv[iGH];
+			envelop[envelopIndex] = rightEnv[iDH];
 			envelopIndex += 1;
 			
 			finished = false;
@@ -265,22 +265,22 @@ if(a1 === a2 && b1 === b2) {
 				}
 			}
 
-			i = iDH;
-			while (i != rightIndex) {
-				envelop[envelopIndex] = rightEnv[i];
-				envelopIndex += 1;
-				i = rightEnv.nextIndex(i); 
-			}
-			envelop[envelopIndex] = rightEnv[rightIndex];
-			envelopIndex += 1;
-			
-			i = leftIndex;
-			while (i != iGH) {
+			i = iGH;
+			while (i != leftIndex) {
 				envelop[envelopIndex] = leftEnv[i];
 				envelopIndex += 1;
-				i = leftEnv.previousIndex(i); 
+				i = leftEnv.nextIndex(i); 
 			}
-			envelop.reverse();
+			envelop[envelopIndex] = leftEnv[leftIndex];
+			envelopIndex += 1;
+			
+			i = rightIndex;
+			while (i != iDH) {
+				envelop[envelopIndex] = rightEnv[i];
+				envelopIndex += 1;
+				i = rightEnv.previousIndex(i); 
+			}
+			//envelop.reverse();
 			return envelop;
 		}
 	};
