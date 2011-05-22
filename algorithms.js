@@ -231,7 +231,7 @@ if(a1 === a2 && b1 === b2) {
 			iGH = leftIndex;
 			iDH = rightIndex;
 
-			envelop[envelopIndex] = leftEnv[iGH];
+			envelop[envelopIndex] = rightEnv[iDH];
 			envelopIndex += 1;
 			
 			finished = false;
@@ -266,22 +266,22 @@ if(a1 === a2 && b1 === b2) {
 				}
 			}
 
-			i = iDH;
-			while (i != rightIndex) {
-				envelop[envelopIndex] = rightEnv[i];
-				envelopIndex += 1;
-				i = rightEnv.nextIndex(i); 
-			}
-			envelop[envelopIndex] = rightEnv[rightIndex];
-			envelopIndex += 1;
-			
-			i = leftIndex;
-			while (i != iGH) {
+			i = iGH;
+			while (i != leftIndex) {
 				envelop[envelopIndex] = leftEnv[i];
 				envelopIndex += 1;
-				i = leftEnv.previousIndex(i); 
+				i = leftEnv.nextIndex(i); 
 			}
-			envelop.reverse();
+			envelop[envelopIndex] = leftEnv[leftIndex];
+			envelopIndex += 1;
+			
+			i = rightIndex;
+			while (i != iDH) {
+				envelop[envelopIndex] = rightEnv[i];
+				envelopIndex += 1;
+				i = rightEnv.previousIndex(i); 
+			}
+			//envelop.reverse();
 			return envelop;
 		}
 	};
@@ -329,20 +329,19 @@ if(a1 === a2 && b1 === b2) {
 			if (isOutside) {
 				bottomLimitIndex = i;
 				topLimitIndex = envelop.nextIndex(i);
-				var c1, comparator;
-				comparator = function (x, y) { return x > y; };
+				var c1;
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
 				}
 
-				comparator = function (x, y) { return x < y; };
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
 						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 				}
+				
 				i = 0;
 				while(topLimitIndex != bottomLimitIndex) {
 					temp[i] = envelop[topLimitIndex];
@@ -362,7 +361,7 @@ if(a1 === a2 && b1 === b2) {
 	 * Lozenge optimization
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
-		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [], k;
+		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, result = [];
 
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
@@ -376,27 +375,26 @@ if(a1 === a2 && b1 === b2) {
 		
 		maxYIndex = pointsArray.maxYmaxX();
 		maxY = pointsArray[maxYIndex];
+		
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
-		k = 0;
+
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
+			
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
+				
 				// if the point belongs to the lozenge, we add it to the deletion list
-				if(!_segmentCrossing(centroid, point, minX, minY) && 
-				   !_segmentCrossing(centroid, point, minY, maxX) && 
-				   !_segmentCrossing(centroid, point, maxX, maxY) && 
-				   !_segmentCrossing(centroid, point, maxY, minX)) {
-					toDelete[k] = i;
-					k += 1;
+				if(_segmentCrossing(centroid, point, minX, minY) || 
+				   _segmentCrossing(centroid, point, minY, maxX) || 
+				   _segmentCrossing(centroid, point, maxX, maxY) || 
+				   _segmentCrossing(centroid, point, maxY, minX)) {
+   					result.push(point);
 				}
 			}
 		}
-		// Deletion of the elements from the pointsArray
-		for (i = 0; i < toDelete.length; i += 1) {
-			pointsArray.splice(toDelete[i] - i, 1);
-		}
-		return pointsArray;
+
+		return result;
 	};
 	that.lozengeOptimization = _lozengeOptimization;
 	
