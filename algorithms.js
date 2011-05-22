@@ -326,20 +326,19 @@ if(a1 === a2 && b1 === b2) {
 			if (isOutside) {
 				bottomLimitIndex = i;
 				topLimitIndex = envelop.nextIndex(i);
-				var c1, comparator;
-				comparator = function (x, y) { return x > y; };
+				var c1;
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[topLimitIndex]}),
 						new m.Vector({p1: p, p2: envelop[envelop.nextIndex(topLimitIndex)]})) > 0) {
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
 				}
 
-				comparator = function (x, y) { return x < y; };
 				while (crossProduct(
 						new m.Vector({p1: p, p2: envelop[bottomLimitIndex]}), 
 						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 				}
+				
 				i = 0;
 				while(topLimitIndex != bottomLimitIndex) {
 					temp[i] = envelop[topLimitIndex];
