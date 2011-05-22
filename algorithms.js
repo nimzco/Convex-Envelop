@@ -294,9 +294,10 @@ window.convlexEnvelop.algorithms = function () {
 	 * Randomized algorithm
 	 */
 	_randomizedAlgorithm = function(pointsArray) {
-		var a, randA, b, randB, c, randC, centroid, envelop = [];
+		var a, randA, b, randB, c, randC, centroid, envelop = [], k;
 		
 		// Taking three random point to make the first triangle of the envelop and removing it from pointsArray 
+		/*
 		randA = Math.randomValue(pointsArray.length - 1);
 		a = pointsArray[randA];
 		pointsArray.splice(randA, 1);
@@ -306,7 +307,10 @@ window.convlexEnvelop.algorithms = function () {
 		randC = Math.randomValue(pointsArray.length - 1);
 		c = pointsArray[randC];
 		pointsArray.splice(randC, 1);
-		
+*/
+		a = pointsArray[0];		
+		b = pointsArray[1];
+		c = pointsArray[2];
 		// Taking the centroid of this triangle
 		centroid = _centroid(a, b, c);
 
@@ -317,15 +321,19 @@ window.convlexEnvelop.algorithms = function () {
 
 		// Put the triangle in clockwise direction
 		turnClockwise(envelop);
+		
 		// Running through all points
-		while(pointsArray.length > 0) {
+//		while(pointsArray.length > 0) {
+		for (k = 3; k < pointsArray.length; k += 1) {
 			var c1, c2, v1, v2, v3, v4, distance, temp = [];
 			var randP, p, isOutside = false, finished = false, i, topLimitIndex, bottomLimitIndex;
 			// Getting a random point and removing it from the set
-			randP = Math.randomValue(pointsArray.length - 1);
+//			randP = Math.randomValue(pointsArray.length - 1);
 
-			p = pointsArray[randP];
-			pointsArray.splice(randP, 1);
+//			p = pointsArray[randP];
+//			pointsArray.splice(randP, 1);
+
+			p = pointsArray[k];
 			isOutside = false;
 			// Checking if the point is in the current envelop
 			for (i = 0; i < envelop.length; i += 1) {;
@@ -350,7 +358,6 @@ window.convlexEnvelop.algorithms = function () {
 						new m.Vector({p1: p, p2: envelop[envelop.previousIndex(bottomLimitIndex)]})) < 0) {
 					bottomLimitIndex = envelop.previousIndex(bottomLimitIndex);
 				}
-	
 				while(topLimitIndex != bottomLimitIndex) {
 					temp.push(envelop[topLimitIndex]);
 					topLimitIndex = envelop.nextIndex(topLimitIndex);
