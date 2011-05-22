@@ -189,7 +189,7 @@ if(a1 === a2 && b1 === b2) {
 			}
 			return pointsArray;
 		} else {
-			var median, leftPointsArray, rightPointsArray, leftEnv, rightEnv, leftIndex, rightIndex, firstRightIndex, firstLeftIndex, finished = false, i, iGH, iDH, envelop = [];
+			var median, leftPointsArray, rightPointsArray, leftEnv, rightEnv, leftIndex, rightIndex, firstRightIndex, firstLeftIndex, finished = false, i, iGH, iDH, envelop = [], envelopIndex = 0;
 			median = pointsArray.length / 2;
 			leftPointsArray = pointsArray.slice(0, median);
 			rightPointsArray = pointsArray.slice(median, pointsArray.length);
@@ -230,7 +230,8 @@ if(a1 === a2 && b1 === b2) {
 			iGH = leftIndex;
 			iDH = rightIndex;
 
-			envelop.push(leftEnv[iGH]);
+			envelop[envelopIndex] = leftEnv[iGH];
+			envelopIndex += 1;
 			
 			finished = false;
 			
@@ -266,14 +267,17 @@ if(a1 === a2 && b1 === b2) {
 
 			i = iDH;
 			while (i != rightIndex) {
-				envelop.push(rightEnv[i]);
+				envelop[envelopIndex] = rightEnv[i];
+				envelopIndex += 1;
 				i = rightEnv.nextIndex(i); 
 			}
-			envelop.push(rightEnv[rightIndex]);	
-					
+			envelop[envelopIndex] = rightEnv[rightIndex];
+			envelopIndex += 1;
+			
 			i = leftIndex;
 			while (i != iGH) {
-				envelop.push(leftEnv[i]);
+				envelop[envelopIndex] = leftEnv[i];
+				envelopIndex += 1;
 				i = leftEnv.previousIndex(i); 
 			}
 			envelop.reverse();
@@ -289,17 +293,6 @@ if(a1 === a2 && b1 === b2) {
 		var a, randA, b, randB, c, randC, centroid, envelop = [], k;
 		
 		// Taking three random point to make the first triangle of the envelop and removing it from pointsArray 
-		/*
-		randA = Math.randomValue(pointsArray.length - 1);
-		a = pointsArray[randA];
-		pointsArray.splice(randA, 1);
-		randB = Math.randomValue(pointsArray.length - 1);
-		b = pointsArray[randB];
-		pointsArray.splice(randB, 1);
-		randC = Math.randomValue(pointsArray.length - 1);
-		c = pointsArray[randC];
-		pointsArray.splice(randC, 1);
-*/
 		a = pointsArray[0];		
 		b = pointsArray[1];
 		c = pointsArray[2];
@@ -366,7 +359,7 @@ if(a1 === a2 && b1 === b2) {
 	 * Lozenge optimization
 	 */
 	_lozengeOptimization = function(pointsArray, bool) {
-		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [];
+		var minX, minXIndex, maxX, maxXIndex, minY, minYIndex, maxY, maxYIndex, centroid, i, point, toDelete = [], k;
 
 		// Min and Max values to define a lozenges
 		minXIndex = pointsArray.minXmaxY();
@@ -382,7 +375,7 @@ if(a1 === a2 && b1 === b2) {
 		maxY = pointsArray[maxYIndex];
 		// Calculating the centroid of the lozenge
 		centroid = _centroid(minX, maxX, minY, maxY);
-
+		k = 0;
 		for(i = 0; i < pointsArray.length; i += 1) {
 			point = pointsArray[i];
 			if (i != minXIndex && i != maxXIndex && i != minYIndex && i != maxYIndex) {
@@ -391,7 +384,8 @@ if(a1 === a2 && b1 === b2) {
 				   !_segmentCrossing(centroid, point, minY, maxX) && 
 				   !_segmentCrossing(centroid, point, maxX, maxY) && 
 				   !_segmentCrossing(centroid, point, maxY, minX)) {
-					toDelete.push(i);
+					toDelete[k] = i;
+					k += 1;
 				}
 			}
 		}
