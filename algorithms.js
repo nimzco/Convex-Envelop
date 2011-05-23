@@ -324,6 +324,7 @@ if(a1 === a2 && b1 === b2) {
 			} 
 			// -- If the point is outside the current envelop
 			if (isOutside) {
+
 				bottomLimitIndex = i;
 				topLimitIndex = envelop.nextIndex(i);
 				var c1;
@@ -349,6 +350,7 @@ if(a1 === a2 && b1 === b2) {
 				temp[i + 1] = p;
 				envelop = temp;
 			}
+					
 		}
 		return envelop;
 	};

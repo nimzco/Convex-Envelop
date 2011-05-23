@@ -165,7 +165,7 @@
 			p4 = new m.Point({x: 100, y: 100});		
 */			
 			
-			for(k = 0; k < 1; k += 1) {
+			for(k = 0; k < 20; k += 1) {
 				var algorithm, optimization, calculTime, executeAlgo, tempPoints, i;
 				tempPoints = _points.slice(0, _points.length);
 				if ($("divide").checked) {
